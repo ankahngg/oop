@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="240" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="20" nextobjectid="11">
+ <tileset firstgid="1" source="D:/DOCUMENT/GameAsset/Newfolder/bg-graveyard.tsx"/>
+ <tileset firstgid="337" source="D:/DOCUMENT/GameAsset/Newfolder/background.tsx"/>
+ <tileset firstgid="673" source="D:/DOCUMENT/GameAsset/Newfolder/tileset.tsx"/>
+ <tileset firstgid="953" source="D:/DOCUMENT/GameAsset/Newfolder/objects.tsx"/>
+ <tileset firstgid="1821" name="mountains" tilewidth="16" tileheight="16" tilecount="132" columns="12">
+  <image source="D:/DOCUMENT/GameAsset/gothicvania-cemetery-files/gothicvania-cemetery-files/PNG/Environment/mountains.png" width="192" height="179"/>
+ </tileset>
+ <tileset firstgid="1953" source="D:/DOCUMENT/GameAsset/Newfolder/hero-attack-1.tsx"/>
+ <tileset firstgid="1971" source="D:/DOCUMENT/GameAsset/Newfolder/skeleton-1.tsx"/>
+ <tileset firstgid="1977" source="D:/DOCUMENT/GameAsset/Newfolder/ghost-halo-1.tsx"/>
+ <layer id="10" name="Background3" width="240" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0uXTFgUUh+H3WTuwuxsLGxULu4OX7u7u7u7uFmywW+zuTuxWDOwOLmb9F3ZnZzz3zPX1d76c8lJZWXVqUJNa1KYOdalHfRrQkEY0pglNaUZzWtCSVrSmDW0p/0/WN7Lcj6Ki1s5/tqcDHelEZ7rQlW50pwc96UVv+tCXfvRnAAMZxGCGMLSU7udxI8v9KCpqw/zncEYwklGMZgxjGcd4JjCRSUxmClOZxnRmMJNZzGYOc0vpfh43styPoqI2z3/OZwELWcRilrCUy1nGcq7gSq7iaq7hWq5jBSu5nhu4kZtK6X4eN7Lcj6KidrP/vIVbuY3buYM7uYu7uYdV3Mt93M8DPMhDPMwjPMpjPM4TPFlK9/O4keV+FBW1p/zn0zzDszzH87zAi7zEy7zCq7zG67zBm7zFat7mHd7lPd7ng1K6n8eNLPejqKh96D8/4mM+4VM+43O+4EvW8BVf8w3fspbv+J4f+JGf+Jlf+JXfSul+Hjey3I+iova7//yDP/mLv/mHf9f/bVJWViJhAzZkIzZmEzZlMzZnC7akAluxNdsk6X4eN7Lcj6Kitq3/3I7t2YEd2Ymd2YVd2Y3d2YM92Yu92Yd92Y/9OYADOYiKHJyk+3ncyHI/ioraIf7zUA7jcCpxBEdyFEdzDMdyHJU5nhM4kSqcxMmcwqmcRlVOT9L9PG5kuR9FRe0M/3kmZ3E253Au53E+F3AhF3Exl3Apl1GNcqpTg5rUojZ1qJuk+3ncyHI/iopaPf9ZnwY0pBGNaUJTmtGcFrSkFa1pQ1va0Z4OdKQTnelC1yTdz+NGlvtRVNS6+c/u9KAnvehNH/rSj/4MYCCDGMwQhjKM4YxgJKMYzRjGJul+Hjey3I+iojbOf45nAhOZxGSmMJVpTGcGM5nFbOYwl3nMZwELWcRilrA0SffzuJHlfhRFURRFURRFURRFURRFURRF0f+pdYJe/GU=
+  </data>
+ </layer>
+ <layer id="14" name="Background2" width="240" height="20" offsetx="0" offsety="-0.5">
+  <data encoding="base64" compression="zlib">
+   eJzt0kNyLlAAROF/dlcR27advNi2bb7Ytr3UnFmyhFt1+1R9sx62x6OUUkoppZRSSimllFJKKaXUb17G4/GGD3zhB38EIBBBCEYIQo17e6VsLoyPhiMCkYhCNGIQizjEIwGJxr29UjaXxEeTkYJUpCEdGchEFrKRg1zj3l4pm8vjo/koQCGKUIwSlKIM/1COCuPeXimbq+SjVahGDWpRh3o0oBFNaEaLcW+vlM218tE2tKMDnehCN3rQiz70Y8C4t1fK5gb56BCGMYJRjGEcE5jEFKYxY9zbK2Vzs3x0DvNYwCKWsIwVrGIN/7Fu3NsrZXMbfHQTW9jGDnaxh30c4BBHODbu7ZWyuRM+eooznOMCl7jCNW5wizvcG/f2StncAx99xBOe8YJXvOEdH/jEF76Ne3ullFJKKaX+9gOH6ToU
+  </data>
+ </layer>
+ <layer id="16" name="Background" width="240" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0mffDnQcxuH7spKVUfbeJFuSLWTz1uxRRkbITvYIDXtkZ2dnFyH78C6u6/6c38//ePg/H/3KylJKKaWUUkoppZRSSimllFJKKaWUUkoppZRSSqk0mswUpjKN6cxgJrOYzRy+4VvmMo/5LOA7FrKIxSzhe5ayrBzsp1TMLecHVrCSVaxmDWtZx4+s5yc2sJFNbGYLW9nGdnawk5/ZVQ72UyrmdrOHX/iV3/idvexjPwc4yCEOc4SjHOMPjnOCk5ziNGc4Ww72Uyrm/uQc57nARS5xmSv8xVWucZ0b3OQWt/mbO9zlHvd5wEMelYP9lIq5f/iXxzzhP57yjOf8zwte8orXvOHt+88FjwpUpBKVqcIHVC2U/n5KxdyHbrQa1alBTWrxEbWpQ13q8TGfUJ8GNKQRjWlCU5rRnBa0LJT+fkrFXCs32po2tKUd7elARzrRmU/pwmd0pRvd6UFPetGbPnxOX74olP5+SsVcPzf6Jf0ZwEAGMZghDGUYXzGcEYzka0YxmjGMZRzjmcBEJhVKfz+lYu4dexkrIw==
+  </data>
+ </layer>
+ <layer id="18" name="ground2" width="240" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1EVOQwEUQNEPtATZB4xxa9EE2QeMcfcEmSCrwSkuCbIPGOPOZUooTFqgyb3JmTTN6//Jew0CMzMzMzMzMzMzMzMzMzMzMzMzS7VioSDYwjZ2sIs97OMAhzjCceivn9TMPvfEXT7jBa94+7jTcBCkIR0ZCCEc/usnNbPPVXCXlahCBFFUowa1qEM9Grxfs2+b40bmsYDFX7qXfn5nAIMYwjBGMIoxjGMCk96v2bedcCOnOMP5L93LEr+zjBWsYg3r2MAmYtjCdpKeZ4e5u9jDPg78n7AULSszCLKRg9zMr79zwX5fJnDHr5h1jRvc4g73eMAjnvCMlyTd1Stz3z5m875pSI/z3mb/vUZ2twnNaImzx3l8np/AHS9gViGKUIwSlKIM5ahAJaqSdFcR5kZRjRrUer+Wok2xu9OYwWycPW7l87YE7ng7szrQiS50owe96EM/BjCYpLsaYu4wRjCKMe/XzMzMzH7oHRZLRxs=
+  </data>
+ </layer>
+ <layer id="17" name="ground" width="240" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1zsKwkAQBuAl8Qo+G72Cz0bvoffQe+h1fRROHYIYAtkEvg9+lt1mdoopJiUAAAAAAAAAAAAAAAB+eRYpvSLvyKfI/RsYlrJMaVTmqz+O2pPINDLL+A8YomXMzCrj3Kyj9iayjezMLzRyjJk5mRvIoro/Nr2fY3Yv5f97aNt6XfcHfVbdH5ver5Fbzfs8sqg529bruj/os+r+2PR+jzxq3veRQ83Ztl7X/UGffQExdk4Z
+  </data>
+ </layer>
+ <layer id="19" name="character" width="240" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1ksKAjEQRdGaZf+7UAcq+G+/S/OtIDTaoA3nQE0KEjK5kCoAAAAAAAAAAPjOpVUN7devAD5xTbs3/cIs3dPuQ78wS8+0+9IvAADULv/ivb8xdC3SyDKzav3d2LNTOeTOo36ha51GNplt6+/Gnp3KKXee9QsAwJ94A0SVFx4=
+  </data>
+ </layer>
+</map>
