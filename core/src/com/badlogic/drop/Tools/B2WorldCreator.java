@@ -14,11 +14,6 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class B2WorldCreator {
 	public B2WorldCreator(World world,TiledMap map) {
-		BodyDef bdef = new BodyDef();
-		PolygonShape shape = new PolygonShape();
-		FixtureDef fdef = new FixtureDef();
-		Body body;
-		
 		for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 			new Brick(world, map, rect);

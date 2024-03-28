@@ -8,6 +8,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -31,9 +34,8 @@ public class PlayScreen implements Screen {
 	
 	private Drop game;
 	Texture texture;
-	OrthographicCamera camera;
+	OrthographicCamera camera,camera2;
 	Viewport gamePort;
-	private Hud hud;
 	
 	// tilemap
 	private TmxMapLoader mapLoader;
@@ -46,91 +48,88 @@ public class PlayScreen implements Screen {
 	
 	private Hero player;
 	
+	private TextureAtlas atlas;
+	TextureRegion region;
+	//private AtlasRegion atlasRegion;
 	
 	public PlayScreen(Drop game) {
+		atlas = new TextureAtlas("Hero.pack");
 		this.game = game;
 		camera = new OrthographicCamera();
-		//gamePort = new ScreenViewport(camera);
+		
 		texture = new Texture("background.png");
-		gamePort = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM,camera);	
-		//gamePort = new ScreenViewport(camera);	
-		hud = new Hud(game.batch);
+		gamePort = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM,camera);		
 		
 		mapLoader = new TmxMapLoader();
 		map = mapLoader.load("map2.tmx");
 		renderer = new OrthogonalTiledMapRenderer(map, 1/Drop.PPM);
-		camera.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
 		
-		
-		world = new World(new Vector2(0,-10),true);
+		world = new World(new Vector2(0,-50),true);
 		b2dr = new Box2DDebugRenderer();
 		
 		new B2WorldCreator(world, map);
+//		
+		player = new Hero(world,this);
+		region = atlas.findRegion("HeroIdle");
 		
-		player = new Hero(world);
+		
 	}
 
+	public TextureAtlas getAtlas() {
+		return atlas;
+	}
 
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
 
 	}
-	private void handleInput(float dt) {
-		// TODO Auto-generated method stub
-		// press A
-		if(Gdx.input.isKeyPressed(29)) {
-			//camera.position.x -= 100*dt;
-			player.b2body.applyLinearImpulse(new Vector2(-0.1f,0), player.b2body.getWorldCenter(), true);
-		}
-		//press D
-		if(Gdx.input.isKeyPressed(32)) {
-			//camera.position.x += 100*dt;
-			player.b2body.applyLinearImpulse(new Vector2(0.1f,0), player.b2body.getWorldCenter(), true);
-			
-		}
-		//press W
-		if(Gdx.input.isKeyPressed(51)) {
-			//camera.position.y += 100*dt;
-			player.b2body.applyLinearImpulse(new Vector2(0,0.4f), player.b2body.getWorldCenter(), true);
-		}
-		//press S
-		//if(Gdx.input.isKeyPressed(47)) camera.position.y -= 100*dt;
-		
-	}
 	
 	public void update(float dt) {
-		
-		handleInput(dt);
+		player.update(dt);
 		world.step(1/60f, 6, 2);
-		camera.position.x = player.b2body.getPosition().x;
+		//handle camera out of bound
+		if(player.b2body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
+			camera.position.x = gamePort.getWorldWidth()/2;
+		else camera.position.x = player.b2body.getPosition().x;
 		
-		camera.update();
+		//player.setRegionX((int)player.b2body.getPosition().x);
+		
+		
 		renderer.setView(camera);
+		camera.update();
 		
 	}
-
 
 
 	@Override
 	public void render(float delta) {
 		update(delta);
 		
+		
 		ScreenUtils.clear(0, 0, 0.2f, 1);
-        game.batch.setProjectionMatrix(gamePort.getCamera().combined);
+		
+		
+        game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
-		game.batch.draw(texture, gamePort.getCamera().position.x - gamePort.getWorldWidth() / 2,
-				gamePort.getCamera().position.y - gamePort.getWorldHeight() / 2, gamePort.getWorldWidth(),
+		game.batch.draw(texture, camera.position.x - gamePort.getWorldWidth() / 2,
+				camera.position.y - gamePort.getWorldHeight() / 2, gamePort.getWorldWidth(),
 				gamePort.getWorldHeight());
 		game.batch.end();
-		//game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-		//hud.stage.draw();
-		
+				
 		renderer.render();
 		
 		b2dr.render(world, camera.combined);
-		
+		game.batch.begin();
+//		game.batch.draw(player.heroStand,
+//				player.b2body.getPosition().x-player.heroStand.getRegionWidth()/2/Drop.PPM,
+//				player.b2body.getPosition().y-player.heroStand.getRegionHeight()/2/Drop.PPM,
+//				player.heroStand.getRegionWidth()/Drop.PPM,
+//				player.heroStand.getRegionHeight()/Drop.PPM);
+		player.draw(game.batch);
+		game.batch.end();
+
 		// TODO Auto-generated method stub
 
 	}

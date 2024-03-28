@@ -9,7 +9,7 @@ public class DesktopLauncher {
       Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
       config.setWindowIcon();
       config.setTitle("Drop");
-      config.setWindowedMode(1000, 640);
+      config.setWindowedMode(1000,1000 );
       config.useVsync(true);
       config.setForegroundFPS(60);
       new Lwjgl3Application(new Drop(), config);

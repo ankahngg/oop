@@ -1,0 +1,33 @@
+
+Hero_jump.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+hero-jump-1
+  rotate: false
+  xy: 1, 1
+  size: 160, 90
+  orig: 160, 90
+  offset: 0, 0
+  index: -1
+hero-jump-2
+  rotate: false
+  xy: 163, 1
+  size: 160, 90
+  orig: 160, 90
+  offset: 0, 0
+  index: -1
+hero-jump-3
+  rotate: false
+  xy: 325, 1
+  size: 160, 90
+  orig: 160, 90
+  offset: 0, 0
+  index: -1
+hero-jump-4
+  rotate: false
+  xy: 487, 1
+  size: 160, 90
+  orig: 160, 90
+  offset: 0, 0
+  index: -1

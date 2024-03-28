@@ -1,0 +1,48 @@
+
+HeroRun.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+hero-run-1
+  rotate: false
+  xy: 124, 44
+  size: 55, 40
+  orig: 55, 40
+  offset: 0, 0
+  index: -1
+hero-run-2
+  rotate: false
+  xy: 66, 43
+  size: 56, 41
+  orig: 56, 41
+  offset: 0, 0
+  index: -1
+hero-run-3
+  rotate: false
+  xy: 124, 3
+  size: 56, 39
+  orig: 56, 39
+  offset: 0, 0
+  index: -1
+hero-run-4
+  rotate: false
+  xy: 1, 1
+  size: 60, 40
+  orig: 60, 40
+  offset: 0, 0
+  index: -1
+hero-run-5
+  rotate: false
+  xy: 1, 43
+  size: 63, 41
+  orig: 63, 41
+  offset: 0, 0
+  index: -1
+hero-run-6
+  rotate: false
+  xy: 63, 3
+  size: 59, 38
+  orig: 59, 38
+  offset: 0, 0
+  index: -1
+
