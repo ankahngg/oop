@@ -1,0 +1,54 @@
+
+Attack1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Attack1
+  rotate: false
+  xy: 1, 95
+  size: 66, 59
+  orig: 162, 162
+  offset: 67, 61
+  index: 6
+Attack1
+  rotate: false
+  xy: 69, 102
+  size: 72, 52
+  orig: 162, 162
+  offset: 61, 61
+  index: 4
+Attack1
+  rotate: false
+  xy: 1, 46
+  size: 69, 47
+  orig: 162, 162
+  offset: 41, 61
+  index: 5
+Attack1
+  rotate: false
+  xy: 1, 1
+  size: 69, 43
+  orig: 162, 162
+  offset: 19, 61
+  index: 1
+Attack1
+  rotate: false
+  xy: 72, 57
+  size: 64, 43
+  orig: 162, 162
+  offset: 20, 61
+  index: 2
+Attack1
+  rotate: false
+  xy: 72, 12
+  size: 60, 43
+  orig: 162, 162
+  offset: 25, 61
+  index: 3
+Attack1
+  rotate: false
+  xy: 138, 55
+  size: 33, 45
+  orig: 162, 162
+  offset: 65, 61
+  index: 0

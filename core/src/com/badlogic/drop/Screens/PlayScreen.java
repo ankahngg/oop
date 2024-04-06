@@ -2,8 +2,10 @@ package com.badlogic.drop.Screens;
 
 import com.badlogic.drop.Drop;
 import com.badlogic.drop.Scenes.Hud;
+import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.drop.Tools.B2WorldCreator;
+import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -51,26 +53,38 @@ public class PlayScreen implements Screen {
 	private TextureAtlas atlas;
 	TextureRegion region;
 	//private AtlasRegion atlasRegion;
+	private Boss Boss;
 	
 	public PlayScreen(Drop game) {
+		// load map
 		atlas = new TextureAtlas("Hero.pack");
 		this.game = game;
+		
+		// create camera
 		camera = new OrthographicCamera();
 		
+		// load background
 		texture = new Texture("background.png");
+		
+		// viewport => responsive 
 		gamePort = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM,camera);		
 		
+		// load tilemap into world
 		mapLoader = new TmxMapLoader();
 		map = mapLoader.load("map2.tmx");
 		renderer = new OrthogonalTiledMapRenderer(map, 1/Drop.PPM);
 		
+		// setup box2d
 		world = new World(new Vector2(0,-50),true);
 		b2dr = new Box2DDebugRenderer();
-		
 		new B2WorldCreator(world, map);
-//		
+		
+		// create hero
 		player = new Hero(world,this);
 		region = atlas.findRegion("HeroIdle");
+		
+		//create boss
+		Boss = new Boss(world, this);
 		
 		
 	}
@@ -84,14 +98,16 @@ public class PlayScreen implements Screen {
 		// TODO Auto-generated method stub
 
 	}
-	
+	// method that be called every 1/60s
 	public void update(float dt) {
 		player.update(dt);
 		world.step(1/60f, 6, 2);
 		//handle camera out of bound
 		if(player.b2body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
 			camera.position.x = gamePort.getWorldWidth()/2;
-		else camera.position.x = player.b2body.getPosition().x;
+		else 
+			camera.position.x = player.b2body.getPosition().x;
+		
 		
 		//player.setRegionX((int)player.b2body.getPosition().x);
 		
@@ -122,13 +138,10 @@ public class PlayScreen implements Screen {
 		
 		b2dr.render(world, camera.combined);
 		game.batch.begin();
-//		game.batch.draw(player.heroStand,
-//				player.b2body.getPosition().x-player.heroStand.getRegionWidth()/2/Drop.PPM,
-//				player.b2body.getPosition().y-player.heroStand.getRegionHeight()/2/Drop.PPM,
-//				player.heroStand.getRegionWidth()/Drop.PPM,
-//				player.heroStand.getRegionHeight()/Drop.PPM);
 		player.draw(game.batch);
+		//Boss.draw(game.batch);
 		game.batch.end();
+		world.setContactListener(new WorldContactListener());
 
 		// TODO Auto-generated method stub
 

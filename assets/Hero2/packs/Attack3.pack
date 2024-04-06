@@ -1,0 +1,61 @@
+
+Attack3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Attack3
+  rotate: false
+  xy: 1, 180
+  size: 129, 98
+  orig: 162, 162
+  offset: 22, 61
+  index: 4
+Attack3
+  rotate: false
+  xy: 1, 78
+  size: 127, 100
+  orig: 162, 162
+  offset: 29, 61
+  index: 6
+Attack3
+  rotate: false
+  xy: 132, 223
+  size: 57, 55
+  orig: 162, 162
+  offset: 27, 61
+  index: 3
+Attack3
+  rotate: false
+  xy: 1, 26
+  size: 80, 50
+  orig: 162, 162
+  offset: 56, 61
+  index: 5
+Attack3
+  rotate: false
+  xy: 132, 160
+  size: 56, 61
+  orig: 162, 162
+  offset: 28, 61
+  index: 0
+Attack3
+  rotate: false
+  xy: 130, 84
+  size: 38, 74
+  orig: 162, 162
+  offset: 46, 61
+  index: 1
+Attack3
+  rotate: false
+  xy: 83, 1
+  size: 35, 75
+  orig: 162, 162
+  offset: 49, 61
+  index: 2
+Attack3
+  rotate: false
+  xy: 120, 41
+  size: 67, 35
+  orig: 162, 162
+  offset: 69, 61
+  index: 7

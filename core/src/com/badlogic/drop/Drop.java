@@ -30,7 +30,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 		public void create() {
 			batch = new SpriteBatch();
 			this.setScreen(new PlayScreen(this));
-			
 		}
 		
 		@Override
