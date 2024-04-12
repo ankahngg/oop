@@ -4,6 +4,7 @@ import com.badlogic.drop.Drop;
 import com.badlogic.drop.Scenes.Hud;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Hero;
+import com.badlogic.drop.Sprites.Middle;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -34,7 +36,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class PlayScreen implements Screen {
 	
-	private Drop game;
+	public Drop game;
 	Texture texture;
 	OrthographicCamera camera,camera2;
 	Viewport gamePort;
@@ -54,6 +56,16 @@ public class PlayScreen implements Screen {
 	TextureRegion region;
 	//private AtlasRegion atlasRegion;
 	private Boss Boss;
+	public WorldContactListener WorldContactListener;
+	
+	public Boss getBoss() {
+		return Boss;
+	}
+	
+	public void setBoss(Boss boss) {
+		Boss = boss;
+	}
+	
 	
 	public PlayScreen(Drop game) {
 		// load map
@@ -77,15 +89,14 @@ public class PlayScreen implements Screen {
 		// setup box2d
 		world = new World(new Vector2(0,-50),true);
 		b2dr = new Box2DDebugRenderer();
-		new B2WorldCreator(world, map);
+		new B2WorldCreator(world, map, this);
 		
 		// create hero
-		player = new Hero(world,this);
 		region = atlas.findRegion("HeroIdle");
 		
 		//create boss
 		Boss = new Boss(world, this);
-		
+		player = new Hero(world,this);
 		
 	}
 
@@ -100,17 +111,15 @@ public class PlayScreen implements Screen {
 	}
 	// method that be called every 1/60s
 	public void update(float dt) {
+		
 		player.update(dt);
+		Boss.update(dt);
 		world.step(1/60f, 6, 2);
 		//handle camera out of bound
 		if(player.b2body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
 			camera.position.x = gamePort.getWorldWidth()/2;
 		else 
 			camera.position.x = player.b2body.getPosition().x;
-		
-		
-		//player.setRegionX((int)player.b2body.getPosition().x);
-		
 		
 		renderer.setView(camera);
 		camera.update();
@@ -120,7 +129,6 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		update(delta);
 		
 		
 		ScreenUtils.clear(0, 0, 0.2f, 1);
@@ -139,10 +147,13 @@ public class PlayScreen implements Screen {
 		b2dr.render(world, camera.combined);
 		game.batch.begin();
 		player.draw(game.batch);
-		//Boss.draw(game.batch);
+		Boss.draw(game.batch);
 		game.batch.end();
-		world.setContactListener(new WorldContactListener());
+		
+		WorldContactListener = new WorldContactListener();
+		world.setContactListener(WorldContactListener);
 
+		update(delta);
 		// TODO Auto-generated method stub
 
 	}

@@ -71,11 +71,12 @@ public class Hero extends Sprite{
 	private boolean isAttacking;
 	private Object fixture;
 	private Fixture attackFixture;
+	private PlayScreen screen;
 	
 	
 	public Hero(World world, PlayScreen screen) {		
-		
 		this.world = world;
+		this.screen = screen;
 		prepareAnimation();
 		defineHero();
 		
@@ -130,14 +131,28 @@ public class Hero extends Sprite{
 	void detectCollison() {
 		Array<Contact> contacts = world.getContactList();
 		for (Contact contact : contacts) {
-			if (contact.isTouching() && (contact.getFixtureA() == attackFixture || contact.getFixtureB() == attackFixture)) {
-				System.out.println("lol");
+			if (contact.isTouching() && 
+				((contact.getFixtureA() == screen.getBoss().bossDef && contact.getFixtureB() == attackFixture) ||
+				(contact.getFixtureA() == attackFixture && contact.getFixtureB() == screen.getBoss().bossDef))) {
+				screen.getBoss().isHurt = true;
 			}
 		}
-		
+	}
+	
+	public void instructionSensor() {
+		Array<Contact> contacts = world.getContactList();
+		for (Contact contact : contacts) {
+			if (contact.isTouching() && 
+				((contact.getFixtureA() == normalDef && contact.getFixtureB() == Middle.instruction.fixture) ||
+				(contact.getFixtureA() == Middle.instruction.fixture && contact.getFixtureB() == normalDef))) {
+				Middle.instruction.onHit();
+			}
+		}
 	}
 	
 	public void update(float dt) {
+		//System.out.println(world.getContactList());
+		
 		handleInput(dt);
 		setRegion(getFrame(dt));
 		setBounds(b2body.getPosition().x-getRegionWidth()/Drop.PPM/2,
@@ -145,14 +160,18 @@ public class Hero extends Sprite{
 				getRegionWidth()/Drop.PPM, 
 				getRegionHeight()/Drop.PPM);
 		
-	attackFix();
+		attackFix();
+
 		
+		instructionSensor();
 	}
 	
 	private TextureRegion getFrame(float dt) {
 		TextureRegion region;
 		currentState = getFrameState();
 		
+		stateTime = (currentState == previousState ? stateTime + dt : 0);
+	
 		switch (currentState) {
 		    case JUMPING:
 		        region = jumping.getKeyFrame(stateTime, false);
@@ -193,7 +212,7 @@ public class Hero extends Sprite{
 		
 		// Update state time
 		
-		stateTime = (currentState == previousState ? stateTime + dt : 0);
+		
 		previousState = currentState;
 
 		return region;
@@ -253,12 +272,13 @@ public class Hero extends Sprite{
 
 	private void defineHero() {
 		// TODO Auto-generated method stub
-		 bdef.position.set(0,10);
+		 bdef.position.set(30,10);
 		 bdef.type = BodyDef.BodyType.DynamicBody;
 		 b2body = world.createBody(bdef);
 		 shape.setRadius(getRegionHeight()/Drop.PPM/2);
 		 fdef.shape = shape;
 		 normalDef = b2body.createFixture(fdef);
+		 normalDef.setUserData("herobody");
 	}
 	
 

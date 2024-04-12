@@ -1,50 +1,48 @@
 package com.badlogic.drop.Tools;
 
-import com.badlogic.drop.Sprites.InteractiveTileObject;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.*;
+import java.util.HashSet;
+import java.util.Set;
 
-public class WorldContactListener implements ContactListener{
+public class WorldContactListener implements ContactListener {
+    private Set<Contact> contacts;
 
-	
-	@Override
-	public void beginContact(Contact contact) {
-		System.out.println("begin");
-		// TODO Auto-generated method stub
-		Fixture fixA = contact.getFixtureA();
-		Fixture fixB = contact.getFixtureB();
-			
-		if(fixA.getUserData() == "DamageRange" || fixB.getUserData() == "DamageRange") {
-			Fixture head = fixA.getUserData() == "DamageRange" ? fixA : fixB;
-			Fixture object = head == fixA ? fixB : fixA;
-			
-			if(object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())) {
-				((InteractiveTileObject) object.getUserData()).onHit();
-			}
-		}
-		
-	}
+    public WorldContactListener() {
+        contacts = new HashSet<>();
+    }
 
-	@Override
-	public void endContact(Contact contact) {
-		// TODO Auto-generated method stub
-		//System.out.println("end");
-	}
+    @Override
+    public void beginContact(Contact contact) {
+        // Add the contact to the set when it begins
+        contacts.add(contact);
+       
+    }
 
-	@Override
-	public void preSolve(Contact contact, Manifold oldManifold) {
-		// TODO Auto-generated method stub
-		//System.out.println("1");
-	}
+    @Override
+    public void endContact(Contact contact) {
+        // Remove the contact from the set when it ends
+        //contacts.remove(contact);
+    }
 
-	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+        // Called before collision resolution
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+        // Called after collision resolution
+    }
+
+    // Method to check if two fixtures are currently in contact
+    public boolean areFixturesInContact(String A, String B) {
+    	
+        for (Contact contact : contacts) {
+            if ((contact.getFixtureA().getUserData() == A && contact.getFixtureB().getUserData() == B) ||
+                (contact.getFixtureA().getUserData() == B && contact.getFixtureB().getUserData() == A)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

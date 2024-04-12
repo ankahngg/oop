@@ -1,7 +1,11 @@
 package com.badlogic.drop.Tools;
 
 import com.badlogic.drop.Drop;
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Brick;
+import com.badlogic.drop.Sprites.Instruction;
+import com.badlogic.drop.Sprites.Middle;
+import com.badlogic.drop.Sprites.SensorObject;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -13,11 +17,16 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class B2WorldCreator {
-	public B2WorldCreator(World world,TiledMap map) {
-		for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
+	public B2WorldCreator(World world,TiledMap map, PlayScreen screen) {
+		for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 			new Brick(world, map, rect);
-			 
 		}
+		for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
+			Rectangle rect = ((RectangleMapObject) object).getRectangle();
+			Instruction x = new Instruction(world, map, rect, screen);
+			Middle.instruction = x;
+		}
+		
 	}
 }

@@ -10,7 +10,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 	import com.badlogic.gdx.graphics.Texture;
-	import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 	import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 	import com.badlogic.gdx.maps.tiled.TiledMap;
 	import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -26,6 +27,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 		public static final float PPM = 16;
 		OrthographicCamera camera;
 		public SpriteBatch batch;
+		
+		public SpriteBatch getBatch() {
+			return batch;
+		}
 		
 		public void create() {
 			batch = new SpriteBatch();
