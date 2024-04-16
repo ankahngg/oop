@@ -1,36 +1,25 @@
 package com.badlogic.drop.Sprites;
 
-import java.awt.Rectangle;
-import java.awt.RenderingHints.Key;
-
 import com.badlogic.drop.Drop;
+import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
-import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
+import com.badlogic.gdx.physics.box2d.World;
 
-public class Hero extends Sprite{
-	final int speed = 10;
+public abstract class Hero extends Sprite{
+	public final int speed = 10;
 	public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3 };
 	public enum Input {LEFT,RIGHT,JUMP,STOP,CROUCH};
 	public State currentState;
@@ -43,13 +32,14 @@ public class Hero extends Sprite{
 	CircleShape shape = new CircleShape();
 	FixtureDef fdef = new FixtureDef();
 	Fixture normalDef,crouchDef;
-	private TextureAtlas atlasRunning;
-	private TextureAtlas atlasJumping;
-	private TextureAtlas atlasStanding;
-	private TextureAtlas atlasCrouch;
-	private TextureAtlas atlasAttack1;
-	private TextureAtlas atlasAttack2;
-	private TextureAtlas atlasAttack3;
+	
+	protected TextureAtlas atlasRunning;
+	protected TextureAtlas atlasJumping;
+	protected TextureAtlas atlasStanding;
+	protected TextureAtlas atlasCrouch;
+	protected TextureAtlas atlasAttack1;
+	protected TextureAtlas atlasAttack2;
+	protected TextureAtlas atlasAttack3;
 	
 	public Animation<TextureRegion> running;
 	public Animation<TextureRegion> jumping;
@@ -59,51 +49,26 @@ public class Hero extends Sprite{
 	public Animation<TextureRegion> attack2;
 	public Animation<TextureRegion> attack3;
 	
-	private double AttackCoolDown = 2000;
-	private double lastAttackTime = 0;
-	private int currentAttack = 0;
+	protected double AttackCoolDown = 2000;
+	protected double lastAttackTime = 0;
+	protected int currentAttack = 0;
 	
-	private float HeroHeight;
-	private float stateTime;
-	private boolean runningRight = true;
-	private boolean currentDirection = false;
+	protected float HeroHeight;
+	protected float stateTime;
+	protected boolean runningRight = true;
+	protected boolean currentDirection = false;
 	
-	private boolean isAttacking;
-	private Object fixture;
-	private Fixture attackFixture;
-	private PlayScreen screen;
-	
-	
-	public Hero(World world, PlayScreen screen) {		
+	protected boolean isAttacking;
+	protected Fixture attackFixture;
+	protected PlayScreen screen;
+	public Hero(World world, PlayScreen screen) {
 		this.world = world;
 		this.screen = screen;
-		prepareAnimation();
-		defineHero();
-		
-		setBounds(0, 0, getRegionWidth()/Drop.PPM, getRegionHeight()/Drop.PPM);
-		currentState = State.STANDING;
-		previousState = State.STANDING;
+
 	}
 	
-	public void prepareAnimation() {
-		atlasAttack1 = new TextureAtlas("Hero2/packs/Attack1.pack");
-		atlasAttack2 = new TextureAtlas("Hero2/packs/Attack2.pack");
-		atlasAttack3 = new TextureAtlas("Hero2/packs/Attack3.pack");
-		atlasStanding = new TextureAtlas("Hero2/packs/Idle.pack");
-		atlasRunning = new TextureAtlas("Hero2/packs/Run.pack");
-		atlasJumping = new TextureAtlas("Hero2/packs/Jump.pack");
-		
-		attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
-		attack2 = new Animation<TextureRegion>(0.1f, atlasAttack2.getRegions());
-		attack3 = new Animation<TextureRegion>(0.1f, atlasAttack3.getRegions());
-		running = new Animation<TextureRegion>(0.1f, atlasRunning.getRegions());
-		jumping = new Animation<TextureRegion>(0.1f, atlasJumping.getRegions());
-		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
-		setRegion(atlasStanding.getRegions().get(1));
-		HeroHeight = getRegionHeight();
-	}
-	
-	private void handleInput(float dt) {
+	protected abstract void prepareAnimation();
+	protected void handleInput(float dt) {
 		Vector2 vel = b2body.getLinearVelocity();
 		boolean stop = true;
 		
@@ -127,46 +92,17 @@ public class Hero extends Sprite{
 		
 		if(stop) b2body.setLinearVelocity( new Vector2(0,vel.y));
 	}
-	
-	void detectCollison() {
-		Array<Contact> contacts = world.getContactList();
-		for (Contact contact : contacts) {
-			if (contact.isTouching() && 
-				((contact.getFixtureA() == screen.getBoss().bossDef && contact.getFixtureB() == attackFixture) ||
-				(contact.getFixtureA() == attackFixture && contact.getFixtureB() == screen.getBoss().bossDef))) {
-				screen.getBoss().isHurt = true;
-			}
-		}
-	}
-	
-	public void instructionSensor() {
-		Array<Contact> contacts = world.getContactList();
-		for (Contact contact : contacts) {
-			if (contact.isTouching() && 
-				((contact.getFixtureA() == normalDef && contact.getFixtureB() == Middle.instruction.fixture) ||
-				(contact.getFixtureA() == Middle.instruction.fixture && contact.getFixtureB() == normalDef))) {
-				Middle.instruction.onHit();
-			}
-		}
-	}
-	
+	public abstract void detectCollison();
+	public abstract void instructionSensor();
 	public void update(float dt) {
-		//System.out.println(world.getContactList());
-		
 		handleInput(dt);
 		setRegion(getFrame(dt));
 		setBounds(b2body.getPosition().x-getRegionWidth()/Drop.PPM/2,
 				b2body.getPosition().y-HeroHeight/Drop.PPM/2,
 				getRegionWidth()/Drop.PPM, 
 				getRegionHeight()/Drop.PPM);
-		
-		attackFix();
-
-		
-		instructionSensor();
 	}
-	
-	private TextureRegion getFrame(float dt) {
+	protected TextureRegion getFrame(float dt) {
 		TextureRegion region;
 		currentState = getFrameState();
 		
@@ -217,8 +153,7 @@ public class Hero extends Sprite{
 
 		return region;
 	}
-
-	private State getFrameState() {
+	protected State getFrameState() {
 		// TODO Auto-generated method stub
 		//System.out.println(currentAttack);
 		
@@ -256,31 +191,4 @@ public class Hero extends Sprite{
 		return State.STANDING;
 	}
 	
-	private void attackFix() {
-		PolygonShape hitbox = new PolygonShape();
-		if(runningRight != currentDirection) {
-			if(attackFixture != null) b2body.destroyFixture(attackFixture);
-			if(runningRight) hitbox.setAsBox(2, 2,new Vector2(2,1),0);
-			else hitbox.setAsBox(2, 2,new Vector2(-2,1),0);
-			fdef.shape = hitbox;
-			fdef.isSensor = true;
-			attackFixture = b2body.createFixture(fdef);
-			attackFixture.setUserData("DamageRange");
-			currentDirection = runningRight;
-		}
-	}
-
-	private void defineHero() {
-		// TODO Auto-generated method stub
-		 bdef.position.set(30,10);
-		 bdef.type = BodyDef.BodyType.DynamicBody;
-		 b2body = world.createBody(bdef);
-		 shape.setRadius(getRegionHeight()/Drop.PPM/2);
-		 fdef.shape = shape;
-		 normalDef = b2body.createFixture(fdef);
-		 normalDef.setUserData("herobody");
-	}
-	
-
-	
-}	
+}

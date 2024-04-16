@@ -1,8 +1,8 @@
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Drop;
-import com.badlogic.drop.Screens.PlayScreen;
-import com.badlogic.drop.Sprites.Hero.State;
+import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Sprites.AnKhangHero.State;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -77,7 +77,7 @@ public class Boss extends Sprite{
 		BossWidth = getRegionWidth();
 	}
 	
-	public Boss(World world, PlayScreen screen) {		
+	public Boss(World world, FirstMap screen) {		
 			
 		this.world = world;
 		prepareAnimation();

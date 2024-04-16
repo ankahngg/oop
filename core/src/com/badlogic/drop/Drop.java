@@ -1,6 +1,6 @@
 	package com.badlogic.drop;
 	import com.badlogic.drop.Screens.LabScreen;
-import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
@@ -34,7 +34,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 		
 		public void create() {
 			batch = new SpriteBatch();
-			this.setScreen(new PlayScreen(this));
+			this.setScreen(new FirstMap(this));
 		}
 		
 		@Override
