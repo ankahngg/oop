@@ -102,12 +102,12 @@ public class AnKhangHero extends Hero{
 	private void attackFix() {
 		PolygonShape hitbox = new PolygonShape();
 		if(runningRight != currentDirection) {
-			if(attackFixture != null) b2body.destroyFixture(attackFixture);
+			if(attackFixture != null) body.destroyFixture(attackFixture);
 			if(runningRight) hitbox.setAsBox(2, 2,new Vector2(2,1),0);
 			else hitbox.setAsBox(2, 2,new Vector2(-2,1),0);
 			fdef.shape = hitbox;
 			fdef.isSensor = true;
-			attackFixture = b2body.createFixture(fdef);
+			attackFixture = body.createFixture(fdef);
 			attackFixture.setUserData("DamageRange");
 			currentDirection = runningRight;
 		}
@@ -117,10 +117,10 @@ public class AnKhangHero extends Hero{
 		// TODO Auto-generated method stub
 		 bdef.position.set(30,10);
 		 bdef.type = BodyDef.BodyType.DynamicBody;
-		 b2body = world.createBody(bdef);
+		 body = world.createBody(bdef);
 		 shape.setRadius(getRegionHeight()/Drop.PPM/2);
 		 fdef.shape = shape;
-		 normalDef = b2body.createFixture(fdef);
+		 normalDef = body.createFixture(fdef);
 		 normalDef.setUserData("herobody");
 	}
 	

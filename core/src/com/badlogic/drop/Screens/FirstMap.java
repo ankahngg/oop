@@ -3,6 +3,7 @@ package com.badlogic.drop.Screens;
 import com.badlogic.drop.Drop;
 import com.badlogic.drop.Scenes.Hud;
 import com.badlogic.drop.Sprites.Boss;
+import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.drop.Sprites.AnKhangHero;
 import com.badlogic.drop.Sprites.Middle;
 import com.badlogic.drop.Tools.B2WorldCreator;
@@ -10,6 +11,7 @@ import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -36,7 +38,8 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class FirstMap extends PlayScreen {
-	
+	public final int speed = 10;
+
 	
 	public Boss getBoss() {
 		return boss;
@@ -91,21 +94,48 @@ public class FirstMap extends PlayScreen {
 	}
 	// method that be called every 1/60s
 	public void update(float dt) {
-		
+		handleInput(dt);
 		player.update(dt);
 		boss.update(dt);
 		world.step(1/60f, 6, 2);
 		//handle camera out of bound
-		if(player.b2body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
+		if(player.body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
 			camera.position.x = gamePort.getWorldWidth()/2;
 		else 
-			camera.position.x = player.b2body.getPosition().x;
+			camera.position.x = player.body.getPosition().x;
 		
 		renderer.setView(camera);
 		camera.update();
 		
 	}
-
+	public Body getBody() {
+		return player.body;
+	}
+	
+	protected void handleInput(float dt) {
+		Vector2 vel = player.body.getLinearVelocity();
+		boolean stop = true;
+		
+		if(player.isAttacking) {
+			player.body.setLinearVelocity( new Vector2(0,vel.y));
+			return;
+		}
+		if(Gdx.input.isKeyPressed(Keys.A)) {
+			player.body.setLinearVelocity( new Vector2(-speed,vel.y));
+			stop = false;
+		}
+		if(Gdx.input.isKeyPressed(Keys.D)) {
+			stop = false;
+			player.body.setLinearVelocity( new Vector2(speed,vel.y));
+		}
+		
+		if(Gdx.input.isKeyPressed(Keys.W) && vel.y == 0) {
+			player.body.applyLinearImpulse(new Vector2(0,30), getBody().getWorldCenter(),true);
+			stop = false;
+		}
+		
+		if(stop) player.body.setLinearVelocity( new Vector2(0,vel.y));
+	}
 
 	@Override
 	public void render(float delta) {

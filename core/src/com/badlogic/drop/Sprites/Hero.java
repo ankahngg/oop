@@ -19,14 +19,13 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Hero extends Sprite{
-	public final int speed = 10;
 	public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3 };
 	public enum Input {LEFT,RIGHT,JUMP,STOP,CROUCH};
 	public State currentState;
 	public State previousState;
 	public Input currentInput;
 	public World world;
-	public Body b2body;
+	public Body body;
 	public Body hitbox;
 	BodyDef bdef = new BodyDef();
 	CircleShape shape = new CircleShape();
@@ -58,7 +57,7 @@ public abstract class Hero extends Sprite{
 	protected boolean runningRight = true;
 	protected boolean currentDirection = false;
 	
-	protected boolean isAttacking;
+	public boolean isAttacking;
 	protected Fixture attackFixture;
 	protected PlayScreen screen;
 	public Hero(World world, PlayScreen screen) {
@@ -67,38 +66,17 @@ public abstract class Hero extends Sprite{
 
 	}
 	
+	
+	
+	
 	protected abstract void prepareAnimation();
-	protected void handleInput(float dt) {
-		Vector2 vel = b2body.getLinearVelocity();
-		boolean stop = true;
-		
-		if(isAttacking) {
-			b2body.setLinearVelocity( new Vector2(0,vel.y));
-			return;
-		}
-		if(Gdx.input.isKeyPressed(Keys.A)) {
-			b2body.setLinearVelocity( new Vector2(-speed,vel.y));
-			stop = false;
-		}
-		if(Gdx.input.isKeyPressed(Keys.D)) {
-			stop = false;
-			b2body.setLinearVelocity( new Vector2(speed,vel.y));
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.W) && vel.y == 0) {
-			b2body.applyLinearImpulse(new Vector2(0,30), b2body.getWorldCenter(),true);
-			stop = false;
-		}
-		
-		if(stop) b2body.setLinearVelocity( new Vector2(0,vel.y));
-	}
+	
 	public abstract void detectCollison();
 	public abstract void instructionSensor();
 	public void update(float dt) {
-		handleInput(dt);
 		setRegion(getFrame(dt));
-		setBounds(b2body.getPosition().x-getRegionWidth()/Drop.PPM/2,
-				b2body.getPosition().y-HeroHeight/Drop.PPM/2,
+		setBounds(body.getPosition().x-getRegionWidth()/Drop.PPM/2,
+				body.getPosition().y-HeroHeight/Drop.PPM/2,
 				getRegionWidth()/Drop.PPM, 
 				getRegionHeight()/Drop.PPM);
 	}
@@ -133,7 +111,7 @@ public abstract class Hero extends Sprite{
 		        break;
 		}
 		
-		float vel = b2body.getLinearVelocity().x;
+		float vel = body.getLinearVelocity().x;
 		
 		if((vel < 0 || !runningRight) && !region.isFlipX()) {
 			region.flip(true,false);
@@ -186,8 +164,8 @@ public abstract class Hero extends Sprite{
 		}
 		
 		if(System.currentTimeMillis() - lastAttackTime >= 500 ) currentAttack = 0;
-		if(b2body.getLinearVelocity().y != 0 ) return State.JUMPING;
-		if(b2body.getLinearVelocity().x != 0 ) return State.RUNNING;
+		if(body.getLinearVelocity().y != 0 ) return State.JUMPING;
+		if(body.getLinearVelocity().x != 0 ) return State.RUNNING;
 		return State.STANDING;
 	}
 	
