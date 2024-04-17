@@ -2,6 +2,7 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Drop;
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -13,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Instruction extends SensorObject {
 	private SpriteBatch batch;
 	private Texture texture;
-	public Instruction(World world, TiledMap map, Rectangle bounds, FirstMap screen) {
+	public Instruction(World world, TiledMap map, Rectangle bounds, PlayScreen screen) {
 		super(world,map,bounds);
 		fixture.setUserData("instruction");
 		texture = new Texture("Instruction.png");

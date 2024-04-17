@@ -1,6 +1,7 @@
 	package com.badlogic.drop;
 	import com.badlogic.drop.Screens.LabScreen;
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
@@ -25,16 +26,19 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 		public static final int V_WIDTH=500;
 		public static final int V_HEIGHT=320;
 		public static final float PPM = 16;
+		public static enum MAP {MAP1, MAP2,MAP3};
+		private static MAP map;
 		OrthographicCamera camera;
 		public SpriteBatch batch;
 		
 		public SpriteBatch getBatch() {
 			return batch;
 		}
-		
+
 		public void create() {
 			batch = new SpriteBatch();
-			this.setScreen(new FirstMap(this));
+			
+			this.setScreen(new FlappyMap(this));
 		}
 		
 		@Override
@@ -50,6 +54,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 			batch.dispose();
 			super.dispose();
 			
+		}
+		
+		public MAP getCurrentMap() {
+			return map;
+		}
+		public void setMap(MAP map) {
+			this.map = map;
 		}
 
 	}

@@ -2,21 +2,17 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Drop;
 import com.badlogic.drop.Screens.FirstMap;
-import com.badlogic.drop.Sprites.AnKhangHero.State;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer.Random;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Boss extends Sprite{

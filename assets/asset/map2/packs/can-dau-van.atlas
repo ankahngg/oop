@@ -1,0 +1,26 @@
+
+can-dau-van.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+can-dau-van
+  rotate: false
+  xy: 1, 2
+  size: 73, 42
+  orig: 73, 42
+  offset: 0, 0
+  index: 2
+can-dau-van
+  rotate: false
+  xy: 76, 1
+  size: 65, 43
+  orig: 65, 43
+  offset: 0, 0
+  index: 1
+can-dau-van
+  rotate: false
+  xy: 143, 3
+  size: 56, 41
+  orig: 56, 41
+  offset: 0, 0
+  index: 0

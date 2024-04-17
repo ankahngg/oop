@@ -5,6 +5,7 @@ import java.awt.RenderingHints.Key;
 
 import com.badlogic.drop.Drop;
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -33,7 +34,7 @@ public class AnKhangHero extends Hero{
 	
 	
 	
-	public AnKhangHero(World world, FirstMap screen) {	
+	public AnKhangHero(World world, PlayScreen screen) {	
 		super(world, screen);
 
 		prepareAnimation();

@@ -1,6 +1,7 @@
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Drop;
+import com.badlogic.drop.Drop.MAP;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
@@ -81,6 +82,10 @@ public abstract class Hero extends Sprite{
 				getRegionHeight()/Drop.PPM);
 	}
 	protected TextureRegion getFrame(float dt) {
+		if (screen.game.getCurrentMap()==MAP.MAP2) {
+	        return standing.getKeyFrame(stateTime, true);
+
+		}
 		TextureRegion region;
 		currentState = getFrameState();
 		
@@ -167,6 +172,10 @@ public abstract class Hero extends Sprite{
 		if(body.getLinearVelocity().y != 0 ) return State.JUMPING;
 		if(body.getLinearVelocity().x != 0 ) return State.RUNNING;
 		return State.STANDING;
+	}
+	
+	public float getStateTime() {
+		return stateTime;
 	}
 	
 }
