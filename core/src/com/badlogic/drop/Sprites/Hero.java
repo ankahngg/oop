@@ -8,6 +8,7 @@ import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -31,7 +32,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 
 public class Hero extends Sprite{
 	final int speed = 10;
-	public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3 };
+	public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3,HURT,DIE };
 	public enum Input {LEFT,RIGHT,JUMP,STOP,CROUCH};
 	public State currentState;
 	public State previousState;
@@ -50,6 +51,8 @@ public class Hero extends Sprite{
 	private TextureAtlas atlasAttack1;
 	private TextureAtlas atlasAttack2;
 	private TextureAtlas atlasAttack3;
+	private TextureAtlas atlasHurt;
+	private TextureAtlas atlasDie;
 	
 	public Animation<TextureRegion> running;
 	public Animation<TextureRegion> jumping;
@@ -58,6 +61,8 @@ public class Hero extends Sprite{
 	public Animation<TextureRegion> attack1;
 	public Animation<TextureRegion> attack2;
 	public Animation<TextureRegion> attack3;
+	private Animation<TextureRegion> die;
+	private Animation<TextureRegion> hurt;
 	
 	private double AttackCoolDown = 2000;
 	private double lastAttackTime = 0;
@@ -69,9 +74,16 @@ public class Hero extends Sprite{
 	private boolean currentDirection = false;
 	
 	private boolean isAttacking;
-	private Object fixture;
+	private boolean isHurting;
+	private int hurtDirection;
 	private Fixture attackFixture;
 	private PlayScreen screen;
+	
+	public int HealthMax=30;
+	public int Health=6;
+	public boolean isHurt = false;
+	private TextureRegion region;
+	
 	
 	
 	public Hero(World world, PlayScreen screen) {		
@@ -92,6 +104,8 @@ public class Hero extends Sprite{
 		atlasStanding = new TextureAtlas("Hero2/packs/Idle.pack");
 		atlasRunning = new TextureAtlas("Hero2/packs/Run.pack");
 		atlasJumping = new TextureAtlas("Hero2/packs/Jump.pack");
+		atlasHurt = new TextureAtlas("Hero2/packs/Hurt.pack");
+		atlasDie = new TextureAtlas("Hero2/packs/Die.pack");
 		
 		attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
 		attack2 = new Animation<TextureRegion>(0.1f, atlasAttack2.getRegions());
@@ -99,6 +113,8 @@ public class Hero extends Sprite{
 		running = new Animation<TextureRegion>(0.1f, atlasRunning.getRegions());
 		jumping = new Animation<TextureRegion>(0.1f, atlasJumping.getRegions());
 		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
+		die = new Animation<TextureRegion>(0.5f, atlasDie.getRegions());
+		hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
 		setRegion(atlasStanding.getRegions().get(1));
 		HeroHeight = getRegionHeight();
 	}
@@ -106,6 +122,15 @@ public class Hero extends Sprite{
 	private void handleInput(float dt) {
 		Vector2 vel = b2body.getLinearVelocity();
 		boolean stop = true;
+		
+		
+		if(isHurting) {
+			if(hurtDirection == 0) {
+				b2body.setLinearVelocity( new Vector2((float) (-1.5*speed),0));
+			}
+			else b2body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
+			return;
+		}
 		
 		if(isAttacking) {
 			b2body.setLinearVelocity( new Vector2(0,vel.y));
@@ -128,30 +153,7 @@ public class Hero extends Sprite{
 		if(stop) b2body.setLinearVelocity( new Vector2(0,vel.y));
 	}
 	
-	void detectCollison() {
-		Array<Contact> contacts = world.getContactList();
-		for (Contact contact : contacts) {
-			if (contact.isTouching() && 
-				((contact.getFixtureA() == screen.getBoss().bossDef && contact.getFixtureB() == attackFixture) ||
-				(contact.getFixtureA() == attackFixture && contact.getFixtureB() == screen.getBoss().bossDef))) {
-				screen.getBoss().isHurt = true;
-			}
-		}
-	}
-	
-	public void instructionSensor() {
-		Array<Contact> contacts = world.getContactList();
-		for (Contact contact : contacts) {
-			if (contact.isTouching() && 
-				((contact.getFixtureA() == normalDef && contact.getFixtureB() == Middle.instruction.fixture) ||
-				(contact.getFixtureA() == Middle.instruction.fixture && contact.getFixtureB() == normalDef))) {
-				Middle.instruction.onHit();
-			}
-		}
-	}
-	
 	public void update(float dt) {
-		//System.out.println(world.getContactList());
 		
 		handleInput(dt);
 		setRegion(getFrame(dt));
@@ -162,12 +164,10 @@ public class Hero extends Sprite{
 		
 		attackFix();
 
-		
-		instructionSensor();
 	}
 	
 	private TextureRegion getFrame(float dt) {
-		TextureRegion region;
+		
 		currentState = getFrameState();
 		
 		stateTime = (currentState == previousState ? stateTime + dt : 0);
@@ -191,6 +191,14 @@ public class Hero extends Sprite{
 		    case ATTACKING3:
 		    	region = attack3.getKeyFrame(stateTime, false);
 		    	break;
+		    case HURT:
+		    	region = hurt.getKeyFrame(stateTime, false);
+		    	break;
+
+		    case DIE:
+		    	region = die.getKeyFrame(stateTime, false);
+		    	break;
+		    	
 		    
 		    default:
 		        region = standing.getKeyFrame(stateTime, true);
@@ -217,12 +225,31 @@ public class Hero extends Sprite{
 
 		return region;
 	}
+	
+	public void handleHurt(Fixture damageObject) {
+		isHurt = true;
+		Spine spine = ((Spine) damageObject.getUserData());
+		if(spine.body.getPosition().x > b2body.getPosition().x) hurtDirection = 0;
+		else hurtDirection = 1;
+		Health --;
+		
+	}
 
 	private State getFrameState() {
 		// TODO Auto-generated method stub
-		//System.out.println(currentAttack);
+		if(isHurting) {
+			if(!hurt.isAnimationFinished(stateTime)) {
+				return State.HURT;
+			}
+			else isHurting = false;
+		}
+		if(isHurt) {
+			isHurting = true;
+			isHurt = false;
+			return State.HURT;
+		}
 		
-	
+		
 		if(isAttacking) {
 			if(currentAttack == 1) {
 				if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
@@ -236,11 +263,10 @@ public class Hero extends Sprite{
 				if(!attack3.isAnimationFinished(stateTime)) return State.ATTACKING3;
 				else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
 			}
-			
 		}
 		if(Gdx.input.isKeyPressed(Keys.J)) {
 			if(System.currentTimeMillis() - lastAttackTime >= 100) {
-				detectCollison();
+				Collision.heroAttack(screen);
 				isAttacking = true;
 				if(currentAttack == 3) currentAttack = 1;
 				else currentAttack ++;
@@ -249,6 +275,7 @@ public class Hero extends Sprite{
 				if(currentAttack == 3) return State.ATTACKING3;
 			}	
 		}
+		
 		
 		if(System.currentTimeMillis() - lastAttackTime >= 500 ) currentAttack = 0;
 		if(b2body.getLinearVelocity().y != 0 ) return State.JUMPING;
@@ -266,6 +293,7 @@ public class Hero extends Sprite{
 			fdef.isSensor = true;
 			attackFixture = b2body.createFixture(fdef);
 			attackFixture.setUserData("DamageRange");
+			Collision.setCategoryFilter(attackFixture, Collision.HEROATTACK_BITS);
 			currentDirection = runningRight;
 		}
 	}
@@ -276,9 +304,12 @@ public class Hero extends Sprite{
 		 bdef.type = BodyDef.BodyType.DynamicBody;
 		 b2body = world.createBody(bdef);
 		 shape.setRadius(getRegionHeight()/Drop.PPM/2);
+		 
 		 fdef.shape = shape;
 		 normalDef = b2body.createFixture(fdef);
-		 normalDef.setUserData("herobody");
+		 normalDef.setUserData(this);
+		
+		 Collision.setCategoryFilter(normalDef, Collision.HERO_BITS);
 	}
 	
 

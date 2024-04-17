@@ -12,11 +12,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class InteractiveTileObject {
-	private World world;
-	private TiledMap map;
-	private TiledMapTile tile;
-	private Rectangle bounds;
-	private Body body;
+	public World world;
+	public TiledMap map;
+	public TiledMapTile tile;
+	public Rectangle bounds;
+	public Body body;
 	
 	protected Fixture fixture;
 	

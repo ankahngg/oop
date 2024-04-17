@@ -12,11 +12,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class SensorObject {
-	private World world;
-	private TiledMap map;
-	private TiledMapTile tile;
-	private Rectangle bounds;
-	protected Body body;
+	public World world;
+	public TiledMap map;
+	public TiledMapTile tile;
+	public Rectangle bounds;
+	public Body body;
 	
 	public Fixture fixture;
 	
@@ -38,7 +38,6 @@ public class SensorObject {
 		fdef.isSensor = true;
 		
 		fixture = body.createFixture(fdef);
-		fixture.setUserData("Instruction");
 	}
 	
 }

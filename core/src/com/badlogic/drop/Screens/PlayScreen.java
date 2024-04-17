@@ -1,10 +1,11 @@
 package com.badlogic.drop.Screens;
 
 import com.badlogic.drop.Drop;
+import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Scenes.Hud;
 import com.badlogic.drop.Sprites.Boss;
+import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.Hero;
-import com.badlogic.drop.Sprites.Middle;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
@@ -57,13 +58,22 @@ public class PlayScreen implements Screen {
 	//private AtlasRegion atlasRegion;
 	private Boss Boss;
 	public WorldContactListener WorldContactListener;
+	private HealthBar healthBar;
 	
 	public Boss getBoss() {
 		return Boss;
 	}
 	
-	public void setBoss(Boss boss) {
-		Boss = boss;
+	public Hero getPlayer() {
+		return player;
+	}
+	
+	public Viewport getGamePort() {
+		return gamePort;
+	}
+	
+	public OrthographicCamera getCamera() {
+		return camera;
 	}
 	
 	
@@ -97,6 +107,10 @@ public class PlayScreen implements Screen {
 		//create boss
 		Boss = new Boss(world, this);
 		player = new Hero(world,this);
+		healthBar = new HealthBar(this);
+		
+		Collision.setup(this);
+		new Hud(game.batch);
 		
 	}
 
@@ -114,6 +128,7 @@ public class PlayScreen implements Screen {
 		
 		player.update(dt);
 		Boss.update(dt);
+		healthBar.update(dt);
 		world.step(1/60f, 6, 2);
 		//handle camera out of bound
 		if(player.b2body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
@@ -132,7 +147,6 @@ public class PlayScreen implements Screen {
 		
 		
 		ScreenUtils.clear(0, 0, 0.2f, 1);
-		
 		
         game.batch.setProjectionMatrix(camera.combined);
 
@@ -154,6 +168,7 @@ public class PlayScreen implements Screen {
 		world.setContactListener(WorldContactListener);
 
 		update(delta);
+		Collision.render();
 		// TODO Auto-generated method stub
 
 	}

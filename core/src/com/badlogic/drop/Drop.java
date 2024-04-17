@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 	
 	public class Drop extends Game {
 			
-		public static final int V_WIDTH=500;
+		public static final int V_WIDTH=520;
 		public static final int V_HEIGHT=320;
 		public static final float PPM = 16;
 		OrthographicCamera camera;

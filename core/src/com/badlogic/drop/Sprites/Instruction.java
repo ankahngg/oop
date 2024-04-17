@@ -3,6 +3,7 @@ package com.badlogic.drop.Sprites;
 import com.badlogic.drop.Drop;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap.Filter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,7 +16,8 @@ public class Instruction extends SensorObject {
 	private Texture texture;
 	public Instruction(World world, TiledMap map, Rectangle bounds, PlayScreen screen) {
 		super(world,map,bounds);
-		fixture.setUserData("instruction");
+		fixture.setUserData(this);
+		Collision.setCategoryFilter(fixture, Collision.INSTRUCTION_BITS);
 		texture = new Texture("Instruction.png");
 		batch = screen.game.batch;
 	}
