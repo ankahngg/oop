@@ -1,6 +1,7 @@
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Drop;
+import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap.Filter;
@@ -19,7 +20,7 @@ public class Instruction extends SensorObject {
 		fixture.setUserData(this);
 		Collision.setCategoryFilter(fixture, Collision.INSTRUCTION_BITS);
 		texture = new Texture("Instruction.png");
-		batch = screen.game.batch;
+		batch = screen.game.getBatch();
 	}
 	
 	public void onHit() {

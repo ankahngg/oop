@@ -1,11 +1,7 @@
 package com.badlogic.drop.Tools;
 
 import com.badlogic.drop.Sprites.Collision;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.*;
-import java.util.HashSet;
-import java.util.Set;
 
 public class WorldContactListener implements ContactListener {
 	public boolean isContact(short id1, short id2, Contact contact) {
@@ -22,7 +18,6 @@ public class WorldContactListener implements ContactListener {
 	}
     @Override
     public void beginContact(Contact contact) {
-    	
         // Add the contact to the set when it begins
         if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.startInstructionColi = true;
         if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = true;

@@ -4,28 +4,13 @@ import com.badlogic.drop.Drop;
 
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Hero;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class HealthBar {
 	private TextureAtlas atlasRanks;
@@ -49,7 +34,7 @@ public class HealthBar {
 			
 		//H = convertTextureRegionToTexture(Health);
 		this.screen = x;
-		batch = x.game.batch;
+		batch = x.game.getBatch();
 		
 		viewport = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM, new OrthographicCamera());
 		
@@ -65,16 +50,15 @@ public class HealthBar {
 		batch.draw(HealthBar, x+3,y-2,HealthBar.getWidth()/Drop.PPM+2,HealthBar.getHeight()/Drop.PPM, 0,0,HealthBar.getWidth(),HealthBar.getHeight(),false,false);
 		batch.draw(currentRank, x, y-2, currentRank.getRegionWidth()/Drop.PPM/2,currentRank.getRegionHeight()/Drop.PPM/2);	
 		
-		float ratio = player.Health/player.HealthMax;
+		float ratio = player.getHealth()/player.getHealthMax();
 		float HealthX = x+3+(HealthBar.getWidth()-Health.getWidth())/2/Drop.PPM;
 		float HealthY = y-2+(HealthBar.getHeight()-Health.getHeight())/2/Drop.PPM;
-		batch.draw(Health, HealthX,HealthY,(Health.getWidth()/Drop.PPM+2)*ratio,Health.getHeight()/Drop.PPM, 0,0,Health.getWidth()*ratio,Health.getHeight(),false,false);
+		// draw at HealthX and HealthY with size (lengOfHealthBar * Health/MaxHealth) x (Height) (!!!) and scale with PPM
+		// and take portion of Texuture with size (lengOfHealthBar * Health/MaxHealth) x (Height)
 		
-		
+		batch.draw(Health, HealthX,HealthY,(Health.getWidth()/Drop.PPM+2)*ratio,Health.getHeight()/Drop.PPM, 0,0,(int)(Health.getWidth()*ratio),Health.getHeight(),false,false);
 		
 		batch.end();
-		
-		stage.draw();
 	}
 	
 }
