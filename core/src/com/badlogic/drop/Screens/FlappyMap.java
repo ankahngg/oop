@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class FlappyMap extends PlayScreen{
 	private final int SPEED = 10;
 	private final int GRAVITY = -50;
+	private float timeCount;
 	private TextureAtlas flyEngineAtlas;
 	private Animation<TextureRegion> flyEngineAnimation;
 	public FlappyMap(Drop game) {
@@ -59,7 +60,8 @@ public class FlappyMap extends PlayScreen{
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
 		player = new AnKhangHero(world,this);
-
+		player.body.setLinearVelocity(SPEED,0);
+		timeCount = 0;
 	}
 	public TextureAtlas getAtlas() {
 		return atlas;
@@ -78,7 +80,11 @@ public class FlappyMap extends PlayScreen{
 	}
 	// method that be called every 1/60s
 	public void update(float dt) {
+		//time count for speed up
+		timeCount+=dt;
+		
 		player.currentState = State.STANDING;
+
 
 		handleInput(dt);
 		player.update(dt);
@@ -97,7 +103,7 @@ public class FlappyMap extends PlayScreen{
 		return player.body;
 	}
 	private void heroJump() {
-		getBody().setLinearVelocity(SPEED, 15);
+		getBody().setLinearVelocity(SPEED*(1+ timeCount/10), 17);
 
 	}
 	protected void handleInput(float dt) {
