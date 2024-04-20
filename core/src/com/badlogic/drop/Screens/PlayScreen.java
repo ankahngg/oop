@@ -1,10 +1,10 @@
 package com.badlogic.drop.Screens;
 
 import com.badlogic.drop.Drop;
+import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.drop.Tools.WorldContactListener;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,11 +20,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public abstract class PlayScreen implements Screen {
 	public Drop game;
 	Texture backgroundTexture;
+
+	// camera
 	OrthographicCamera camera,camera2;
 	Viewport gamePort;
-	
-	
-	
+
 	// tilemap
 	protected TmxMapLoader mapLoader;
 	protected TiledMap map;
@@ -34,20 +34,39 @@ public abstract class PlayScreen implements Screen {
 	protected World world;
 	protected Box2DDebugRenderer b2dr;
 	
+	//Hero
 	protected Hero player;
 	
+	//Boss
+	protected Boss boss;
+
+	//HealthBar
+	protected HealthBar healthbar;
+	
+	//map
 	protected TextureAtlas atlas;
 	protected TextureRegion region;
 	
-	protected Boss boss;
 	public WorldContactListener worldContactListener;
+
 	
+	
+	public OrthographicCamera getCamera() {
+		return camera;
+	}
+
+	public Viewport getGamePort() {
+		return gamePort;
+	}
+
 	public Boss getBoss() {
-		return boss;
+		return this.boss;
 	}
-	public void setBoss(Boss boss) {
-		this.boss = boss;
+
+	public Hero getPlayer() {
+		return player;
 	}
+	
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub

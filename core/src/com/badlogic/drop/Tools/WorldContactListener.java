@@ -1,20 +1,29 @@
 package com.badlogic.drop.Tools;
 
+import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.gdx.physics.box2d.*;
-import java.util.HashSet;
-import java.util.Set;
 
 public class WorldContactListener implements ContactListener {
-    private Set<Contact> contacts;
-
-    public WorldContactListener() {
-        contacts = new HashSet<>();
-    }
-
+	public boolean isContact(short id1, short id2, Contact contact) {
+		Fixture x = contact.getFixtureA();
+		Fixture y = contact.getFixtureB();
+		
+		short xx = x.getFilterData().categoryBits;
+		short yy = y.getFilterData().categoryBits;	
+		
+		if(xx == id1 && yy == id2) return true;
+		if(xx == id2 && yy == id1) return true;
+		return false;
+		
+	}
     @Override
     public void beginContact(Contact contact) {
         // Add the contact to the set when it begins
-        contacts.add(contact);
+        if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.startInstructionColi = true;
+        if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = true;
+      
+        if(isContact(Collision.SPINE_BITS,Collision.HERO_BITS,contact)) Collision.heroHurt(contact);
+       
        
     }
 
@@ -22,6 +31,10 @@ public class WorldContactListener implements ContactListener {
     public void endContact(Contact contact) {
         // Remove the contact from the set when it ends
         //contacts.remove(contact);
+    	if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.startInstructionColi = false;
+    	 if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = false;
+    	
+        
     }
 
     @Override
@@ -34,15 +47,6 @@ public class WorldContactListener implements ContactListener {
         // Called after collision resolution
     }
 
-    // Method to check if two fixtures are currently in contact
-    public boolean areFixturesInContact(String A, String B) {
-    	
-        for (Contact contact : contacts) {
-            if ((contact.getFixtureA().getUserData() == A && contact.getFixtureB().getUserData() == B) ||
-                (contact.getFixtureA().getUserData() == B && contact.getFixtureB().getUserData() == A)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    
+ 
 }

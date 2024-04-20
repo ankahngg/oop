@@ -2,54 +2,27 @@ package com.badlogic.drop.Screens;
 
 import com.badlogic.drop.Drop;
 import com.badlogic.drop.Drop.MAP;
-import com.badlogic.drop.Scenes.Hud;
+import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.Boss;
-import com.badlogic.drop.Sprites.Hero;
+import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.AnKhangHero;
-import com.badlogic.drop.Sprites.Middle;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class FirstMap extends PlayScreen {
 	public final int speed = 10;
-
-	
-	public Boss getBoss() {
-		return boss;
-	}
-	
-	public void setBoss(Boss boss) {
-		this.boss = boss;
-	}
-	
 	
 	public FirstMap(Drop game) {
 		game.setMap(MAP.MAP1);
@@ -61,7 +34,7 @@ public class FirstMap extends PlayScreen {
 		camera = new OrthographicCamera();
 		
 		// load background
-		backgroundTexture = new Texture("background.png");
+		backgroundTexture = new Texture("bg1.png");
 		
 		// viewport => responsive 
 		gamePort = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM,camera);		
@@ -76,13 +49,17 @@ public class FirstMap extends PlayScreen {
 		b2dr = new Box2DDebugRenderer();
 		new B2WorldCreator(world, map, this);
 		
-		// create hero
-		region = atlas.findRegion("HeroIdle");
-		
 		//create boss
 		boss = new Boss(world, this);
+
+		//create player
 		player = new AnKhangHero(world,this);
+
+		//setup collision 
+		Collision.setup(this);
 		
+		//create healthBar
+		healthbar = new HealthBar(this);
 	}
 
 	public TextureAtlas getAtlas() {
@@ -99,6 +76,8 @@ public class FirstMap extends PlayScreen {
 		handleInput(dt);
 		player.update(dt);
 		boss.update(dt);
+		healthbar.update(dt);
+
 		world.step(1/60f, 6, 2);
 		//handle camera out of bound
 		if(player.body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
@@ -110,13 +89,18 @@ public class FirstMap extends PlayScreen {
 		camera.update();
 		
 	}
-	public Body getBody() {
-		return player.body;
-	}
 	
 	protected void handleInput(float dt) {
 		Vector2 vel = player.body.getLinearVelocity();
 		boolean stop = true;
+		
+		if(player.isHurting) {
+			if(player.hurtDirection == 0) {
+				player.body.setLinearVelocity( new Vector2((float) (-1.5*speed),0));
+			}
+			else player.body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
+			return;
+		}
 		
 		if(player.isAttacking) {
 			player.body.setLinearVelocity( new Vector2(0,vel.y));
@@ -132,7 +116,7 @@ public class FirstMap extends PlayScreen {
 		}
 		
 		if(Gdx.input.isKeyPressed(Keys.W) && vel.y == 0) {
-			player.body.applyLinearImpulse(new Vector2(0,30), getBody().getWorldCenter(),true);
+			player.body.applyLinearImpulse(new Vector2(0,30), player.getBody().getWorldCenter(),true);
 			stop = false;
 		}
 		
@@ -142,31 +126,38 @@ public class FirstMap extends PlayScreen {
 	@Override
 	public void render(float delta) {
 		
-		
 		ScreenUtils.clear(0, 0, 0.2f, 1);
-		
 		
         game.batch.setProjectionMatrix(camera.combined);
 
+		//Draw background
 		game.batch.begin();
 		game.batch.draw(backgroundTexture, camera.position.x - gamePort.getWorldWidth() / 2,
 				camera.position.y - gamePort.getWorldHeight() / 2, gamePort.getWorldWidth(),
 				gamePort.getWorldHeight());
 		game.batch.end();
 				
+		// render tilemap
 		renderer.render();
 		
+		// render box2d
 		b2dr.render(world, camera.combined);
+
+		// draw player and draw boss
 		game.batch.begin();
 		player.draw(game.batch);
 		boss.draw(game.batch);
 		game.batch.end();
 		
-		worldContactListener = new WorldContactListener();
-		world.setContactListener(worldContactListener);
 
 		update(delta);
-		// TODO Auto-generated method stub
+		
+		// setup worldContactListener
+		worldContactListener = new WorldContactListener();
+		world.setContactListener(worldContactListener);
+		
+		//render collision
+		Collision.render();
 
 	}
 

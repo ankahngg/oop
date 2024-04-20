@@ -41,7 +41,7 @@ public class FlappyMap extends PlayScreen{
 		camera = new OrthographicCamera();
 		
 		// load background
-		backgroundTexture = new Texture("background.png");
+		backgroundTexture = new Texture("bg2.png");
 		
 		// viewport => responsive 
 		gamePort = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM,camera);		

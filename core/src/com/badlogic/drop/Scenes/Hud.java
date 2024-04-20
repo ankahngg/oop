@@ -26,11 +26,8 @@ public class Hud {
 	Label marioLabel;
 	
 	public Hud(SpriteBatch sb) {
-		worldTimer = 300;
-		timeCount = 0;
-		score = 0;
 		
-		viewport = new FitViewport(Drop.V_WIDTH, Drop.V_HEIGHT, new OrthographicCamera());
+		viewport = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM, new OrthographicCamera());
 		stage = new Stage(viewport,sb);
 		
 		Table table = new Table();

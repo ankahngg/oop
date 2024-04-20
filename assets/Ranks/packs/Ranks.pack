@@ -1,0 +1,40 @@
+
+Ranks.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ranks
+  rotate: false
+  xy: 1, 1
+  size: 80, 40
+  orig: 97, 50
+  offset: 6, 6
+  index: 1
+ranks
+  rotate: false
+  xy: 83, 1
+  size: 80, 40
+  orig: 97, 50
+  offset: 10, 4
+  index: 2
+ranks
+  rotate: false
+  xy: 165, 1
+  size: 80, 40
+  orig: 97, 50
+  offset: 13, 6
+  index: 3
+ranks
+  rotate: false
+  xy: 247, 1
+  size: 80, 40
+  orig: 97, 50
+  offset: 9, 4
+  index: 4
+ranks
+  rotate: false
+  xy: 329, 15
+  size: 14, 26
+  orig: 51, 35
+  offset: 20, 5
+  index: 0
