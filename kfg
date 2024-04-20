@@ -1,0 +1,66 @@
+[33mcommit 35566986ccf92c4b3df584b2f825a3e310cd85fa[m[33m ([m[1;36mHEAD -> [m[1;32mhung[m[33m, [m[1;31morigin/hung[m[33m)[m
+Author: Duc Hung <duchung04st@gmail.com>
+Date:   Wed Apr 17 12:11:54 2024 +0700
+
+    create flappy map, add enum map
+
+[33mcommit 4e13fa0a798b1e27265f8898d9f895878ede8d2b[m
+Author: Duc Hung <duchung04st@gmail.com>
+Date:   Tue Apr 16 23:19:37 2024 +0700
+
+    let Screen handle input instead of Sprite
+
+[33mcommit 371c5ead80f25ac6af1e8284730eb2262a3b5e44[m
+Author: Duc Hung <duchung04st@gmail.com>
+Date:   Tue Apr 16 19:31:59 2024 +0700
+
+    create abstract class of Hero and PlayScreen for inheritance
+
+[33mcommit 85d819159a88340c40600633d890373e2a27ffc1[m[33m ([m[1;32mmaster[m[33m)[m
+Merge: 35656b0 6ab5667
+Author: Duc Hung <duchung04st@gmail.com>
+Date:   Mon Apr 15 18:34:46 2024 +0700
+
+    Merge branch 'hung' of https://github.com/ankahngg/oop
+
+[33mcommit 35656b041d5c7cdce29e049d87cba38c3eecbb30[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/ankhang[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: ankahngg <ankhanghp2004@gmail.com>
+Date:   Fri Apr 12 10:16:36 2024 +0700
+
+    update instruction part and asset
+
+[33mcommit 4ddb1da6238f526004fadee4d14bf5d5555cb1dc[m
+Author: ankahngg <ankhanghp2004@gmail.com>
+Date:   Sat Apr 6 17:08:26 2024 +0700
+
+    complete hero class and add boss animation folder
+
+[33mcommit 6ab5667eb198a4271f4124b6ca6da9b53304f562[m
+Author: Duc Hung <duchung04st@gmail.com>
+Date:   Thu Mar 28 22:57:35 2024 +0700
+
+    Cac
+
+[33mcommit 4299023388cbea2e20a9e25eebbbdba913a71e96[m
+Author: Duc Hung <duchung04st@gmail.com>
+Date:   Thu Mar 28 22:48:16 2024 +0700
+
+    Hung dz da o day
+
+[33mcommit 1b4579a93b72a5e465eaa147fb4d56e5e9b4a3f8[m
+Author: ankahngg <ankhanghp2004@gmail.com>
+Date:   Thu Mar 28 22:32:14 2024 +0700
+
+    create ankhang branch and first upload
+
+[33mcommit 1ffb4ff0f47003e1da44d1a8d76a92190f0adcfa[m
+Author: ankahngg <ankhanghp2004@gmail.com>
+Date:   Sat Mar 16 16:44:07 2024 +0700
+
+    second commit
+
+[33mcommit 8597159586a2e92bcc9540b9462e21d492a622c7[m
+Author: ankahngg <ankhanghp2004@gmail.com>
+Date:   Sat Mar 16 16:28:32 2024 +0700
+
+    first commit

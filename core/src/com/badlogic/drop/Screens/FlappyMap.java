@@ -60,7 +60,9 @@ public class FlappyMap extends PlayScreen{
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
 		player = new AnKhangHero(world,this);
-		player.body.setLinearVelocity(SPEED,0 );
+
+		player.body.setLinearVelocity(SPEED,0);
+
 		timeCount = 0;
 	}
 	public TextureAtlas getAtlas() {
