@@ -1,0 +1,26 @@
+
+Hurt.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Take hit
+  rotate: false
+  xy: 1, 1
+  size: 43, 41
+  orig: 162, 162
+  offset: 60, 61
+  index: 2
+Take hit
+  rotate: false
+  xy: 46, 1
+  size: 36, 41
+  orig: 162, 162
+  offset: 64, 61
+  index: 1
+Take hit
+  rotate: false
+  xy: 84, 1
+  size: 33, 41
+  orig: 162, 162
+  offset: 66, 61
+  index: 0

@@ -2,16 +2,13 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Drop;
 import com.badlogic.drop.Drop.MAP;
-import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -20,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Hero extends Sprite{
-	public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3 };
+	public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3,HURT,DIE };
 	public enum Input {LEFT,RIGHT,JUMP,STOP,CROUCH};
 	public State currentState;
 	public State previousState;
@@ -40,6 +37,8 @@ public abstract class Hero extends Sprite{
 	protected TextureAtlas atlasAttack1;
 	protected TextureAtlas atlasAttack2;
 	protected TextureAtlas atlasAttack3;
+	protected TextureAtlas atlasHurting;
+	protected TextureAtlas atlasDieing;
 	
 	public Animation<TextureRegion> running;
 	public Animation<TextureRegion> jumping;
@@ -48,6 +47,9 @@ public abstract class Hero extends Sprite{
 	public Animation<TextureRegion> attack1;
 	public Animation<TextureRegion> attack2;
 	public Animation<TextureRegion> attack3;
+	public Animation<TextureRegion> die;
+	public Animation<TextureRegion> hurt;
+	
 	
 	protected double AttackCoolDown = 2000;
 	protected double lastAttackTime = 0;
@@ -58,7 +60,14 @@ public abstract class Hero extends Sprite{
 	protected boolean runningRight = true;
 	protected boolean currentDirection = false;
 	
+	public boolean isHurting;
+	public boolean isHurt;
 	public boolean isAttacking;
+	public int hurtDirection;
+
+	protected int Health;
+	protected int HealthMax;
+
 	protected Fixture attackFixture;
 	protected PlayScreen screen;
 	public Hero(World world, PlayScreen screen) {
@@ -66,14 +75,24 @@ public abstract class Hero extends Sprite{
 		this.screen = screen;
 
 	}
-	
-	
-	
+	public Body getBody() {
+		return body;
+	}
+	public int getHealth() {
+		return Health;
+	}
+	public void setHealth(int health) {
+		Health = health;
+	}
+	public int getHealthMax() {
+		return HealthMax;
+	}
+	public void setHealthMax(int healthMax) {
+		HealthMax = healthMax;
+	}
 	
 	protected abstract void prepareAnimation();
 	
-	public abstract void detectCollison();
-	public abstract void instructionSensor();
 	public void update(float dt) {
 		setRegion(getFrame(dt));
 		setBounds(body.getPosition().x-getRegionWidth()/Drop.PPM/2,
@@ -84,7 +103,6 @@ public abstract class Hero extends Sprite{
 	protected TextureRegion getFrame(float dt) {
 		if (screen.game.getCurrentMap()==MAP.MAP2) {
 	        return standing.getKeyFrame(stateTime, true);
-
 		}
 		TextureRegion region;
 		currentState = getFrameState();
@@ -96,7 +114,6 @@ public abstract class Hero extends Sprite{
 		        region = jumping.getKeyFrame(stateTime, false);
 		        break;
 		    case RUNNING:
-		    	
 		        region = running.getKeyFrame(stateTime, true);
 		        break;
 		    case ATTACKING1:
@@ -109,6 +126,13 @@ public abstract class Hero extends Sprite{
 		    	
 		    case ATTACKING3:
 		    	region = attack3.getKeyFrame(stateTime, false);
+		    	break;
+		    case HURT:
+		    	region = hurt.getKeyFrame(stateTime, false);
+		    	break;
+
+		    case DIE:
+		    	region = die.getKeyFrame(stateTime, false);
 		    	break;
 		    
 		    default:
@@ -128,19 +152,35 @@ public abstract class Hero extends Sprite{
 			runningRight = true;
 		}
 		
-		
-		// Update state time
-		
-		
 		previousState = currentState;
 
 		return region;
 	}
+
+	public void handleHurt(Fixture damageObject) {
+		isHurt = true;
+		Spine spine = ((Spine) damageObject.getUserData());
+		if(spine.body.getPosition().x > body.getPosition().x) hurtDirection = 0;
+		else hurtDirection = 1;
+		Health --;
+		
+	}
+
 	protected State getFrameState() {
 		// TODO Auto-generated method stub
-		//System.out.println(currentAttack);
+		if(isHurting) {
+			if(!hurt.isAnimationFinished(stateTime)) {
+				return State.HURT;
+			}
+			else isHurting = false;
+		}
+		if(isHurt) {
+			isHurting = true;
+			isHurt = false;
+			return State.HURT;
+		}
 		
-	
+		
 		if(isAttacking) {
 			if(currentAttack == 1) {
 				if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
@@ -154,11 +194,10 @@ public abstract class Hero extends Sprite{
 				if(!attack3.isAnimationFinished(stateTime)) return State.ATTACKING3;
 				else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
 			}
-			
 		}
 		if(Gdx.input.isKeyPressed(Keys.J)) {
 			if(System.currentTimeMillis() - lastAttackTime >= 100) {
-				detectCollison();
+				Collision.heroAttack(screen);
 				isAttacking = true;
 				if(currentAttack == 3) currentAttack = 1;
 				else currentAttack ++;
@@ -167,6 +206,7 @@ public abstract class Hero extends Sprite{
 				if(currentAttack == 3) return State.ATTACKING3;
 			}	
 		}
+		
 		
 		if(System.currentTimeMillis() - lastAttackTime >= 500 ) currentAttack = 0;
 		if(body.getLinearVelocity().y != 0 ) return State.JUMPING;

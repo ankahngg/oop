@@ -88,7 +88,7 @@ public class Boss extends Sprite{
 				getRegionWidth()/Drop.PPM,
 				getRegionHeight()/Drop.PPM);
 		
-		updateMovement();
+		//updateMovement();
 	}
 	
 	private void updateMovement() {
@@ -175,12 +175,17 @@ public class Boss extends Sprite{
 			return State.ATTACKING1;
 		}
 		if(isHurt && !isAttacking) {
+			onHit();
 			isHurting = true;
 			isHurt = false;
 			return State.HURT;
 		}
 		
 		return State.STANDING;
+	}
+	
+	void onHit() {
+		System.out.println("-10 mau");
 	}
 	
 	private void defineBoss() {
@@ -191,6 +196,7 @@ public class Boss extends Sprite{
 		 shape.setRadius(getRegionHeight()/Drop.PPM/2);
 		 fdef.shape = shape;
 		 bossDef = b2body.createFixture(fdef);
+		 Collision.setCategoryFilter(bossDef, Collision.BOSS_BITS);
 		  
 	}
 }
