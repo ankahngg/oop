@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -22,9 +23,11 @@ public abstract class Hero extends Sprite{
 	public State currentState;
 	public State previousState;
 	public Input currentInput;
+	public int currentRank;
 	public World world;
 	public Body body;
 	public Body hitbox;
+	public float speed = 10f;
 	BodyDef bdef = new BodyDef();
 	CircleShape shape = new CircleShape();
 	FixtureDef fdef = new FixtureDef();
@@ -60,9 +63,12 @@ public abstract class Hero extends Sprite{
 	protected boolean runningRight = true;
 	protected boolean currentDirection = false;
 	
+	
 	public boolean isHurting;
 	public boolean isHurt;
 	public boolean isAttacking;
+	public boolean isDieing;
+	public boolean isDie;
 	public int hurtDirection;
 
 	protected int Health;
@@ -82,7 +88,7 @@ public abstract class Hero extends Sprite{
 		return Health;
 	}
 	public void setHealth(int health) {
-		Health = health;
+		if(Health < HealthMax) Health += health;
 	}
 	public int getHealthMax() {
 		return HealthMax;
@@ -163,9 +169,12 @@ public abstract class Hero extends Sprite{
 		if(spine.body.getPosition().x > body.getPosition().x) hurtDirection = 0;
 		else hurtDirection = 1;
 		Health --;
-		
+		if(Health == 0) handleDie();
 	}
 
+	private void handleDie() {
+		isDie = true;
+	}
 	protected State getFrameState() {
 		// TODO Auto-generated method stub
 		if(isHurting) {
@@ -174,11 +183,29 @@ public abstract class Hero extends Sprite{
 			}
 			else isHurting = false;
 		}
+		
+		if(isDieing) {
+//			if(hurtDirection == 0) body.setLinearVelocity( new Vector2((float) (-1.5*speed),0));
+//			else body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
+			if(!die.isAnimationFinished(stateTime)) {
+				return State.DIE;
+			}
+			else isDieing = false;
+		}
+		
+		
 		if(isHurt) {
 			isHurting = true;
 			isHurt = false;
 			return State.HURT;
 		}
+		
+		if(isDie) {
+			isDieing = true;
+			isDie = false;
+			return State.DIE;
+		}
+		
 		
 		
 		if(isAttacking) {
