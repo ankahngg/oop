@@ -1,6 +1,6 @@
 package com.badlogic.drop.Sprites;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -90,15 +90,15 @@ public class Boss extends Sprite{
 		this.HealthMax = 20;
 		prepareAnimation();
 		defineBoss();
-		setBounds(0, 0, getRegionWidth()/Drop.PPM, getRegionHeight()/Drop.PPM);
+		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
 	}
 	
 	public void update(float dt) {
 		setRegion(getFrame(dt));
-		setBounds(b2body.getPosition().x-BossWidth/Drop.PPM/2,
-				b2body.getPosition().y-BossHeight/Drop.PPM/2,
-				getRegionWidth()/Drop.PPM,
-				getRegionHeight()/Drop.PPM);
+		setBounds(b2body.getPosition().x-BossWidth/CuocChienSinhTon.PPM/2,
+				b2body.getPosition().y-BossHeight/CuocChienSinhTon.PPM/2,
+				getRegionWidth()/CuocChienSinhTon.PPM,
+				getRegionHeight()/CuocChienSinhTon.PPM);
 		
 		//updateMovement();
 	}
@@ -205,7 +205,7 @@ public class Boss extends Sprite{
 		 bdef.position.set(35,2);
 		 bdef.type = BodyDef.BodyType.DynamicBody;
 		 b2body = world.createBody(bdef);
-		 shape.setRadius(getRegionHeight()/Drop.PPM/2);
+		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 		 fdef.shape = shape;
 		 bossDef = b2body.createFixture(fdef);
 		 Collision.setCategoryFilter(bossDef, Collision.BOSS_BITS);

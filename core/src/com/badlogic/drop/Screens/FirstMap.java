@@ -1,7 +1,7 @@
 package com.badlogic.drop.Screens;
 
-import com.badlogic.drop.Drop;
-import com.badlogic.drop.Drop.MAP;
+import com.badlogic.drop.CuocChienSinhTon;
+import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Collision;
@@ -26,12 +26,10 @@ public class FirstMap extends PlayScreen {
 	public boolean isBossSpawn = true;
 	public final int speed = 10;
 	
-	public FirstMap(Drop game) {
-		game.setMap(MAP.MAP1);
+	public FirstMap(CuocChienSinhTon game) {
 		// load map
 		atlas = new TextureAtlas("Hero.pack");
 		this.game =  game;
-		
 		// create camera
 		camera = new OrthographicCamera();
 		
@@ -39,12 +37,12 @@ public class FirstMap extends PlayScreen {
 		backgroundTexture = new Texture("bg1.png");
 		
 		// viewport => responsive 
-		gamePort = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM,camera);		
+		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH/CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM,camera);		
 		
 		// load tilemap into world
 		mapLoader = new TmxMapLoader();
 		map = mapLoader.load("map2.tmx");
-		renderer = new OrthogonalTiledMapRenderer(map, 1/Drop.PPM);
+		renderer = new OrthogonalTiledMapRenderer(map, 1/CuocChienSinhTon.PPM);
 		
 		// setup box2d
 		world = new World(new Vector2(0,-50),true);
@@ -56,12 +54,14 @@ public class FirstMap extends PlayScreen {
 
 		//create player
 		player = new AnKhangHero(world,this);
-
+		System.out.println(player.isDie);
 		//setup collision 
 		Collision.setup(this);
 		
 		//create healthBar
 		healthbar = new HealthBar(this);
+		
+
 	}
 
 	public TextureAtlas getAtlas() {
@@ -73,11 +73,18 @@ public class FirstMap extends PlayScreen {
 		// TODO Auto-generated method stub
 
 	}
+	public void handleDie() {
+			game.setScreen(new FlappyMap(game));
+		
+		
+	}
 	// method that be called every 1/60s
 	public void update(float dt) {
 		handleInput(dt);
 		player.update(dt);
 		boss.update(dt);
+		if(player.isDie)
+		handleDie();
 		Collision.update(dt);
 		healthbar.update(dt);
 

@@ -1,6 +1,6 @@
 package com.badlogic.drop.Tools;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Brick;
@@ -22,7 +22,8 @@ public class B2WorldCreator {
 	public static Spine spine;
 
 	public B2WorldCreator(World world,TiledMap map, PlayScreen screen) {
-		for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
+		if (screen instanceof FirstMap) {
+			for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 			new Brick(world, map, rect);
 		}
@@ -33,6 +34,8 @@ public class B2WorldCreator {
 		for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
 			new Spine(world, map, rect, screen);
+		}
+		
 		}
 		
 	}

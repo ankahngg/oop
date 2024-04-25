@@ -1,6 +1,6 @@
 package com.badlogic.drop.Sprites;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
@@ -30,10 +30,10 @@ public abstract class InteractiveTileObject {
 		FixtureDef fdef = new FixtureDef();
 		
 		bdef.type = BodyDef.BodyType.StaticBody;
-		bdef.position.set((bounds.getX()+bounds.getWidth()/2)/Drop.PPM,(bounds.getY()+bounds.getHeight()/2)/Drop.PPM);
+		bdef.position.set((bounds.getX()+bounds.getWidth()/2)/CuocChienSinhTon.PPM,(bounds.getY()+bounds.getHeight()/2)/CuocChienSinhTon.PPM);
 		body = world.createBody(bdef);
 		
-		shape.setAsBox(bounds.getWidth()/2/Drop.PPM, bounds.getHeight()/2/Drop.PPM);
+		shape.setAsBox(bounds.getWidth()/2/CuocChienSinhTon.PPM, bounds.getHeight()/2/CuocChienSinhTon.PPM);
 		fdef.shape = shape;
 		
 		fixture = body.createFixture(fdef);

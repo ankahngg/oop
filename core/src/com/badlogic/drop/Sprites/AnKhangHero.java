@@ -1,6 +1,7 @@
 package com.badlogic.drop.Sprites;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
+import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,9 +20,15 @@ public class AnKhangHero extends Hero{
 		this.currentRank = 0;
 
 		prepareAnimation();
-		defineHero();
+		if (screen instanceof FirstMap) {
+			defineHero(30,10);
+		}else {
+			System.out.print("FlappyMap");
+			defineHero(0,10);
+		}
 		
-		setBounds(0, 0, getRegionWidth()/Drop.PPM, getRegionHeight()/Drop.PPM);
+		
+		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
 		currentState = State.STANDING;
 		previousState = State.STANDING;
 	}
@@ -33,7 +40,7 @@ public class AnKhangHero extends Hero{
 		atlasStanding = new TextureAtlas("Hero2/packs/Idle.pack");
 		atlasRunning = new TextureAtlas("Hero2/packs/Run.pack");
 		atlasJumping = new TextureAtlas("Hero2/packs/Jump.pack");
-		atlasHurting = new TextureAtlas("Hero2/packs/Hurt2.pack");
+		atlasHurting = new TextureAtlas("Hero2/packs/Hurt.pack");
 		atlasDieing = new TextureAtlas("Hero2/packs/Die.pack");
 		
 		attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
@@ -70,15 +77,10 @@ public class AnKhangHero extends Hero{
 		}
 	}
 
-	private void defineHero() {
+	protected void defineHero(int x,int y) {
 		// TODO Auto-generated method stub
-		 bdef.position.set(30,10);
-		 bdef.type = BodyDef.BodyType.DynamicBody;
-		 body = world.createBody(bdef);
-		 shape.setRadius(getRegionHeight()/Drop.PPM/2);
-		 fdef.shape = shape;
-		 normalDef = body.createFixture(fdef);
-		 normalDef.setUserData("herobody");
-		 Collision.setCategoryFilter(normalDef, Collision.HERO_BITS);
+		 bdef.position.set(x,y);
+		 super.defineHero();
+		 
 	}
 }	

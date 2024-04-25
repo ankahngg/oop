@@ -1,6 +1,6 @@
 package com.badlogic.drop.Screens;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Hero;
@@ -18,7 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public abstract class PlayScreen implements Screen {
-	public Drop game;
+	public CuocChienSinhTon game;
 	Texture backgroundTexture;
 
 	// camera

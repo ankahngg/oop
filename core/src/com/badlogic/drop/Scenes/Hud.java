@@ -1,6 +1,6 @@
 package com.badlogic.drop.Scenes;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -27,7 +27,7 @@ public class Hud {
 	
 	public Hud(SpriteBatch sb) {
 		
-		viewport = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM, new OrthographicCamera());
+		viewport = new FitViewport(CuocChienSinhTon.V_WIDTH/CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM, new OrthographicCamera());
 		stage = new Stage(viewport,sb);
 		
 		Table table = new Table();

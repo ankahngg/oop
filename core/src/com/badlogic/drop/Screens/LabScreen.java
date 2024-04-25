@@ -1,6 +1,6 @@
 package com.badlogic.drop.Screens;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class LabScreen implements Screen {
 	
-	private Drop game;
+	private CuocChienSinhTon game;
 	private OrthographicCamera camera;        
       
 	//private float rotationSpeed;     
@@ -39,7 +39,7 @@ public class LabScreen implements Screen {
 	float stateTime;
 	
 	
-	public LabScreen(Drop game) {
+	public LabScreen(CuocChienSinhTon game) {
 		
 		this.game = game;
 		camera = new OrthographicCamera();

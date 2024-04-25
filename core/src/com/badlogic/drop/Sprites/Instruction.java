@@ -1,6 +1,6 @@
 package com.badlogic.drop.Sprites;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
@@ -26,9 +26,9 @@ public class Instruction extends SensorObject {
 	public void onHit() {
 		batch.begin();
 		batch.draw(texture, 
-				this.body.getPosition().x-texture.getWidth()/Drop.PPM/2, 
+				this.body.getPosition().x-texture.getWidth()/CuocChienSinhTon.PPM/2, 
 				this.body.getPosition().y+3 ,
-				texture.getWidth()/Drop.PPM,texture.getHeight()/Drop.PPM);
+				texture.getWidth()/CuocChienSinhTon.PPM,texture.getHeight()/CuocChienSinhTon.PPM);
 		batch.end();
 		
 	}
