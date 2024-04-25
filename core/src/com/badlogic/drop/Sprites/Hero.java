@@ -100,7 +100,7 @@ public abstract class Hero extends Sprite{
 				getRegionWidth()/Drop.PPM, 
 				getRegionHeight()/Drop.PPM);
 	}
-	protected TextureRegion getFrame(float dt) {
+	public TextureRegion getFrame(float dt) {
 		if (screen.game.getCurrentMap()==MAP.MAP2) {
 	        return standing.getKeyFrame(stateTime, true);
 		}
