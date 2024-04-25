@@ -37,6 +37,9 @@ public class Boss extends Sprite{
 	public float stateTime;
 	java.util.Random rd = new java.util.Random();
 	
+	private int Health;
+	private int HealthMax;
+	
 	public double lastAttackTime = 0;
 	public double lastTeleTime = 0;
 	public double TeleCd = 50;
@@ -50,6 +53,13 @@ public class Boss extends Sprite{
 	public boolean isHurt = false;
 	private int BossHeight;
 	private int BossWidth;
+	
+	public int getHealthMax() {
+		return HealthMax;
+	}
+	public int getHealth() {
+		return Health;
+	}
 	
 	public void prepareAnimation() {
 		atlasAttack1 = new TextureAtlas("Boss/packs/BossAttack1.pack");
@@ -76,6 +86,8 @@ public class Boss extends Sprite{
 	public Boss(World world, FirstMap screen) {		
 			
 		this.world = world;
+		this.Health = 20;
+		this.HealthMax = 20;
 		prepareAnimation();
 		defineBoss();
 		setBounds(0, 0, getRegionWidth()/Drop.PPM, getRegionHeight()/Drop.PPM);
@@ -185,7 +197,7 @@ public class Boss extends Sprite{
 	}
 	
 	void onHit() {
-		System.out.println("-10 mau");
+		this.Health --;
 	}
 	
 	private void defineBoss() {

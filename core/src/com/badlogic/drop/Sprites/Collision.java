@@ -30,7 +30,7 @@ public class Collision {
 	public static void heroAttack(PlayScreen screen) {
 		if(bossInRangeAttack) screen.getBoss().isHurt = true;
 	}
-	public static void render() {
+	public static void update(float dt) {
 		if(startInstructionColi) B2WorldCreator.startInstruc.onHit();
 	}
 	public static void heroHurt(Contact contact) {

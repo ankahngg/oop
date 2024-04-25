@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class FirstMap extends PlayScreen {
+	public boolean isBossSpawn = true;
 	public final int speed = 10;
 	
 	public FirstMap(Drop game) {
@@ -77,6 +78,7 @@ public class FirstMap extends PlayScreen {
 		handleInput(dt);
 		player.update(dt);
 		boss.update(dt);
+		Collision.update(dt);
 		healthbar.update(dt);
 
 		world.step(1/60f, 6, 2);
@@ -102,15 +104,25 @@ public class FirstMap extends PlayScreen {
 			else player.body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
 			return;
 		}
+		if(player.isDieing) {
+			player.body.setLinearVelocity( new Vector2(0,vel.y));
+			return ;
+		}
 		
 		if(player.isAttacking) {
 			player.body.setLinearVelocity( new Vector2(0,vel.y));
 			return;
 		}
+		
+		if(Gdx.input.isKeyJustPressed(Keys.P) && Gdx.input.isKeyPressed(Keys.ALT_LEFT)) {
+			// +1 vào health
+			player.setHealth(1);
+		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {
 			player.body.setLinearVelocity( new Vector2(-speed,vel.y));
 			stop = false;
 		}
+		
 		if(Gdx.input.isKeyPressed(Keys.D)) {
 			stop = false;
 			player.body.setLinearVelocity( new Vector2(speed,vel.y));
@@ -157,8 +169,8 @@ public class FirstMap extends PlayScreen {
 		worldContactListener = new WorldContactListener();
 		world.setContactListener(worldContactListener);
 		
-		//render collision
-		Collision.render();
+		
+		
 
 	}
 

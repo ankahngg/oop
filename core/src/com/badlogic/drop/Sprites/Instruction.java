@@ -30,6 +30,7 @@ public class Instruction extends SensorObject {
 				this.body.getPosition().y+3 ,
 				texture.getWidth()/Drop.PPM,texture.getHeight()/Drop.PPM);
 		batch.end();
+		
 	}
 	public void onLeave() {
 		
