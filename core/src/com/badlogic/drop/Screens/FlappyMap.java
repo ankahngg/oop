@@ -1,7 +1,7 @@
 package com.badlogic.drop.Screens;
 
-import com.badlogic.drop.Drop;
-import com.badlogic.drop.Drop.MAP;
+import com.badlogic.drop.CuocChienSinhTon;
+import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Sprites.AnKhangHero;
 import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.drop.Tools.B2WorldCreator;
@@ -27,12 +27,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class FlappyMap extends PlayScreen{
-	private final int SPEED = 10;
+	private final int SPEED = 0;
 	private final int GRAVITY = -50;
 	private float timeCount;
 	private TextureAtlas flyEngineAtlas;
 	private Animation<TextureRegion> flyEngineAnimation;
-	public FlappyMap(Drop game) {
+	public FlappyMap(CuocChienSinhTon game) {
 		game.setMap(MAP.MAP2);
 		atlas = new TextureAtlas("Hero.pack");
 		this.game = game;
@@ -41,15 +41,15 @@ public class FlappyMap extends PlayScreen{
 		camera = new OrthographicCamera();
 		
 		// load background
-		backgroundTexture = new Texture("bg2.png");
+		backgroundTexture = new Texture("map1.png");
 		
 		// viewport => responsive 
-		gamePort = new FitViewport(Drop.V_WIDTH/Drop.PPM, Drop.V_HEIGHT/Drop.PPM,camera);		
+		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH/CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM,camera);		
 		
 		// load tilemap into world
 		mapLoader = new TmxMapLoader();
-		map = mapLoader.load("map2.tmx");
-		renderer = new OrthogonalTiledMapRenderer(map, 1/Drop.PPM);
+		map = mapLoader.load("map1.tmx");
+		renderer = new OrthogonalTiledMapRenderer(map, 1/CuocChienSinhTon.PPM);
 		
 		// setup box2d
 		world = new World(new Vector2(0,GRAVITY),true);
@@ -60,7 +60,7 @@ public class FlappyMap extends PlayScreen{
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
 		player = new AnKhangHero(world,this);
-
+		System.out.print(player.getX());
 		player.body.setLinearVelocity(SPEED,0);
 
 		timeCount = 0;
@@ -91,12 +91,7 @@ public class FlappyMap extends PlayScreen{
 		handleInput(dt);
 		player.update(dt);
 		world.step(1/60f, 6, 2);
-		//handle camera out of bound
-		if(player.body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
-			camera.position.x = gamePort.getWorldWidth()/2;
-		else 
-			camera.position.x = player.body.getPosition().x;
-		
+		camera.position.x = player.getX()+10;
 		renderer.setView(camera);
 		camera.update();
 		
@@ -129,13 +124,19 @@ public class FlappyMap extends PlayScreen{
 				camera.position.y - gamePort.getWorldHeight() / 2, gamePort.getWorldWidth(),
 				gamePort.getWorldHeight());
 		game.batch.end();
-				
-		renderer.render();
 		
+//        //render tilemap
+//		float scale = 5.0f; // Adjust this value as needed
+//	    renderer.getBatch().setProjectionMatrix(camera.combined.cpy().scl(scale));
+//
+//	    // Render the map
+//	    renderer.setView(camera);
+//	    renderer.render();
+
 		b2dr.render(world, camera.combined);
 		game.batch.begin();
 		player.draw(game.batch);
-		game.batch.draw(flyEngineAnimation.getKeyFrame(player.getStateTime()), getBody().getPosition().x-player.getRegionWidth()/1.2f/Drop.PPM, getBody().getPosition().y-player.getRegionHeight()/Drop.PPM,flyEngineAnimation.getKeyFrame(0).getRegionWidth()*0.75f/Drop.PPM,flyEngineAnimation.getKeyFrame(delta).getRegionHeight()*0.8f/Drop.PPM);
+		game.batch.draw(flyEngineAnimation.getKeyFrame(player.getStateTime()), getBody().getPosition().x-player.getRegionWidth()/1.2f/CuocChienSinhTon.PPM, getBody().getPosition().y-player.getRegionHeight()/CuocChienSinhTon.PPM,flyEngineAnimation.getKeyFrame(0).getRegionWidth()*0.75f/CuocChienSinhTon.PPM,flyEngineAnimation.getKeyFrame(delta).getRegionHeight()*0.8f/CuocChienSinhTon.PPM);
 		game.batch.end();
 		
 		worldContactListener = new WorldContactListener();

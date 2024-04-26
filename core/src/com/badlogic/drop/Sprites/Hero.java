@@ -1,7 +1,7 @@
 package com.badlogic.drop.Sprites;
 
-import com.badlogic.drop.Drop;
-import com.badlogic.drop.Drop.MAP;
+import com.badlogic.drop.CuocChienSinhTon;
+import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -79,7 +79,7 @@ public abstract class Hero extends Sprite{
 	public Hero(World world, PlayScreen screen) {
 		this.world = world;
 		this.screen = screen;
-
+		isDie = false;
 	}
 	public Body getBody() {
 		return body;
@@ -101,12 +101,12 @@ public abstract class Hero extends Sprite{
 	
 	public void update(float dt) {
 		setRegion(getFrame(dt));
-		setBounds(body.getPosition().x-getRegionWidth()/Drop.PPM/2,
-				body.getPosition().y-HeroHeight/Drop.PPM/2,
-				getRegionWidth()/Drop.PPM, 
-				getRegionHeight()/Drop.PPM);
+		setBounds(body.getPosition().x-getRegionWidth()/CuocChienSinhTon.PPM/2,
+				body.getPosition().y-HeroHeight/CuocChienSinhTon.PPM/2,
+				getRegionWidth()/CuocChienSinhTon.PPM, 
+				getRegionHeight()/CuocChienSinhTon.PPM);
 	}
-	protected TextureRegion getFrame(float dt) {
+	public TextureRegion getFrame(float dt) {
 		if (screen.game.getCurrentMap()==MAP.MAP2) {
 	        return standing.getKeyFrame(stateTime, true);
 		}
@@ -175,6 +175,8 @@ public abstract class Hero extends Sprite{
 
 	private void handleDie() {
 		isDie = true;
+		this.screen.dispose();
+		
 	}
 	protected State getFrameState() {
 		// TODO Auto-generated method stub
@@ -244,6 +246,15 @@ public abstract class Hero extends Sprite{
 	
 	public float getStateTime() {
 		return stateTime;
+	}
+	protected void defineHero() {
+		bdef.type = BodyDef.BodyType.DynamicBody;
+		 body = world.createBody(bdef);
+		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
+		 fdef.shape = shape;
+		 normalDef = body.createFixture(fdef);
+		 normalDef.setUserData("herobody");
+		 Collision.setCategoryFilter(normalDef, Collision.HERO_BITS);
 	}
 	
 }
