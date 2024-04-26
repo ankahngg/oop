@@ -165,6 +165,7 @@ public abstract class Hero extends Sprite{
 
 	public void handleHurt(Fixture damageObject) {
 		isHurt = true;
+		isAttacking = false;
 		Spine spine = ((Spine) damageObject.getUserData());
 		if(spine.body.getPosition().x > body.getPosition().x) hurtDirection = 0;
 		else hurtDirection = 1;
@@ -223,7 +224,7 @@ public abstract class Hero extends Sprite{
 			}
 		}
 		if(Gdx.input.isKeyPressed(Keys.J)) {
-			if(System.currentTimeMillis() - lastAttackTime >= 100) {
+			if(System.currentTimeMillis() - lastAttackTime >= 50) {
 				Collision.heroAttack(screen);
 				isAttacking = true;
 				if(currentAttack == 3) currentAttack = 1;

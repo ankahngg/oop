@@ -108,11 +108,15 @@ public class FirstMap extends PlayScreen {
 			return ;
 		}
 		
+//		if(Gdx.input.isKeyJustPressed(Keys.J)) {
+//			System.out.println("lol");
+//			player.body.applyLinearImpulse(new Vector2(30,0), player.getBody().getWorldCenter(),true);
+//		}
 		if(player.isAttacking) {
-			player.body.setLinearVelocity( new Vector2(0,vel.y));
+			if(player.isFlipX()) player.body.setLinearVelocity( new Vector2(-2,vel.y));
+			else player.body.setLinearVelocity( new Vector2(2,vel.y));
 			return;
 		}
-		
 		if(Gdx.input.isKeyJustPressed(Keys.P) && Gdx.input.isKeyPressed(Keys.ALT_LEFT)) {
 			// +1 vào health
 			player.setHealth(1);
@@ -128,7 +132,7 @@ public class FirstMap extends PlayScreen {
 		}
 		
 		if(Gdx.input.isKeyPressed(Keys.W) && vel.y == 0) {
-			player.body.applyLinearImpulse(new Vector2(0,30), player.getBody().getWorldCenter(),true);
+			player.body.applyLinearImpulse(new Vector2(0,25), player.getBody().getWorldCenter(),true);
 			stop = false;
 		}
 		

@@ -1,0 +1,61 @@
+
+Skeleton.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+skeleton-1
+  rotate: false
+  xy: 1, 53
+  size: 32, 40
+  orig: 44, 52
+  offset: 6, 0
+  index: -1
+skeleton-5
+  rotate: false
+  xy: 1, 11
+  size: 31, 40
+  orig: 44, 52
+  offset: 7, 0
+  index: -1
+skeleton-4
+  rotate: false
+  xy: 34, 14
+  size: 32, 37
+  orig: 44, 52
+  offset: 6, 0
+  index: -1
+skeleton-8
+  rotate: false
+  xy: 35, 55
+  size: 31, 38
+  orig: 44, 52
+  offset: 7, 0
+  index: -1
+skeleton-2
+  rotate: false
+  xy: 68, 50
+  size: 22, 43
+  orig: 44, 52
+  offset: 13, 0
+  index: -1
+skeleton-7
+  rotate: false
+  xy: 92, 48
+  size: 17, 45
+  orig: 44, 52
+  offset: 13, 0
+  index: -1
+skeleton-6
+  rotate: false
+  xy: 68, 5
+  size: 22, 43
+  orig: 44, 52
+  offset: 13, 0
+  index: -1
+skeleton-3
+  rotate: false
+  xy: 92, 1
+  size: 16, 45
+  orig: 44, 52
+  offset: 14, 0
+  index: -1
