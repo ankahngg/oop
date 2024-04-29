@@ -1,6 +1,6 @@
 package com.badlogic.drop.Sprites;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -15,30 +15,30 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Monster extends Sprite{
+abstract public class Monster extends Sprite{
 		public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3,DIE, HURT};
-		private State currentState ,previousState;
+		public State currentState ,previousState;
 		public World world;
-		private Animation<TextureRegion> jumping;
-		private TextureAtlas atlasAttack1;
-		private TextureAtlas atlasAttack2;
-		private TextureAtlas atlasAttack3;
-		private TextureAtlas atlasStanding;
-		private TextureAtlas atlasRunning;
-		private TextureAtlas atlasDie;
-		private TextureAtlas atlasHurt;
-		private Animation<TextureRegion> attack1;
-		private Animation<TextureRegion> attack2;
-		private Animation<TextureRegion> attack3;
-		private Animation<TextureRegion> running;
-		private Animation<TextureRegion> standing;
-		private Animation<TextureRegion> die;
-		private Animation<TextureRegion> hurt;
+		public Animation<TextureRegion> jumping;
+		public TextureAtlas atlasAttack1;
+		public TextureAtlas atlasAttack2;
+		public TextureAtlas atlasAttack3;
+		public TextureAtlas atlasStanding;
+		public TextureAtlas atlasRunning;
+		public TextureAtlas atlasDie;
+		public TextureAtlas atlasHurt;
+		public Animation<TextureRegion> attack1;
+		public Animation<TextureRegion> attack2;
+		public Animation<TextureRegion> attack3;
+		public Animation<TextureRegion> running;
+		public Animation<TextureRegion> standing;
+		public Animation<TextureRegion> die;
+		public Animation<TextureRegion> hurt;
 		public float stateTime;
 		java.util.Random rd = new java.util.Random();
 		
-		private int Health;
-		private int HealthMax;
+		public int Health;
+		public int HealthMax;
 		
 		public double lastAttackTime = 0;
 		public double lastTeleTime = 0;
@@ -47,12 +47,14 @@ public class Monster extends Sprite{
 		public Body hitbox;
 		BodyDef bdef = new BodyDef();
 		FixtureDef fdef = new FixtureDef();
-		public Fixture bossDef;
-		private Fixture hitboxDef;
+		public Fixture monsterDef;
+		public Fixture hitboxDef;
 		
 		public boolean isHurt = false;
-		private int BossHeight;
-		private int BossWidth;
+		public boolean isIntialLeft = false;
+		public int MonsterHeight;
+		public int MonsterWidth;
+		public boolean runningRight = true;
 		
 		public int getHealthMax() {
 			return HealthMax;
@@ -61,72 +63,37 @@ public class Monster extends Sprite{
 			return Health;
 		}
 		
-		public void prepareAnimation() {
-			atlasAttack1 = new TextureAtlas("Boss/packs/BossAttack1.pack");
-			atlasAttack2 = new TextureAtlas("Boss/packs/BossAttack2.pack");
-			atlasAttack3 = new TextureAtlas("Boss/packs/BossAttack3.pack");
-			atlasStanding = new TextureAtlas("Boss/packs/BossIdle.pack");
-			atlasRunning = new TextureAtlas("Boss/packs/BossRun.pack");
-			atlasDie = new TextureAtlas("Boss/packs/BossDie.pack");
-			atlasHurt = new TextureAtlas("Boss/packs/BossHurt.pack");
-			
-			
-			attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
-			attack2 = new Animation<TextureRegion>(0.1f, atlasAttack2.getRegions());
-			attack3 = new Animation<TextureRegion>(0.1f, atlasAttack3.getRegions());
-			running = new Animation<TextureRegion>(0.1f, atlasRunning.getRegions());
-			standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
-			hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
-			die = new Animation<TextureRegion>(0.1f, atlasDie.getRegions());
-			setRegion(atlasStanding.getRegions().get(1));
-			BossHeight = getRegionHeight();
-			BossWidth = getRegionWidth();
-		}
-		
-		public Boss(World world, FirstMap screen) {		
-				
+		abstract public void prepareAnimation() ;
+		public Monster(World world, FirstMap screen, int x, int y) {		
 			this.world = world;
 			this.Health = 20;
 			this.HealthMax = 20;
 			prepareAnimation();
-			defineBoss();
-			setBounds(0, 0, getRegionWidth()/Drop.PPM, getRegionHeight()/Drop.PPM);
+			defineMonster(x,y);
+			setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
+			
 		}
 		
 		public void update(float dt) {
 			setRegion(getFrame(dt));
-			setBounds(b2body.getPosition().x-BossWidth/Drop.PPM/2,
-					b2body.getPosition().y-BossHeight/Drop.PPM/2,
-					getRegionWidth()/Drop.PPM,
-					getRegionHeight()/Drop.PPM);
+			setBounds(b2body.getPosition().x-MonsterWidth/CuocChienSinhTon.PPM/2,
+					b2body.getPosition().y-MonsterHeight/CuocChienSinhTon.PPM/2,
+					getRegionWidth()/CuocChienSinhTon.PPM,
+					getRegionHeight()/CuocChienSinhTon.PPM);
 			
-			//updateMovement();
+			Movement();
 		}
 		
-		private void updateMovement() {
-			
-			Vector2 po = b2body.getPosition();
-			float pox;
-			if(System.currentTimeMillis() - lastTeleTime >= TeleCd) {
-				if(rd.nextInt(2) == 0) {
-					pox = po.x - rd.nextInt(5);
-				}
-				else pox = po.x + rd.nextInt(5);
-				
-				b2body.setTransform(new Vector2(pox,po.y), 0);			
-				lastTeleTime = System.currentTimeMillis();
-			}
-			
-		}
+		abstract public void Movement();	
 		
-		private TextureRegion getFrame(float dt) {
+		
+		public TextureRegion getFrame(float dt) {
 			TextureRegion region;
 			currentState = getFrameState(dt);
 			
 			stateTime = (currentState == previousState ? stateTime + dt : 0);
 			switch (currentState) {
 			    case RUNNING:
-			    	
 			        region = running.getKeyFrame(stateTime, true);
 			        break;
 			    case ATTACKING1:
@@ -152,10 +119,30 @@ public class Monster extends Sprite{
 			}
 			
 			
-			// Update state time
+			float vel = b2body.getLinearVelocity().x;
+			if(!isIntialLeft) {
+				if((vel < 0 || !runningRight) && !region.isFlipX()) {
+					region.flip(true,false);
+					runningRight = false;
+					
+				}
+				else if((vel > 0 || runningRight) && region.isFlipX()) {
+					region.flip(true,false);
+					runningRight = true;
+				}				
+			}
+			else {
+				if((vel < 0 || !runningRight) && region.isFlipX()) {
+					region.flip(true,false);
+					runningRight = false;
+				}
+				else if((vel > 0 || runningRight) && !region.isFlipX()) {
+					region.flip(true,false);
+					runningRight = true;
+				}				
+			}
 			
 			previousState = currentState;
-			
 
 			return region;
 		}
@@ -164,51 +151,22 @@ public class Monster extends Sprite{
 		boolean isAttacking = false;
 		boolean isHurting = false;
 		
-		private State getFrameState(float dt) {
-			
-			double currentTime = System.currentTimeMillis();
-			
-			if(isAttacking) {
-				isHurt = false;
-				if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
-				else {
-					t = (rd.nextInt(5)+1)*1000;
-					lastAttackTime = System.currentTimeMillis();
-					isAttacking = false;
-				}
-			}
-			if(isHurting) {
-				if(!hurt.isAnimationFinished(stateTime)) return State.HURT;
-				else isHurting = false;
-			}
-			
-			if(currentTime - lastAttackTime >= t) {
-				isAttacking = true;
-				return State.ATTACKING1;
-			}
-			if(isHurt && !isAttacking) {
-				onHit();
-				isHurting = true;
-				isHurt = false;
-				return State.HURT;
-			}
-			
-			return State.STANDING;
-		}
+		abstract public State getFrameState(float dt) ;
 		
 		void onHit() {
 			this.Health --;
 		}
 		
-		private void defineBoss() {
+		public void defineMonster(int x,int y) {
+			if(x == 30 && y == 2) System.out.println("lol");
 			CircleShape shape = new CircleShape();
-			 bdef.position.set(35,2);
+			 bdef.position.set(x,y);
 			 bdef.type = BodyDef.BodyType.DynamicBody;
 			 b2body = world.createBody(bdef);
-			 shape.setRadius(getRegionHeight()/Drop.PPM/2);
+			 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 			 fdef.shape = shape;
-			 bossDef = b2body.createFixture(fdef);
-			 Collision.setCategoryFilter(bossDef, Collision.BOSS_BITS);
+			 monsterDef = b2body.createFixture(fdef);
+			
 			  
 		}
 

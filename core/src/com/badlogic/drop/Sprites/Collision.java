@@ -15,6 +15,7 @@ public class Collision {
 	public static final short HEROATTACK_BITS = 3;
 	public static final short BOSS_BITS = 4;
 	public static final short SPINE_BITS = 5;
+	public static final short SKELETON_BITS = 6;
 	public static PlayScreen screen;
 	
 	public static void setup(PlayScreen x) {

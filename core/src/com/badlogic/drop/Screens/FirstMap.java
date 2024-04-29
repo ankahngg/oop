@@ -5,6 +5,7 @@ import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Collision;
+import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.AnKhangHero;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.drop.Tools.Utils;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class FirstMap extends PlayScreen {
 	public boolean isBossSpawn = true;
 	public final int speed = 10;
+	private Skeleton skeleton1;
 	
 	public FirstMap(CuocChienSinhTon game) {
 		// load map
@@ -49,19 +51,20 @@ public class FirstMap extends PlayScreen {
 		b2dr = new Box2DDebugRenderer();
 		new B2WorldCreator(world, map, this);
 		
+		//create monster
+		skeleton1 = new Skeleton(world, this,30,2);
 		//create boss
-		boss = new Boss(world, this);
+		boss = new Boss(world, this,35,2);
 
 		//create player
 		player = new AnKhangHero(world,this);
-		System.out.println(player.isDie);
 		//setup collision 
 		Collision.setup(this);
 		
 		//create healthBar
 		healthbar = new HealthBar(this);
 		
-
+		boss.b2body.setActive(false);
 	}
 
 	public TextureAtlas getAtlas() {
@@ -83,8 +86,9 @@ public class FirstMap extends PlayScreen {
 		handleInput(dt);
 		player.update(dt);
 		boss.update(dt);
-		if(player.isDie)
-		handleDie();
+		skeleton1.update(dt);
+		
+		if(player.isDie) handleDie();
 		Collision.update(dt);
 		healthbar.update(dt);
 
@@ -171,9 +175,9 @@ public class FirstMap extends PlayScreen {
 		game.batch.begin();
 		player.draw(game.batch);
 		boss.draw(game.batch);
+		skeleton1.draw(game.batch);
 		game.batch.end();
 		
-
 		update(delta);
 		
 		// setup worldContactListener

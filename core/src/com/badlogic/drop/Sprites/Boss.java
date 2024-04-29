@@ -15,47 +15,9 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Boss extends Sprite{
-	public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3,DIE, HURT};
-	private State currentState ,previousState;
-	public World world;
-	private Animation<TextureRegion> jumping;
-	private TextureAtlas atlasAttack1;
-	private TextureAtlas atlasAttack2;
-	private TextureAtlas atlasAttack3;
-	private TextureAtlas atlasStanding;
-	private TextureAtlas atlasRunning;
-	private TextureAtlas atlasDie;
-	private TextureAtlas atlasHurt;
-	private Animation<TextureRegion> attack1;
-	private Animation<TextureRegion> attack2;
-	private Animation<TextureRegion> attack3;
-	private Animation<TextureRegion> running;
-	private Animation<TextureRegion> standing;
-	private Animation<TextureRegion> die;
-	private Animation<TextureRegion> hurt;
-	public float stateTime;
-	java.util.Random rd = new java.util.Random();
-	
-	private int Health;
-	private int HealthMax;
-	
-	public double lastAttackTime = 0;
-	public double lastTeleTime = 0;
-	public double TeleCd = 50;
-	public Body b2body;
-	public Body hitbox;
-	BodyDef bdef = new BodyDef();
-	FixtureDef fdef = new FixtureDef();
-	public Fixture bossDef;
-	private Fixture hitboxDef;
-	
-	public boolean isHurt = false;
-	private int BossHeight;
-	private int BossWidth;
-	
+public class Boss extends Monster{
 	public int getHealthMax() {
-		return HealthMax;
+		return this.HealthMax;
 	}
 	public int getHealth() {
 		return Health;
@@ -70,7 +32,6 @@ public class Boss extends Sprite{
 		atlasDie = new TextureAtlas("Boss/packs/BossDie.pack");
 		atlasHurt = new TextureAtlas("Boss/packs/BossHurt.pack");
 		
-		
 		attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
 		attack2 = new Animation<TextureRegion>(0.1f, atlasAttack2.getRegions());
 		attack3 = new Animation<TextureRegion>(0.1f, atlasAttack3.getRegions());
@@ -79,92 +40,35 @@ public class Boss extends Sprite{
 		hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
 		die = new Animation<TextureRegion>(0.1f, atlasDie.getRegions());
 		setRegion(atlasStanding.getRegions().get(1));
-		BossHeight = getRegionHeight();
-		BossWidth = getRegionWidth();
+		MonsterHeight = getRegionHeight();
+		MonsterWidth = getRegionWidth();
 	}
 	
-	public Boss(World world, FirstMap screen) {		
-			
-		this.world = world;
-		this.Health = 20;
-		this.HealthMax = 20;
-		prepareAnimation();
-		defineBoss();
-		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
+	public Boss(World world, FirstMap screen, int x, int y) {		
+		super(world, screen,x,y);
+		Collision.setCategoryFilter(monsterDef, Collision.BOSS_BITS);
 	}
 	
-	public void update(float dt) {
-		setRegion(getFrame(dt));
-		setBounds(b2body.getPosition().x-BossWidth/CuocChienSinhTon.PPM/2,
-				b2body.getPosition().y-BossHeight/CuocChienSinhTon.PPM/2,
-				getRegionWidth()/CuocChienSinhTon.PPM,
-				getRegionHeight()/CuocChienSinhTon.PPM);
+	public void Movement() {
 		
-		//updateMovement();
-	}
-	
-	private void updateMovement() {
-		
-		Vector2 po = b2body.getPosition();
-		float pox;
-		if(System.currentTimeMillis() - lastTeleTime >= TeleCd) {
-			if(rd.nextInt(2) == 0) {
-				pox = po.x - rd.nextInt(5);
-			}
-			else pox = po.x + rd.nextInt(5);
-			
-			b2body.setTransform(new Vector2(pox,po.y), 0);			
-			lastTeleTime = System.currentTimeMillis();
-		}
-		
-	}
-	
-	private TextureRegion getFrame(float dt) {
-		TextureRegion region;
-		currentState = getFrameState(dt);
-		
-		stateTime = (currentState == previousState ? stateTime + dt : 0);
-		switch (currentState) {
-		    case RUNNING:
-		    	
-		        region = running.getKeyFrame(stateTime, true);
-		        break;
-		    case ATTACKING1:
-		    	
-		    	region = attack1.getKeyFrame(stateTime, false);
-		    	break;
-		    case ATTACKING2:
-		    	region = attack2.getKeyFrame(stateTime, false);
-		    	break;
-		    	
-		    case ATTACKING3:
-		    	region = attack3.getKeyFrame(stateTime, false);
-		    	break;
-		    case DIE:
-		    	region = die.getKeyFrame(stateTime, false);
-		    	break;
-		    case HURT:
-		    	region = hurt.getKeyFrame(stateTime, false);
-		    	break;
-		    default:
-		        region = standing.getKeyFrame(stateTime, true);
-		        break;
-		}
-		
-		
-		// Update state time
-		
-		previousState = currentState;
-		
-
-		return region;
+//		Vector2 po = b2body.getPosition();
+//		float pox;
+//		if(System.currentTimeMillis() - lastTeleTime >= TeleCd) {
+//			if(rd.nextInt(2) == 0) {
+//				pox = po.x - rd.nextInt(5);
+//			}
+//			else pox = po.x + rd.nextInt(5);
+//			
+//			b2body.setTransform(new Vector2(pox,po.y), 0);			
+//			lastTeleTime = System.currentTimeMillis();
+//		}	
 	}
 	
 	double t = 1000;
 	boolean isAttacking = false;
 	boolean isHurting = false;
 	
-	private State getFrameState(float dt) {
+	public State getFrameState(float dt) {
 		
 		double currentTime = System.currentTimeMillis();
 		
@@ -192,7 +96,6 @@ public class Boss extends Sprite{
 			isHurt = false;
 			return State.HURT;
 		}
-		
 		return State.STANDING;
 	}
 	
@@ -200,15 +103,4 @@ public class Boss extends Sprite{
 		this.Health --;
 	}
 	
-	private void defineBoss() {
-		CircleShape shape = new CircleShape();
-		 bdef.position.set(35,2);
-		 bdef.type = BodyDef.BodyType.DynamicBody;
-		 b2body = world.createBody(bdef);
-		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
-		 fdef.shape = shape;
-		 bossDef = b2body.createFixture(fdef);
-		 Collision.setCategoryFilter(bossDef, Collision.BOSS_BITS);
-		  
-	}
 }
