@@ -1,0 +1,40 @@
+
+enemy-death.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+enemy-death
+  rotate: false
+  xy: 1, 1
+  size: 44, 52
+  orig: 44, 52
+  offset: 0, 0
+  index: 1
+enemy-death
+  rotate: false
+  xy: 47, 1
+  size: 44, 52
+  orig: 44, 52
+  offset: 0, 0
+  index: 2
+enemy-death
+  rotate: false
+  xy: 93, 1
+  size: 44, 52
+  orig: 44, 52
+  offset: 0, 0
+  index: 3
+enemy-death
+  rotate: false
+  xy: 139, 1
+  size: 44, 52
+  orig: 44, 52
+  offset: 0, 0
+  index: 4
+enemy-death
+  rotate: false
+  xy: 185, 1
+  size: 44, 52
+  orig: 44, 52
+  offset: 0, 0
+  index: 5

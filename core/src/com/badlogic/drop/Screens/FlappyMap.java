@@ -109,7 +109,7 @@ public class FlappyMap extends PlayScreen{
 		}
 		
 	}
-
+	
 	@Override
 	public void render(float delta) {
 		
