@@ -1,8 +1,13 @@
 package com.badlogic.drop.Screens;
 
+import java.util.LinkedList;
+
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Sprites.AnKhangHero;
+import com.badlogic.drop.Sprites.EyeBullet;
+import com.badlogic.drop.Sprites.FlyingEye;
+import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
@@ -26,10 +31,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class FlappyMap extends PlayScreen{
-	private final int SPEED = 0;
+	private final int SPEED = 5;
 	private final int GRAVITY = -50;
+	private final int DISTANCE = 10;
 	private float timeCount;
 	private TextureAtlas flyEngineAtlas;
+	private LinkedList<Monster> monsters;
 	private Animation<TextureRegion> flyEngineAnimation;
 	public FlappyMap(CuocChienSinhTon game) {
 		game.setMap(MAP.MAP2);
@@ -54,18 +61,30 @@ public class FlappyMap extends PlayScreen{
 		world = new World(new Vector2(0,GRAVITY),true);
 		b2dr = new Box2DDebugRenderer();
 		new B2WorldCreator(world, map, this);
-		
+		// create monsters
+		prepareMonster();
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
 		player = new AnKhangHero(world,this);
-		System.out.print(player.getX());
 		player.body.setLinearVelocity(SPEED,0);
-
 		timeCount = 0;
 	}
 	public TextureAtlas getAtlas() {
 		return atlas;
+	}
+	private void prepareMonster() {
+		int intitDistance = 0;
+		int monsterQuantity = 20;
+		monsters = new LinkedList<Monster>();
+		
+		for (int i =0 ; i<monsterQuantity;i++) {
+			FlyingEye flyingEye = new FlyingEye(world, this, 3+intitDistance, (int) (Math.random()*20));
+			
+			monsters.add(flyingEye);
+			intitDistance+=DISTANCE;
+		}
+		
 	}
 	private void prepareFlyEngineAnimation() {
 		flyEngineAtlas = new TextureAtlas("asset/map2/packs/can-dau-van.atlas");
@@ -81,6 +100,10 @@ public class FlappyMap extends PlayScreen{
 	}
 	// method that be called every 1/60s
 	public void update(float dt) {
+		//update monster
+		for (Monster monster :monsters) {
+			monster.update(dt);
+		}
 		//time count for speed up
 		timeCount+=dt;
 		
@@ -90,10 +113,12 @@ public class FlappyMap extends PlayScreen{
 		handleInput(dt);
 		player.update(dt);
 		world.step(1/60f, 6, 2);
+		
+		
 		camera.position.x = player.getX()+10;
 		renderer.setView(camera);
 		camera.update();
-		
+
 	}
 	public Body getBody() {
 		return player.body;
@@ -144,6 +169,11 @@ public class FlappyMap extends PlayScreen{
 		update(delta);
 
 		}
+	
+	void updatePlayer(float dt) {
+		
+		
+	}
 
 		
 

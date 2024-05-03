@@ -2,6 +2,7 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -58,7 +59,7 @@ abstract public class Monster extends Sprite{
 		public int MonsterHeight;
 		public int MonsterWidth;
 		public boolean runningRight = true;
-		public FirstMap screen;
+		public PlayScreen screen;
 		public SpriteBatch batch;
 		public int posX;
 		public int posY;
@@ -71,7 +72,7 @@ abstract public class Monster extends Sprite{
 		}
 		
 		abstract public void prepareAnimation() ;
-		public Monster(World world, FirstMap screen, int x, int y, boolean isDynamic) {		
+		public Monster(World world, PlayScreen screen, int x, int y, boolean isDynamic) {		
 			this.world = world;
 			this.Health = 20;
 			this.HealthMax = 20;
@@ -92,13 +93,13 @@ abstract public class Monster extends Sprite{
 					b2body.getPosition().y-MonsterHeight/CuocChienSinhTon.PPM/2,
 					getRegionWidth()/CuocChienSinhTon.PPM,
 					getRegionHeight()/CuocChienSinhTon.PPM);
-			Movement();
+			movement();
 			batch.begin();
 			this.draw(batch);
 			batch.end();
 		}
 		
-		abstract public void Movement();	
+		abstract public void movement();	
 		
 		
 		public TextureRegion getFrame(float dt) {
@@ -179,7 +180,7 @@ abstract public class Monster extends Sprite{
 			 b2body = world.createBody(bdef);
 			 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 			 fdef.shape = shape;
-			 
+			
 			 monsterDef = b2body.createFixture(fdef);
 		}
 

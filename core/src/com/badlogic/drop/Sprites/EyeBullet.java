@@ -1,6 +1,7 @@
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class EyeBullet extends Bullet {
 
 
-	public EyeBullet(World world, FirstMap screen, int x, int y, int direction) {
+	public EyeBullet(World world, PlayScreen screen, int x, int y, int direction) {
 		super(world, screen, x, y, direction);
 		Collision.setCategoryFilter(monsterDef, Collision.EYEBULLET_BITS);
 	}

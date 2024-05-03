@@ -40,7 +40,7 @@ public class Boss extends Monster{
 		Collision.setCategoryFilter(monsterDef, Collision.BOSS_BITS);
 	}
 	
-	public void Movement() {
+	public void movement() {
 		
 //		Vector2 po = b2body.getPosition();
 //		float pox;

@@ -2,6 +2,7 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,7 +21,7 @@ import com.badlogic.gdx.physics.box2d.World;
 abstract public class Bullet extends Sprite{
 			
 	public World world;
-	public FirstMap screen;
+	public PlayScreen screen;
 	public boolean isActive = true;
 	BodyDef bdef = new BodyDef();
 	FixtureDef fdef = new FixtureDef();
@@ -40,7 +41,7 @@ abstract public class Bullet extends Sprite{
 	public int posY;
 	public boolean isLaunch=false;
 	
-	public Bullet(World world,FirstMap screen,int x, int y,int direction) {
+	public Bullet(World world,PlayScreen screen,int x, int y,int direction) {
 		this.world = world;
 		this.screen = screen;
 		this.posX = x;

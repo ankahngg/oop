@@ -43,7 +43,7 @@ public class Skeleton extends Monster{
 		monsterDef.setUserData(this);
 	}
 	
-	public void Movement() {
+	public void movement() {
 		Vector2 vel = b2body.getLinearVelocity();
 		if(isRuningR) b2body.setLinearVelocity(new Vector2(5,vel.y));
 		else b2body.setLinearVelocity(new Vector2(-5,vel.y));

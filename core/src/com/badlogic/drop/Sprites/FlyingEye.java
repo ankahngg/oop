@@ -1,6 +1,7 @@
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -35,7 +36,7 @@ public class FlyingEye extends Monster{
 		MonsterWidth = getRegionWidth();
 	}
 	
-	public FlyingEye(World world, FirstMap screen,int x, int y) {		
+	public FlyingEye(World world, PlayScreen screen,int x, int y) {		
 		super(world, screen,x,y,false);
 		bullet = new EyeBullet(world, screen, x, y, 0);
 		isIntialLeft = true;
@@ -55,10 +56,10 @@ public class FlyingEye extends Monster{
 		//bullet.update(dt);
 	}
 	
-	public void Movement() {
+	public void movement() {
 		Vector2 vel = b2body.getLinearVelocity();
 		b2body.setLinearVelocity(new Vector2(0,vel.y));
-		
+	
 	}
 
 	

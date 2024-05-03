@@ -27,7 +27,6 @@ public abstract class Hero extends Sprite{
 	public World world;
 	public Body body;
 	public Body hitbox;
-	public float speed = 10f;
 	BodyDef bdef = new BodyDef();
 	CircleShape shape = new CircleShape();
 	FixtureDef fdef = new FixtureDef();
