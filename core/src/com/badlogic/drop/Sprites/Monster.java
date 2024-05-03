@@ -1,6 +1,6 @@
 package com.badlogic.drop.Sprites;
 
-import com.badlogic.drop.Drop;
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
