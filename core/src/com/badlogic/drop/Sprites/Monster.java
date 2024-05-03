@@ -2,12 +2,12 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
-
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -19,7 +19,6 @@ abstract public class Monster extends Sprite{
 		public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3,DIE, HURT};
 		public State currentState ,previousState;
 		public World world;
-		public Animation<TextureRegion> jumping;
 		public TextureAtlas atlasAttack1;
 		public TextureAtlas atlasAttack2;
 		public TextureAtlas atlasAttack3;
@@ -27,6 +26,7 @@ abstract public class Monster extends Sprite{
 		public TextureAtlas atlasRunning;
 		public TextureAtlas atlasDie;
 		public TextureAtlas atlasHurt;
+		public Animation<TextureRegion> jumping;
 		public Animation<TextureRegion> attack1;
 		public Animation<TextureRegion> attack2;
 		public Animation<TextureRegion> attack3;
@@ -40,6 +40,7 @@ abstract public class Monster extends Sprite{
 		public int Health;
 		public int HealthMax;
 		
+		
 		public double lastAttackTime = 0;
 		public double lastTeleTime = 0;
 		public double TeleCd = 50;
@@ -50,11 +51,17 @@ abstract public class Monster extends Sprite{
 		public Fixture monsterDef;
 		public Fixture hitboxDef;
 		
+		public boolean isRuningR;
+		public boolean isDynamic;
 		public boolean isHurt = false;
 		public boolean isIntialLeft = false;
 		public int MonsterHeight;
 		public int MonsterWidth;
 		public boolean runningRight = true;
+		public FirstMap screen;
+		public SpriteBatch batch;
+		public int posX;
+		public int posY;
 		
 		public int getHealthMax() {
 			return HealthMax;
@@ -64,10 +71,15 @@ abstract public class Monster extends Sprite{
 		}
 		
 		abstract public void prepareAnimation() ;
-		public Monster(World world, FirstMap screen, int x, int y) {		
+		public Monster(World world, FirstMap screen, int x, int y, boolean isDynamic) {		
 			this.world = world;
 			this.Health = 20;
 			this.HealthMax = 20;
+			this.screen = screen;
+			this.isDynamic = isDynamic;
+			this.posX = x;
+			this.posY = y;
+			this.batch = screen.game.getBatch();
 			prepareAnimation();
 			defineMonster(x,y);
 			setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
@@ -80,8 +92,10 @@ abstract public class Monster extends Sprite{
 					b2body.getPosition().y-MonsterHeight/CuocChienSinhTon.PPM/2,
 					getRegionWidth()/CuocChienSinhTon.PPM,
 					getRegionHeight()/CuocChienSinhTon.PPM);
-			
 			Movement();
+			batch.begin();
+			this.draw(batch);
+			batch.end();
 		}
 		
 		abstract public void Movement();	
@@ -158,16 +172,15 @@ abstract public class Monster extends Sprite{
 		}
 		
 		public void defineMonster(int x,int y) {
-			if(x == 30 && y == 2) System.out.println("lol");
 			CircleShape shape = new CircleShape();
 			 bdef.position.set(x,y);
-			 bdef.type = BodyDef.BodyType.DynamicBody;
+			 if(isDynamic) bdef.type = BodyDef.BodyType.DynamicBody;
+			 else  bdef.type = BodyDef.BodyType.StaticBody;
 			 b2body = world.createBody(bdef);
 			 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 			 fdef.shape = shape;
+			 
 			 monsterDef = b2body.createFixture(fdef);
-			
-			  
 		}
 
 }

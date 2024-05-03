@@ -1,20 +1,14 @@
 package com.badlogic.drop.Tools;
 
-import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Brick;
 import com.badlogic.drop.Sprites.Instruction;
-import com.badlogic.drop.Sprites.SensorObject;
 import com.badlogic.drop.Sprites.Spine;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class B2WorldCreator {

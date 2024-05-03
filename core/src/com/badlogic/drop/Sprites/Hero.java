@@ -2,6 +2,7 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
+import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -9,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -166,8 +166,8 @@ public abstract class Hero extends Sprite{
 	public void handleHurt(Fixture damageObject) {
 		isHurt = true;
 		isAttacking = false;
-		Spine spine = ((Spine) damageObject.getUserData());
-		if(spine.body.getPosition().x > body.getPosition().x) hurtDirection = 0;
+		
+		if(damageObject.getBody().getPosition().x > body.getPosition().x) hurtDirection = 0;
 		else hurtDirection = 1;
 		Health --;
 		if(Health == 0) handleDie();
@@ -175,7 +175,8 @@ public abstract class Hero extends Sprite{
 
 	private void handleDie() {
 		isDie = true;
-		this.screen.dispose();
+		System.out.println("wtf");
+		//screen.game.setScreen(new FlappyMap(screen.game));
 		
 	}
 	protected State getFrameState() {
@@ -254,7 +255,7 @@ public abstract class Hero extends Sprite{
 		 fdef.shape = shape;
 		 normalDef = body.createFixture(fdef);
 		 normalDef.setUserData("herobody");
-		 Collision.setCategoryFilter(normalDef, Collision.HERO_BITS);
+		 
 	}
 	
 }

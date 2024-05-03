@@ -7,9 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class AnKhangHero extends Hero{
 	
@@ -31,6 +30,8 @@ public class AnKhangHero extends Hero{
 		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
 		currentState = State.STANDING;
 		previousState = State.STANDING;
+		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS);
+		normalDef.setUserData(this);
 	}
 	
 	public void prepareAnimation() {

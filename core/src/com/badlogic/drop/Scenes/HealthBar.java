@@ -2,10 +2,8 @@ package com.badlogic.drop.Scenes;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
-import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Hero;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;

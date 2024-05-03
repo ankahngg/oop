@@ -1,14 +1,15 @@
 package com.badlogic.drop.Screens;
 
 import com.badlogic.drop.CuocChienSinhTon;
-import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Scenes.HealthBar;
-import com.badlogic.drop.Sprites.Boss;
-import com.badlogic.drop.Sprites.Collision;
-import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.AnKhangHero;
+import com.badlogic.drop.Sprites.Boss;
+import com.badlogic.drop.Sprites.Bullet;
+import com.badlogic.drop.Sprites.Collision;
+import com.badlogic.drop.Sprites.EyeBullet;
+import com.badlogic.drop.Sprites.FlyingEye;
+import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Tools.B2WorldCreator;
-import com.badlogic.drop.Tools.Utils;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -27,6 +28,8 @@ public class FirstMap extends PlayScreen {
 	public boolean isBossSpawn = true;
 	public final int speed = 10;
 	private Skeleton skeleton1;
+	private FlyingEye Eye1;
+	private Bullet bullet;
 	
 	public FirstMap(CuocChienSinhTon game) {
 		// load map
@@ -53,6 +56,7 @@ public class FirstMap extends PlayScreen {
 		
 		//create monster
 		skeleton1 = new Skeleton(world, this,30,2);
+		Eye1 = new FlyingEye(world, this, 30, 5);
 		//create boss
 		boss = new Boss(world, this,35,2);
 
@@ -77,30 +81,9 @@ public class FirstMap extends PlayScreen {
 
 	}
 	public void handleDie() {
-			game.setScreen(new FlappyMap(game));
+		System.out.println("wtf");
+		//game.setScreen(new FlappyMap(game));
 		
-		
-	}
-	// method that be called every 1/60s
-	public void update(float dt) {
-		handleInput(dt);
-		player.update(dt);
-		boss.update(dt);
-		skeleton1.update(dt);
-		
-		if(player.isDie) handleDie();
-		Collision.update(dt);
-		healthbar.update(dt);
-
-		world.step(1/60f, 6, 2);
-		//handle camera out of bound
-		if(player.body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
-			camera.position.x = gamePort.getWorldWidth()/2;
-		else 
-			camera.position.x = player.body.getPosition().x;
-		
-		renderer.setView(camera);
-		camera.update();
 		
 	}
 	
@@ -131,7 +114,7 @@ public class FirstMap extends PlayScreen {
 		}
 		if(Gdx.input.isKeyJustPressed(Keys.P) && Gdx.input.isKeyPressed(Keys.ALT_LEFT)) {
 			// +1 vào health
-			player.setHealth(1);
+			skeleton1.onWallCollision();
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {
 			player.body.setLinearVelocity( new Vector2(-speed,vel.y));
@@ -149,6 +132,30 @@ public class FirstMap extends PlayScreen {
 		}
 		
 		if(stop) player.body.setLinearVelocity( new Vector2(0,vel.y));
+	}
+	
+	// method that be called every 1/60s
+	public void update(float dt) {
+		handleInput(dt);
+		player.update(dt);
+		boss.update(dt);
+		skeleton1.update(dt);
+		Eye1.update(dt);
+		
+		if(player.isDie) handleDie();
+		Collision.update(dt);
+		healthbar.update(dt);
+
+		world.step(1/60f, 6, 2);
+		//handle camera out of bound
+		if(player.body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
+			camera.position.x = gamePort.getWorldWidth()/2;
+		else 
+			camera.position.x = player.body.getPosition().x;
+		
+		renderer.setView(camera);
+		camera.update();
+		
 	}
 
 	@Override
@@ -174,8 +181,6 @@ public class FirstMap extends PlayScreen {
 		// draw player and draw boss
 		game.batch.begin();
 		player.draw(game.batch);
-		boss.draw(game.batch);
-		skeleton1.draw(game.batch);
 		game.batch.end();
 		
 		update(delta);

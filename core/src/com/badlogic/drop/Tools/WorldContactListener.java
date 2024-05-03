@@ -1,7 +1,11 @@
 package com.badlogic.drop.Tools;
 
 import com.badlogic.drop.Sprites.Collision;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
 
 public class WorldContactListener implements ContactListener {
 	public boolean isContact(short id1, short id2, Contact contact) {
@@ -23,6 +27,10 @@ public class WorldContactListener implements ContactListener {
         if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = true;
       
         if(isContact(Collision.SPINE_BITS,Collision.HERO_BITS,contact)) Collision.heroHurt(contact);
+        if(isContact(Collision.MONSTERBOUND_BITS,Collision.SKELETON_BITS, contact)) Collision.monsterBound(contact);
+        if(isContact(Collision.SKELETON_BITS,Collision.HERO_BITS, contact)) {
+        	Collision.heroHurt(contact);
+        }
        
        
     }
