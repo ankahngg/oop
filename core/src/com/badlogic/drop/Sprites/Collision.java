@@ -10,7 +10,7 @@ public class Collision {
 
 	public static boolean bossInRangeAttack = true;
 	public static boolean startInstructionColi = false;
-	public static final short GROUND_BITS = 9;
+	public static final short GROUND_BITS = 10;
 	public static final short HERO_BITS = 1;
 	public static final short INSTRUCTION_BITS = 2;
 	public static final short HEROATTACK_BITS = 3;
@@ -19,7 +19,7 @@ public class Collision {
 	public static final short SKELETON_BITS = 6;
 	public static final short FLYINGEYE_BITS = 7;
 	public static final short EYEBULLET_BITS = 8;
-	public static final short MONSTERBOUND_BITS = 8;
+	public static final short MONSTERBOUND_BITS = 9;
 	public static PlayScreen screen;
 	
 	public static void setup(PlayScreen x) {
