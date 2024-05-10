@@ -6,11 +6,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Brick extends InteractiveTileObject{
-	public Brick(World world, TiledMap map, Rectangle bounds) {
-		super(world,map,bounds);
+	public Brick(World world, TiledMap map, Rectangle bounds, boolean isSensor) {
+		super(world,map,bounds,isSensor);
 		fixture.setUserData(this);
 		Collision.setCategoryFilter(fixture, Collision.GROUND_BITS);
-		
 	}
 
 	@Override

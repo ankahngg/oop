@@ -2,6 +2,7 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Sprites.Monster.State;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,16 +22,16 @@ public class FlyingEye extends Monster{
 //		atlasAttack3 = new TextureAtlas("Boss/packs/BossAttack3.pack");
 		atlasStanding = new TextureAtlas("Monster/FlyingEye/flying-eye.pack");
 		atlasRunning = new TextureAtlas("Monster/FlyingEye/flying-eye.pack");
-//		atlasDie = new TextureAtlas("Boss/packs/BossDie.pack");
-//		atlasHurt = new TextureAtlas("Boss/packs/BossHurt.pack");
+		atlasDie = new TextureAtlas("Monster/FlyingEye/Die.pack");
+		atlasHurt = new TextureAtlas("Monster/FlyingEye/Hurting.pack");
 		
 //		attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
 //		attack2 = new Animation<TextureRegion>(0.1f, atlasAttack2.getRegions());
 //		attack3 = new Animation<TextureRegion>(0.1f, atlasAttack3.getRegions());
 		running = new Animation<TextureRegion>(0.15f, atlasRunning.getRegions());
 		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
-//		hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
-//		die = new Animation<TextureRegion>(0.1f, atlasDie.getRegions());
+		hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
+		die = new Animation<TextureRegion>(0.1f, atlasDie.getRegions());
 		setRegion(atlasRunning.getRegions().get(1));
 		MonsterHeight = getRegionHeight();
 		MonsterWidth = getRegionWidth();
@@ -40,7 +41,7 @@ public class FlyingEye extends Monster{
 		super(world, screen,x,y,false);
 		bullet = new EyeBullet(world, screen, x, y, 0);
 		isIntialLeft = true;
-		Collision.setCategoryFilter(monsterDef, Collision.FLYINGEYE_BITS);
+		monsterDef.setUserData(this);
 	}
 	@Override
 	public void update(float dt) {
@@ -57,13 +58,32 @@ public class FlyingEye extends Monster{
 	}
 	
 	public void movement() {
-		Vector2 vel = b2body.getLinearVelocity();
-		b2body.setLinearVelocity(new Vector2(0,vel.y));
-	
+//		Vector2 vel = b2body.getLinearVelocity();
+//		b2body.setLinearVelocity(new Vector2(0,vel.y));
 	}
 
 	
 	public State getFrameState(float dt) {
+		
+		if(isHurting) {
+			if(!hurt.isAnimationFinished(stateTime)) return State.HURT;
+			else isHurting = false;
+		}
+		if(isDieing) {
+			if(!die.isAnimationFinished(stateTime)) return State.DIE;
+			else isDieing = false;
+		}
+		if(isDie) {
+			isDieing = true;
+			isDie = false;
+			return State.DIE;
+		}
+		if(isHurt) {
+			isHurting = true;
+			isHurt = false;
+			return State.HURT;
+		}
+		
 		double crTime = System.currentTimeMillis();
 		
 		if(isRunning) {
@@ -84,7 +104,14 @@ public class FlyingEye extends Monster{
 	}
 	
 	void onHit() {
+		//System.out.println("lol");
 		this.Health --;
+		if(this.Health == 0) {
+			isDie = true;
+		}
+		else {
+			isHurt = true;
+		}
 	}
 	
 }

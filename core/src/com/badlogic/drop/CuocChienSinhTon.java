@@ -26,7 +26,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 		public void create() {
 			map = MAP.MAP1;
 			batch = new SpriteBatch();
-			this.setScreen(new FlappyMap(this));
+			this.setScreen(new FirstMap(this));
 		}
 		
 		@Override

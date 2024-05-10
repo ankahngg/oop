@@ -30,7 +30,7 @@ abstract public class Bullet extends Sprite{
 	
 	public TextureAtlas atlasBullet;
 	public Animation<TextureRegion> bullet;
-	public Fixture monsterDef;
+	public Fixture bulletDef;
 	public float SpriteHeight;
 	public float SpriteWidth;
 	public int direction;
@@ -52,6 +52,7 @@ abstract public class Bullet extends Sprite{
 		SpriteHeight = getRegionHeight();
 		SpriteWidth = getRegionWidth();
 		defineBullet(x,y);
+		
 	}
 	
 	abstract public void prepareAnimation() ;
@@ -79,10 +80,8 @@ abstract public class Bullet extends Sprite{
 	
 	public void launch(float dt) {
 		stateTime = 0;
-		
 	}
 
-	
 	public void Movement() {
 		if(direction == 0) b2body.setLinearVelocity(new Vector2(-10,0));
 		else b2body.setLinearVelocity(new Vector2(10,0));
@@ -97,7 +96,7 @@ abstract public class Bullet extends Sprite{
 		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 		 fdef.shape = shape;
 		 fdef.isSensor = true;
-		 monsterDef = b2body.createFixture(fdef);
+		 bulletDef = b2body.createFixture(fdef);
 	}
 
 	

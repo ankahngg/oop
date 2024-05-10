@@ -27,12 +27,12 @@ public class WorldContactListener implements ContactListener {
         if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = true;
       
         if(isContact(Collision.SPINE_BITS,Collision.HERO_BITS,contact)) Collision.heroHurt(contact);
-        if(isContact(Collision.MONSTERBOUND_BITS,Collision.SKELETON_BITS, contact)) Collision.monsterBound(contact);
-        if(isContact(Collision.SKELETON_BITS,Collision.HERO_BITS, contact)) {
+        if(isContact(Collision.MONSTERBULLET_BITS,Collision.HERO_BITS, contact)) Collision.heroHurt(contact);
+        if(isContact(Collision.MONSTERBOUND_BITS,Collision.MONSTER_BITS, contact)) Collision.monsterBound(contact);
+        if(isContact(Collision.MONSTER_BITS,Collision.HERO_BITS, contact)) {
         	Collision.heroHurt(contact);
         }
-       
-       
+        if(isContact(Collision.MONSTER_BITS,Collision.HEROATTACK_BITS, contact)) Collision.monsterInRangeAttackAdd(contact);
     }
 
     @Override
@@ -41,6 +41,7 @@ public class WorldContactListener implements ContactListener {
         //contacts.remove(contact);
     	if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.startInstructionColi = false;
     	 if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = false;
+    	 if(isContact(Collision.MONSTER_BITS,Collision.HEROATTACK_BITS, contact)) Collision.monsterInRangeAttackRemove(contact);
     	
         
     }

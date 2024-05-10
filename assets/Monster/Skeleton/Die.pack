@@ -1,0 +1,40 @@
+
+Die.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+enemy-death-3
+  rotate: false
+  xy: 1, 10
+  size: 26, 41
+  orig: 44, 52
+  offset: 8, 5
+  index: -1
+enemy-death-2
+  rotate: false
+  xy: 29, 18
+  size: 26, 33
+  orig: 44, 52
+  offset: 8, 2
+  index: -1
+enemy-death-4
+  rotate: false
+  xy: 57, 11
+  size: 18, 40
+  orig: 44, 52
+  offset: 11, 10
+  index: -1
+enemy-death-5
+  rotate: false
+  xy: 77, 23
+  size: 12, 28
+  orig: 44, 52
+  offset: 15, 23
+  index: -1
+enemy-death-1
+  rotate: false
+  xy: 77, 1
+  size: 14, 20
+  orig: 44, 52
+  offset: 15, 4
+  index: -1
