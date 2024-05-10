@@ -1,5 +1,7 @@
 package com.badlogic.drop.Sprites;
 
+import java.util.ArrayList;
+
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -16,11 +18,13 @@ public class Collision {
 	public static final short HEROATTACK_BITS = 3;
 	public static final short BOSS_BITS = 4;
 	public static final short SPINE_BITS = 5;
-	public static final short SKELETON_BITS = 6;
+	public static final short MONSTER_BITS = 6;
 	public static final short FLYINGEYE_BITS = 7;
-	public static final short EYEBULLET_BITS = 8;
+	public static final short MONSTERBULLET_BITS = 8;
 	public static final short MONSTERBOUND_BITS = 9;
 	public static PlayScreen screen;
+	
+	public static ArrayList<Monster> monsters = new ArrayList<Monster>();
 	
 	public static void setup(PlayScreen x) {
 		screen = x;
@@ -33,7 +37,10 @@ public class Collision {
 		}
 	
 	public static void heroAttack(PlayScreen screen) {
-		if(bossInRangeAttack) screen.getBoss().isHurt = true;
+		for(Monster m : monsters) {
+			m.onHit();
+		}
+
 	}
 	public static void update(float dt) {
 		if(startInstructionColi) B2WorldCreator.startInstruc.onHit();
@@ -45,9 +52,20 @@ public class Collision {
 		((AnKhangHero) x.getUserData()).handleHurt(y);
 	}
 	public static void monsterBound(Contact contact) {
-		Fixture x = getFix(Collision.SKELETON_BITS,contact);
-		((Skeleton) x.getUserData()).onWallCollision();
+		Fixture x = getFix(Collision.MONSTER_BITS,contact);
+		((Monster) x.getUserData()).onWallCollision();
 	}
+	public static void monsterInRangeAttackAdd(Contact contact) {
+		Fixture x = getFix(Collision.HEROATTACK_BITS,contact);
+		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
+		monsters.add((Monster) y.getUserData());
+	}
+	public static void monsterInRangeAttackRemove(Contact contact) {
+		Fixture x = getFix(Collision.HEROATTACK_BITS,contact);
+		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
+		monsters.remove((Monster) y.getUserData());
+	}
+	
 
 	private static Fixture getFix(short z, Contact contact) {
 		// TODO Auto-generated method stub

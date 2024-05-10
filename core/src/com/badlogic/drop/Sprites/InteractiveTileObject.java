@@ -17,17 +17,16 @@ public abstract class InteractiveTileObject {
 	public TiledMapTile tile;
 	public Rectangle bounds;
 	public Body body;
+	public BodyDef bdef = new BodyDef();
+	public PolygonShape shape = new PolygonShape();
+	public FixtureDef fdef = new FixtureDef();
 	
 	protected Fixture fixture;
 	
-	public InteractiveTileObject(World world, TiledMap map, Rectangle bounds) {
+	public InteractiveTileObject(World world, TiledMap map, Rectangle bounds, boolean isSensor) {
 		this.world = world;
 		this.map = map;
 		this.bounds = bounds;
-		
-		BodyDef bdef = new BodyDef();
-		PolygonShape shape = new PolygonShape();
-		FixtureDef fdef = new FixtureDef();
 		
 		bdef.type = BodyDef.BodyType.StaticBody;
 		bdef.position.set((bounds.getX()+bounds.getWidth()/2)/CuocChienSinhTon.PPM,(bounds.getY()+bounds.getHeight()/2)/CuocChienSinhTon.PPM);
@@ -35,6 +34,7 @@ public abstract class InteractiveTileObject {
 		
 		shape.setAsBox(bounds.getWidth()/2/CuocChienSinhTon.PPM, bounds.getHeight()/2/CuocChienSinhTon.PPM);
 		fdef.shape = shape;
+		if(isSensor) fdef.isSensor = true;
 		
 		fixture = body.createFixture(fdef);
 	}

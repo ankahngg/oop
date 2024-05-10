@@ -1,0 +1,12 @@
+
+Hurting.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+skeleton-7
+  rotate: false
+  xy: 1, 1
+  size: 17, 45
+  orig: 44, 52
+  offset: 13, 0
+  index: -1

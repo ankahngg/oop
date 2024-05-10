@@ -174,7 +174,6 @@ public abstract class Hero extends Sprite{
 
 	private void handleDie() {
 		isDie = true;
-		System.out.println("wtf");
 		//screen.game.setScreen(new FlappyMap(screen.game));
 		
 	}

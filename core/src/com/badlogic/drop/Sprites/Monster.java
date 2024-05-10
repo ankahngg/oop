@@ -52,9 +52,14 @@ abstract public class Monster extends Sprite{
 		public Fixture monsterDef;
 		public Fixture hitboxDef;
 		
+		double t = 1000;
+		public boolean isAttacking = false;
+		public boolean isHurting = false;
+		public boolean isDieing = false;
 		public boolean isRuningR;
 		public boolean isDynamic;
 		public boolean isHurt = false;
+		public boolean isDie = false;
 		public boolean isIntialLeft = false;
 		public int MonsterHeight;
 		public int MonsterWidth;
@@ -84,6 +89,7 @@ abstract public class Monster extends Sprite{
 			prepareAnimation();
 			defineMonster(x,y);
 			setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
+			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS);
 			
 		}
 		
@@ -161,10 +167,10 @@ abstract public class Monster extends Sprite{
 
 			return region;
 		}
+		public void onWallCollision() {
+			isRuningR = !isRuningR;
+		}
 		
-		double t = 1000;
-		boolean isAttacking = false;
-		boolean isHurting = false;
 		
 		abstract public State getFrameState(float dt) ;
 		

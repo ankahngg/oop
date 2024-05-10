@@ -21,16 +21,16 @@ public class Skeleton extends Monster{
 //		atlasAttack3 = new TextureAtlas("Boss/packs/BossAttack3.pack");
 //		atlasStanding = new TextureAtlas("Boss/packs/BossIdle.pack");
 		atlasRunning = new TextureAtlas("Monster/Skeleton/Skeleton.pack");
-//		atlasDie = new TextureAtlas("Boss/packs/BossDie.pack");
-//		atlasHurt = new TextureAtlas("Boss/packs/BossHurt.pack");
+		atlasDie = new TextureAtlas("Monster/Skeleton/Die.pack");
+		atlasHurt = new TextureAtlas("Monster/Skeleton/Hurting.pack");
 		
 //		attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
 //		attack2 = new Animation<TextureRegion>(0.1f, atlasAttack2.getRegions());
 //		attack3 = new Animation<TextureRegion>(0.1f, atlasAttack3.getRegions());
 		running = new Animation<TextureRegion>(0.1f, atlasRunning.getRegions());
 //		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
-//		hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
-//		die = new Animation<TextureRegion>(0.1f, atlasDie.getRegions());
+		hurt = new Animation<TextureRegion>(0.2f, atlasHurt.getRegions());
+		die = new Animation<TextureRegion>(0.1f, atlasDie.getRegions());
 		setRegion(atlasRunning.getRegions().get(1));
 		MonsterHeight = getRegionHeight();
 		MonsterWidth = getRegionWidth();
@@ -39,30 +39,52 @@ public class Skeleton extends Monster{
 	public Skeleton(World world, FirstMap screen,int x, int y) {		
 		super(world, screen,x,y,true);
 		isIntialLeft = true;
-		Collision.setCategoryFilter(monsterDef, Collision.SKELETON_BITS);
 		monsterDef.setUserData(this);
 	}
 	
 	public void movement() {
 		Vector2 vel = b2body.getLinearVelocity();
-		if(isRuningR) b2body.setLinearVelocity(new Vector2(5,vel.y));
-		else b2body.setLinearVelocity(new Vector2(-5,vel.y));
-	}
-	
-	public void onWallCollision() {
-		isRuningR = !isRuningR;
+		if(!isHurting) {
+			if(isRuningR) b2body.setLinearVelocity(new Vector2(5,vel.y));
+			else b2body.setLinearVelocity(new Vector2(-5,vel.y));			
+		}
 	}
 	
 	double t = 1000;
-	boolean isAttacking = false;
-	boolean isHurting = false;
 	
 	public State getFrameState(float dt) {
+		if(isHurting) {
+			b2body.applyLinearImpulse(new Vector2(-2,0), b2body.getWorldCenter(),true);
+			if(!hurt.isAnimationFinished(stateTime)) return State.HURT;
+			else isHurting = false;
+		}
+		if(isDieing) {
+			if(!die.isAnimationFinished(stateTime)) return State.DIE;
+			else isDieing = false;
+		}
+		if(isDie) {
+			isDieing = true;
+			isDie = false;
+			return State.DIE;
+		}
+		if(isHurt) {
+			isHurting = true;
+			isHurt = false;
+			return State.HURT;
+		}
 		return State.RUNNING;
 	}
 	
 	void onHit() {
 		this.Health --;
+		if(this.Health == 0) {
+			isDie = true;
+		}
+		else {
+			isHurt = true;
+		}
+		
+		
 	}
 	
 }
