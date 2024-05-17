@@ -42,7 +42,7 @@ public class StageCreator {
 			x.removeMonster();
 		}
 		for(Skeleton x : skeMonsters) {
-			world.destroyBody(x.b2body);
+			
 			x.removeMonster();
 		}
 		eyeMonsters.clear();
