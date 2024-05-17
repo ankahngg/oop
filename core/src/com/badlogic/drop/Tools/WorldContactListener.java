@@ -23,12 +23,14 @@ public class WorldContactListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
         // Add the contact to the set when it begins
+    	if(isContact(Collision.HERO_BITS,Collision.GROUND_BITS,contact)) Collision.resetJump(contact);
         if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.startInstructionColi = true;
+        if(isContact(Collision.HERO_BITS,Collision.STAGEBOUND_BITS,contact)) Collision.heroCollideBound(contact);
         if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = true;
-      
+        if(isContact(Collision.MONSTERBULLET_BITS,Collision.HERO_BITS,contact)) Collision.heroBulletHurt(contact);
         if(isContact(Collision.SPINE_BITS,Collision.HERO_BITS,contact)) Collision.heroHurt(contact);
         if(isContact(Collision.MONSTERBULLET_BITS,Collision.HERO_BITS, contact)) Collision.heroHurt(contact);
-        if(isContact(Collision.MONSTERBOUND_BITS,Collision.MONSTER_BITS, contact)) Collision.monsterBound(contact);
+      
         if(isContact(Collision.MONSTER_BITS,Collision.HERO_BITS, contact)) {
         	Collision.heroHurt(contact);
         }

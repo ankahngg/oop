@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 	
 	public class CuocChienSinhTon extends Game {
 			
-		public static final int V_WIDTH=530;
+		public static final int V_WIDTH=560;
 		public static final int V_HEIGHT=320;
 		public static final float PPM = 16;
 		public  enum MAP {MAP1, MAP2,MAP3};

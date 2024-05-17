@@ -34,6 +34,7 @@ public abstract class InteractiveTileObject {
 		
 		shape.setAsBox(bounds.getWidth()/2/CuocChienSinhTon.PPM, bounds.getHeight()/2/CuocChienSinhTon.PPM);
 		fdef.shape = shape;
+		fdef.filter.maskBits = Collision.MONSTER_BITS; 
 		if(isSensor) fdef.isSensor = true;
 		
 		fixture = body.createFixture(fdef);

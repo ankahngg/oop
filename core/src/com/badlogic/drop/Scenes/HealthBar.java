@@ -32,11 +32,11 @@ public class HealthBar {
 	public HealthBar(FirstMap x) {
 		atlasRanks = new TextureAtlas("Ranks/packs/Ranks.pack");
 		currentRank = atlasRanks.getRegions().get(1);
-		HeroHealthBar = new Texture("HealthBar/HeroHealthBar1.png");
-		HeroHealth =  new Texture("HealthBar/HeroHealthBar2.png");
+		HeroHealthBar = new Texture("HealthBar/bg.png");
+		HeroHealth =  new Texture("HealthBar/red.png");
 		
-		BossHealthBar = new Texture("HealthBar/BossHealthBar1.png");
-		BossHealth =  new Texture("HealthBar/BossHealthBar2.png");
+		BossHealthBar = new Texture("HealthBar/bg.png");
+		BossHealth =  new Texture("HealthBar/green.png");
 		
 		
 		//get batch and player
@@ -46,16 +46,16 @@ public class HealthBar {
 		boss = x.getBoss();
 		
 		//set up hud
-		viewport = new FitViewport(CuocChienSinhTon.V_WIDTH, CuocChienSinhTon.V_HEIGHT, new OrthographicCamera());
-		stage = new Stage(viewport,x.game.getBatch());
-		HeroHealthLabel = new Label(String.format("%d/%d",player.getHealth(),player.getHealthMax()),new Label.LabelStyle(new BitmapFont(),Color.WHITE));
-		HeroHealthLabel.setPosition(3*CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT-1.5f*CuocChienSinhTon.PPM+3);
-		
-		BossHealthLabel = new Label(String.format("%d/%d",boss.getHealth(),boss.getHealthMax()),new Label.LabelStyle(new BitmapFont(),Color.WHITE));
-		BossHealthLabel.setPosition(20*CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT-1.5f*CuocChienSinhTon.PPM+3);
-		
-		stage.addActor(HeroHealthLabel);
-		stage.addActor(BossHealthLabel);
+//		viewport = new FitViewport(CuocChienSinhTon.V_WIDTH, CuocChienSinhTon.V_HEIGHT, new OrthographicCamera());
+//		stage = new Stage(viewport,x.game.getBatch());
+//		HeroHealthLabel = new Label(String.format("%d/%d",player.getHealth(),player.getHealthMax()),new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+//		HeroHealthLabel.setPosition(3*CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT-1.5f*CuocChienSinhTon.PPM+3);
+//		
+//		BossHealthLabel = new Label(String.format("%d/%d",boss.getHealth(),boss.getHealthMax()),new Label.LabelStyle(new BitmapFont(),Color.WHITE));
+//		BossHealthLabel.setPosition(20*CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT-1.5f*CuocChienSinhTon.PPM+3);
+//		
+//		stage.addActor(HeroHealthLabel);
+//		stage.addActor(BossHealthLabel);
 	}
 	
 	public void update(float dt) {
@@ -64,7 +64,7 @@ public class HealthBar {
 		float x = screen.getCamera().position.x-screen.getGamePort().getWorldWidth()/2;
 		float y = screen.getCamera().position.y+screen.getGamePort().getWorldHeight()/2;
 	
-		batch.draw(HeroHealthBar, x+3,y-2,HeroHealthBar.getWidth()/CuocChienSinhTon.PPM,HeroHealthBar.getHeight()/CuocChienSinhTon.PPM, 0,0,HeroHealthBar.getWidth(),HeroHealthBar.getHeight(),false,false);
+		batch.draw(HeroHealthBar, x+3,y-2,HeroHealthBar.getWidth()/CuocChienSinhTon.PPM/2,HeroHealthBar.getHeight()/CuocChienSinhTon.PPM/2, 0,0,HeroHealthBar.getWidth(),HeroHealthBar.getHeight(),false,false);
 		
 		float ratio = 1.0f*player.getHealth()/player.getHealthMax();
 		float HealthX = x+3+(HeroHealthBar.getWidth()-HeroHealth.getWidth())/2/CuocChienSinhTon.PPM;
@@ -73,7 +73,7 @@ public class HealthBar {
 		// and take portion of Texuture with size (lengOfHeroHeroHealthBar * HeroHealth/MaxHeroHealth) x (Height)
 		
 		batch.draw(HeroHealth, HealthX,HealthY,
-			(HeroHealth.getWidth()/CuocChienSinhTon.PPM)*ratio,HeroHealth.getHeight()/CuocChienSinhTon.PPM, 
+			(HeroHealth.getWidth()/CuocChienSinhTon.PPM/2)*ratio,HeroHealth.getHeight()/CuocChienSinhTon.PPM/2, 
 			0,0,(int)(HeroHealth.getWidth()*ratio),HeroHealth.getHeight(),
 			false,false);
 		batch.end();
@@ -83,14 +83,14 @@ public class HealthBar {
 			batch.begin();
 			x = screen.getCamera().position.x-screen.getGamePort().getWorldWidth()/2;
 			y = screen.getCamera().position.y+screen.getGamePort().getWorldHeight()/2;
-			batch.draw(BossHealthBar, x+20,y-2,BossHealthBar.getWidth()/CuocChienSinhTon.PPM+5,BossHealthBar.getHeight()/CuocChienSinhTon.PPM, 0,0,BossHealthBar.getWidth(),BossHealthBar.getHeight(),false,false);
+			batch.draw(BossHealthBar, x+20,y-2,BossHealthBar.getWidth()/CuocChienSinhTon.PPM/2+5,BossHealthBar.getHeight()/CuocChienSinhTon.PPM/2, 0,0,BossHealthBar.getWidth(),BossHealthBar.getHeight(),false,false);
 			
 			ratio = 1.0f*boss.getHealth()/boss.getHealthMax();
 			HealthX = x+20+(BossHealthBar.getWidth()-BossHealth.getWidth())/2/CuocChienSinhTon.PPM;
 			HealthY = y-2+(BossHealthBar.getHeight()-BossHealth.getHeight())/2/CuocChienSinhTon.PPM;
 			
 			batch.draw(BossHealth, HealthX,HealthY,
-					(BossHealth.getWidth()/CuocChienSinhTon.PPM+5)*ratio,BossHealth.getHeight()/CuocChienSinhTon.PPM, 
+					(BossHealth.getWidth()/CuocChienSinhTon.PPM/2+5)*ratio,BossHealth.getHeight()/CuocChienSinhTon.PPM/2, 
 					0,0,(int)(BossHealth.getWidth()*ratio),BossHealth.getHeight(),
 					false,false);
 			batch.end();
@@ -101,10 +101,10 @@ public class HealthBar {
 			batch.end();
 		}
 		// Draw hud
-		HeroHealthLabel.setText(String.format("%d/%d",player.getHealth(),player.getHealthMax()));
-		BossHealthLabel.setText(String.format("%d/%d",boss.getHealth(),boss.getHealthMax()));
-		screen.game.getBatch().setProjectionMatrix(stage.getCamera().combined);
-		stage.draw();
+//		HeroHealthLabel.setText(String.format("%d/%d",player.getHealth(),player.getHealthMax()));
+//		BossHealthLabel.setText(String.format("%d/%d",boss.getHealth(),boss.getHealthMax()));
+//		screen.game.getBatch().setProjectionMatrix(stage.getCamera().combined);
+//		stage.draw();
 	}
 	
 }

@@ -13,7 +13,7 @@ public class EyeBullet extends Bullet {
 	public EyeBullet(World world, PlayScreen screen, int x, int y, int direction) {
 		super(world, screen, x, y, direction);
 		bulletDef.setUserData(this);
-		Collision.setCategoryFilter(bulletDef, Collision.MONSTERBULLET_BITS);
+		Collision.setCategoryFilter(bulletDef, Collision.MONSTERBULLET_BITS,null);
 	}
 
 	@Override

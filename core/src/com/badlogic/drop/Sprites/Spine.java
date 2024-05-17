@@ -9,7 +9,7 @@ public class Spine extends InteractiveTileObject{
 	public Spine(World world, TiledMap map, Rectangle bounds,boolean isSensor) {
 		super(world,map,bounds,isSensor);
 		fixture.setUserData(this);
-		Collision.setCategoryFilter(fixture, Collision.SPINE_BITS);
+		Collision.setCategoryFilter(fixture, Collision.SPINE_BITS,null);
 	}
 
 	@Override

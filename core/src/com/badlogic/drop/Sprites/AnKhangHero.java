@@ -32,7 +32,7 @@ public class AnKhangHero extends Hero{
 		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
 		currentState = State.STANDING;
 		previousState = State.STANDING;
-		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS);
+		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS,null);
 		normalDef.setUserData(this);
 	}
 	
@@ -52,7 +52,7 @@ public class AnKhangHero extends Hero{
 		running = new Animation<TextureRegion>(0.1f, atlasRunning.getRegions());
 		jumping = new Animation<TextureRegion>(0.1f, atlasJumping.getRegions());
 		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
-		hurt = new Animation<TextureRegion>(0.1f, atlasHurting.getRegions());
+		hurt = new Animation<TextureRegion>(0.05f, atlasHurting.getRegions());
 		die = new Animation<TextureRegion>(0.1f, atlasDieing.getRegions());
 		setRegion(atlasStanding.getRegions().get(1));
 		HeroHeight = getRegionHeight();
@@ -75,7 +75,7 @@ public class AnKhangHero extends Hero{
 			fdef.isSensor = true;
 			attackFixture = body.createFixture(fdef);
 			attackFixture.setUserData("DamageRange");
-			Collision.setCategoryFilter(attackFixture, Collision.HEROATTACK_BITS);
+			Collision.setCategoryFilter(attackFixture, Collision.HEROATTACK_BITS,null);
 			currentDirection = runningRight;
 		}
 	}

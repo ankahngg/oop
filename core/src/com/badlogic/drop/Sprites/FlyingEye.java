@@ -1,5 +1,8 @@
 package com.badlogic.drop.Sprites;
 
+import java.util.Iterator;
+
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Monster.State;
@@ -7,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -28,7 +33,7 @@ public class FlyingEye extends Monster{
 //		attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
 //		attack2 = new Animation<TextureRegion>(0.1f, atlasAttack2.getRegions());
 //		attack3 = new Animation<TextureRegion>(0.1f, atlasAttack3.getRegions());
-		running = new Animation<TextureRegion>(0.15f, atlasRunning.getRegions());
+		running = new Animation<TextureRegion>(0.2f, atlasRunning.getRegions());
 		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
 		hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
 		die = new Animation<TextureRegion>(0.1f, atlasDie.getRegions());
@@ -39,6 +44,7 @@ public class FlyingEye extends Monster{
 	
 	public FlyingEye(World world, PlayScreen screen,int x, int y) {		
 		super(world, screen,x,y,false);
+		this.Health = 2;
 		bullet = new EyeBullet(world, screen, x, y, 0);
 		isIntialLeft = true;
 		monsterDef.setUserData(this);
@@ -47,19 +53,26 @@ public class FlyingEye extends Monster{
 	public void update(float dt) {
 		// TODO Auto-generated method stub
 		super.update(dt);
+//		if(isDie) return;
 		
+		if(isDied) return;
 		if(running.isAnimationFinished(stateTime)) {
 			bullet.launch(dt);
 		}
 		bullet.update(dt);
 		
-		
-		//bullet.update(dt);
+	}
+	
+	public void removeMonster() {
+		world.destroyBody(b2body);
+		world.destroyBody(bullet.b2body);
+		b2body = null;bullet=null;
+		((FirstMap) screen).StageCreator.eyeMonsters.remove(this);
+		isDied = true;
 	}
 	
 	public void movement() {
-//		Vector2 vel = b2body.getLinearVelocity();
-//		b2body.setLinearVelocity(new Vector2(0,vel.y));
+
 	}
 
 	
@@ -71,7 +84,10 @@ public class FlyingEye extends Monster{
 		}
 		if(isDieing) {
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
-			else isDieing = false;
+			else {
+				isDieing = false;
+				removeMonster();
+			}
 		}
 		if(isDie) {
 			isDieing = true;
@@ -112,6 +128,11 @@ public class FlyingEye extends Monster{
 		else {
 			isHurt = true;
 		}
+	}
+	
+	public void defineMonster(int x,int y) {
+		
+		super.defineMonster(x,y);
 	}
 	
 }

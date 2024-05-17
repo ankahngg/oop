@@ -1,44 +1,56 @@
 package com.badlogic.drop.Tools;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Brick;
+import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.Instruction;
-import com.badlogic.drop.Sprites.MonsterBound;
+import com.badlogic.drop.Sprites.Monster;
+import com.badlogic.drop.Sprites.StageBound;
+import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.Spine;
+import com.badlogic.gdx.maps.MapGroupLayer;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.ObjectSet;
 
 public class B2WorldCreator {
 	public static Instruction startInstruc;
 	public static Spine spine;
+	
+	public ArrayList<Vector2> checkpoints = new ArrayList<Vector2>();
+	public ArrayList<StageBound> stageBounds = new ArrayList<StageBound>();
 
 	public B2WorldCreator(World world,TiledMap map, PlayScreen screen) {
 		if (screen instanceof FirstMap) {
-			for(MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
-			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			new Brick(world, map, rect,false);
+			for(MapObject object : map.getLayers().get("GroundObject").getObjects().getByType(RectangleMapObject.class)) {
+				Rectangle rect = ((RectangleMapObject) object).getRectangle();
+				new Brick(world, map, rect,false);
+			}
+			for(MapObject object : map.getLayers().get("SensorObject").getObjects().getByType(RectangleMapObject.class)) {
+				Rectangle rect = ((RectangleMapObject) object).getRectangle();
+				Vector2 pos = new Vector2(rect.x,rect.y);
+				checkpoints.add(pos);
+				startInstruc = new Instruction(world, map, rect, screen);
+			}
+			
+			for(MapObject object : map.getLayers().get("StageBound").getObjects().getByType(RectangleMapObject.class)) {
+				Rectangle rect = ((RectangleMapObject) object).getRectangle();
+				StageBound x = new StageBound(world, map, rect,false);
+				System.out.println(rect.x/CuocChienSinhTon.PPM+"*");
+				stageBounds.add(x);
+			}
 		}
-		for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
-			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			startInstruc = new Instruction(world, map, rect, screen);
-		}
-		for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
-			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			new Spine(world, map, rect,false);
-		}
-		for(MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
-			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			new MonsterBound(world, map, rect,true);
-		}	
-//		for(MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
-//			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-//			new Spine(world, map, rect, screen);
-//		}	
-	}
-		
 	}
 }

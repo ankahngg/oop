@@ -56,10 +56,12 @@ abstract public class Monster extends Sprite{
 		public boolean isAttacking = false;
 		public boolean isHurting = false;
 		public boolean isDieing = false;
+		
 		public boolean isRuningR;
 		public boolean isDynamic;
 		public boolean isHurt = false;
 		public boolean isDie = false;
+		public boolean isDied = false;
 		public boolean isIntialLeft = false;
 		public int MonsterHeight;
 		public int MonsterWidth;
@@ -89,12 +91,13 @@ abstract public class Monster extends Sprite{
 			prepareAnimation();
 			defineMonster(x,y);
 			setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
-			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS);
+			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
 			
 		}
 		
 		public void update(float dt) {
 			setRegion(getFrame(dt));
+			if(isDied) return;
 			setBounds(b2body.getPosition().x-MonsterWidth/CuocChienSinhTon.PPM/2,
 					b2body.getPosition().y-MonsterHeight/CuocChienSinhTon.PPM/2,
 					getRegionWidth()/CuocChienSinhTon.PPM,
@@ -104,6 +107,10 @@ abstract public class Monster extends Sprite{
 			this.draw(batch);
 			batch.end();
 		}
+		
+		abstract public void removeMonster();
+			
+		
 		
 		abstract public void movement();	
 		
@@ -139,31 +146,33 @@ abstract public class Monster extends Sprite{
 			        break;
 			}
 			
-			
-			float vel = b2body.getLinearVelocity().x;
-			if(!isIntialLeft) {
-				if((vel < 0 || !runningRight) && !region.isFlipX()) {
-					region.flip(true,false);
-					runningRight = false;
-					
+			if(b2body != null) {
+				
+				float vel = b2body.getLinearVelocity().x;
+				if(!isIntialLeft) {
+					if((vel < 0 || !runningRight) && !region.isFlipX()) {
+						region.flip(true,false);
+						runningRight = false;
+						
+					}
+					else if((vel > 0 || runningRight) && region.isFlipX()) {
+						region.flip(true,false);
+						runningRight = true;
+					}				
 				}
-				else if((vel > 0 || runningRight) && region.isFlipX()) {
-					region.flip(true,false);
-					runningRight = true;
-				}				
-			}
-			else {
-				if((vel < 0 || !runningRight) && region.isFlipX()) {
-					region.flip(true,false);
-					runningRight = false;
+				else {
+					if((vel < 0 || !runningRight) && region.isFlipX()) {
+						region.flip(true,false);
+						runningRight = false;
+					}
+					else if((vel > 0 || runningRight) && !region.isFlipX()) {
+						region.flip(true,false);
+						runningRight = true;
+					}				
 				}
-				else if((vel > 0 || runningRight) && !region.isFlipX()) {
-					region.flip(true,false);
-					runningRight = true;
-				}				
+				
+				previousState = currentState;
 			}
-			
-			previousState = currentState;
 
 			return region;
 		}
@@ -179,6 +188,7 @@ abstract public class Monster extends Sprite{
 		}
 		
 		public void defineMonster(int x,int y) {
+			
 			CircleShape shape = new CircleShape();
 			 bdef.position.set(x,y);
 			 if(isDynamic) bdef.type = BodyDef.BodyType.DynamicBody;

@@ -37,7 +37,13 @@ public class Boss extends Monster{
 	
 	public Boss(World world, FirstMap screen, int x, int y) {		
 		super(world, screen,x,y,true);
-		Collision.setCategoryFilter(monsterDef, Collision.BOSS_BITS);
+		Collision.setCategoryFilter(monsterDef, Collision.BOSS_BITS,null);
+	}
+	
+	@Override
+	public void removeMonster() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public void movement() {

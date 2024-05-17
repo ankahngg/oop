@@ -2,6 +2,7 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
+import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
@@ -10,11 +11,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Hero extends Sprite{
@@ -192,7 +195,10 @@ public abstract class Hero extends Sprite{
 			if(!die.isAnimationFinished(stateTime)) {
 				return State.DIE;
 			}
-			else isDieing = false;
+			else {
+				isDieing = false;
+				((FirstMap) screen).handleDie();
+			}
 		}
 		
 		
@@ -249,8 +255,11 @@ public abstract class Hero extends Sprite{
 	protected void defineHero() {
 		bdef.type = BodyDef.BodyType.DynamicBody;
 		 body = world.createBody(bdef);
-		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
+		 PolygonShape shape = new PolygonShape();
+		 shape.setAsBox(getRegionWidth()/CuocChienSinhTon.PPM/2, getRegionHeight()/CuocChienSinhTon.PPM/2,new Vector2(0,0),0);
+		 //shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 		 fdef.shape = shape;
+		 fdef.friction = 0.05f;
 		 normalDef = body.createFixture(fdef);
 		 normalDef.setUserData("herobody");
 		 

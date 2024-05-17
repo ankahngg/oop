@@ -14,7 +14,7 @@ public class Instruction extends SensorObject {
 	public Instruction(World world, TiledMap map, Rectangle bounds, PlayScreen screen) {
 		super(world,map,bounds);
 		fixture.setUserData(this);
-		Collision.setCategoryFilter(fixture, Collision.INSTRUCTION_BITS);
+		Collision.setCategoryFilter(fixture, Collision.INSTRUCTION_BITS,null);
 		texture = new Texture("Instruction.png");
 		batch = screen.game.getBatch();
 	}

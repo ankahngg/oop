@@ -26,7 +26,7 @@ abstract public class Bullet extends Sprite{
 	BodyDef bdef = new BodyDef();
 	FixtureDef fdef = new FixtureDef();
 	public Body b2body;
-	public float stateTime=0;
+	public float stateTime=1000;
 	
 	public TextureAtlas atlasBullet;
 	public Animation<TextureRegion> bullet;
@@ -85,6 +85,10 @@ abstract public class Bullet extends Sprite{
 	public void Movement() {
 		if(direction == 0) b2body.setLinearVelocity(new Vector2(-10,0));
 		else b2body.setLinearVelocity(new Vector2(10,0));
+	}
+	
+	public void onHit() {
+		stateTime = bullet.getFrameDuration()*1000;
 	}
 
 	public void defineBullet(int x,int y) {

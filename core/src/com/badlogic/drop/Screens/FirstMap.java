@@ -1,5 +1,7 @@
 package com.badlogic.drop.Screens;
 
+import java.util.ArrayList;
+
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
@@ -9,7 +11,9 @@ import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.Skeleton;
+import com.badlogic.drop.Sprites.StageBound;
 import com.badlogic.drop.Tools.B2WorldCreator;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -18,6 +22,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -25,11 +30,24 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class FirstMap extends PlayScreen {
+	public int stageLength = 35;
 	public boolean isBossSpawn = true;
 	public final int speed = 10;
 	private Skeleton skeleton1;
 	private FlyingEye Eye1;
 	private Bullet bullet;
+	public B2WorldCreator WorldCreator;
+	public boolean canJump = false;
+	public boolean Hitting;
+	public int stageNum = 5;
+	public int stagePass = -1;
+	public int stageCr;
+	public int crCheckpoint = 0;
+	public StageCreator StageCreator;
+	public Rectangle tmp;
+	public ArrayList<Boolean> firstEntry = new ArrayList<Boolean>();
+	public ArrayList<Boolean> stageComplete = new ArrayList<Boolean>();
+	private boolean isOnStage = false;
 	
 	public FirstMap(CuocChienSinhTon game) {
 		// load map
@@ -52,23 +70,21 @@ public class FirstMap extends PlayScreen {
 		// setup box2d
 		world = new World(new Vector2(0,-50),true);
 		b2dr = new Box2DDebugRenderer();
-		new B2WorldCreator(world, map, this);
-		
-		//create monster
-		skeleton1 = new Skeleton(world, this,30,2);
-		Eye1 = new FlyingEye(world, this, 30, 5);
-		//create boss
-		boss = new Boss(world, this,35,2);
-
+		WorldCreator = new B2WorldCreator(world, map, this);
+		StageCreator = new StageCreator(world, map, this);
 		//create player
 		player = new AnKhangHero(world,this);
 		//setup collision 
 		Collision.setup(this);
 		
+		boss = new Boss(world, this, 40, 5);
 		//create healthBar
 		healthbar = new HealthBar(this);
-		
 		boss.b2body.setActive(false);
+		for(int i=0;i<=stageNum;i++) firstEntry.add(true);
+		firstEntry.set(0, false);
+		nextStage();
+		
 	}
 
 	public TextureAtlas getAtlas() {
@@ -81,10 +97,31 @@ public class FirstMap extends PlayScreen {
 
 	}
 	public void handleDie() {
-		System.out.println("wtf");
-		//game.setScreen(new FlappyMap(game));
+		Vector2 pos = WorldCreator.checkpoints.get(0);
+		for(Vector2 p : WorldCreator.checkpoints) {
+			if((int) p.x/35/CuocChienSinhTon.PPM <= stagePass) pos = p;
+		}
+		
+		StageCreator.clearMonster();
+		
+		stagePass = (int) (pos.x/CuocChienSinhTon.PPM/35)-1;
+		nextStage();
 		
 		
+		for(int i = stagePass+1;i<=stageNum;i++) firstEntry.set(i,true);
+	
+		player.setHealth(player.getHealthMax());
+		player.body.setTransform(new Vector2(pos.x/CuocChienSinhTon.PPM,pos.y/CuocChienSinhTon.PPM), 0);
+		
+	}
+	public void closeStage() {
+		isOnStage = true;
+		WorldCreator.stageBounds.get(stagePass).body.setActive(true);
+	}
+	
+	public void nextStage() {
+		stagePass++;
+		WorldCreator.stageBounds.get(stagePass).body.setActive(false);
 	}
 	
 	protected void handleInput(float dt) {
@@ -93,9 +130,9 @@ public class FirstMap extends PlayScreen {
 		
 		if(player.isHurting) {
 			if(player.hurtDirection == 0) {
-				player.body.setLinearVelocity( new Vector2((float) (-1.5*speed),0));
+				player.body.setLinearVelocity( new Vector2((float) (0*speed),0));
 			}
-			else player.body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
+			else player.body.setLinearVelocity( new Vector2((float) (0*speed),0));
 			return;
 		}
 		if(player.isDieing) {
@@ -107,14 +144,15 @@ public class FirstMap extends PlayScreen {
 //			System.out.println("lol");
 //			player.body.applyLinearImpulse(new Vector2(30,0), player.getBody().getWorldCenter(),true);
 //		}
-		if(player.isAttacking) {
-			if(player.isFlipX()) player.body.setLinearVelocity( new Vector2(-2,vel.y));
-			else player.body.setLinearVelocity( new Vector2(2,vel.y));
-			return;
-		}
+//		if(player.isAttacking) {
+//			if(player.isFlipX()) player.body.setLinearVelocity( new Vector2(-2,vel.y));
+//			else player.body.setLinearVelocity( new Vector2(2,vel.y));
+//			return;
+//		}
 		if(Gdx.input.isKeyJustPressed(Keys.P) && Gdx.input.isKeyPressed(Keys.ALT_LEFT)) {
 			// +1 vào health
-			skeleton1.onWallCollision();
+			nextStage();
+			
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {
 			player.body.setLinearVelocity( new Vector2(-speed,vel.y));
@@ -126,7 +164,8 @@ public class FirstMap extends PlayScreen {
 			player.body.setLinearVelocity( new Vector2(speed,vel.y));
 		}
 		
-		if(Gdx.input.isKeyPressed(Keys.W) && vel.y == 0) {
+		if(Gdx.input.isKeyJustPressed(Keys.W) && canJump && vel.y == 0) {
+			canJump = false;
 			player.body.applyLinearImpulse(new Vector2(0,25), player.getBody().getWorldCenter(),true);
 			stop = false;
 		}
@@ -134,25 +173,41 @@ public class FirstMap extends PlayScreen {
 		if(stop) player.body.setLinearVelocity( new Vector2(0,vel.y));
 	}
 	
+	public void monsterUpdate(float dt) {
+		for(FlyingEye x : StageCreator.eyeMonsters) {
+			if(x!=null)
+			x.update(dt);
+		}
+		for(Skeleton x : StageCreator.skeMonsters) {
+			if(x!=null)
+			x.update(dt);
+		}
+	}
+	
 	// method that be called every 1/60s
 	public void update(float dt) {
 		handleInput(dt);
 		player.update(dt);
 		boss.update(dt);
-		skeleton1.update(dt);
-		Eye1.update(dt);
+		monsterUpdate(dt);
 		
-		if(player.isDie) handleDie();
 		Collision.update(dt);
 		healthbar.update(dt);
 
 		world.step(1/60f, 6, 2);
 		//handle camera out of bound
-		if(player.body.getPosition().x-gamePort.getWorldWidth()/2 < 0) 
-			camera.position.x = gamePort.getWorldWidth()/2;
-		else 
-			camera.position.x = player.body.getPosition().x;
 		
+		stageCr = (int) ((player.body.getPosition().x-(player.getRegionWidth()/2)/CuocChienSinhTon.PPM)/stageLength);
+		
+		camera.position.x = stageCr * stageLength + (float) stageLength/2;
+		
+		//camera.position.x = player.body.getPosition().x;
+		if(firstEntry.get(stageCr)) {
+			firstEntry.set(stageCr, false);
+			StageCreator.Creator(stageCr);
+			closeStage();
+		}
+		if(StageCreator.isStageClear()) nextStage();
 		renderer.setView(camera);
 		camera.update();
 		
