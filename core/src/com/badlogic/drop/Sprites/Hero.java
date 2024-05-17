@@ -1,5 +1,7 @@
 package com.badlogic.drop.Sprites;
 
+import java.util.Set;
+
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Screens.FirstMap;
@@ -42,6 +44,7 @@ public abstract class Hero extends Sprite{
 	protected TextureAtlas atlasAttack1;
 	protected TextureAtlas atlasAttack2;
 	protected TextureAtlas atlasAttack3;
+	protected TextureAtlas atlasEnergyBall;
 	protected TextureAtlas atlasHurting;
 	protected TextureAtlas atlasDieing;
 	
@@ -52,6 +55,7 @@ public abstract class Hero extends Sprite{
 	public Animation<TextureRegion> attack1;
 	public Animation<TextureRegion> attack2;
 	public Animation<TextureRegion> attack3;
+	public Animation<TextureRegion> energyBall;
 	public Animation<TextureRegion> die;
 	public Animation<TextureRegion> hurt;
 	
@@ -72,16 +76,20 @@ public abstract class Hero extends Sprite{
 	public boolean isDieing;
 	public boolean isDie;
 	public int hurtDirection;
-
+	
 	protected int Health;
 	protected int HealthMax;
 
 	protected Fixture attackFixture;
 	protected PlayScreen screen;
+	protected Bullet bullet;
 	public Hero(World world, PlayScreen screen) {
 		this.world = world;
 		this.screen = screen;
 		isDie = false;
+	}
+	public void setBullet(Bullet bullet) {
+		this.bullet = bullet;
 	}
 	public Body getBody() {
 		return body;
@@ -109,15 +117,10 @@ public abstract class Hero extends Sprite{
 				getRegionHeight()/CuocChienSinhTon.PPM);
 	}
 	public TextureRegion getFrame(float dt) {
-		if (screen.game.getCurrentMap()==MAP.MAP2) {
-	        return standing.getKeyFrame(stateTime, true);
-		}
-		TextureRegion region;
+		TextureRegion region = new TextureRegion();
 		currentState = getFrameState();
-		
-		stateTime = (currentState == previousState ? stateTime + dt : 0);
-	
-		switch (currentState) {
+		if (screen instanceof FirstMap) {
+			switch (currentState) {
 		    case JUMPING:
 		        region = jumping.getKeyFrame(stateTime, false);
 		        break;
@@ -161,7 +164,36 @@ public abstract class Hero extends Sprite{
 		}
 		
 		previousState = currentState;
-
+		}else if (screen instanceof FlappyMap) {
+			
+			
+			stateTime = (currentState == previousState ? stateTime + dt : 0);
+		
+			switch (currentState) {
+			    
+			    case ATTACKING1:
+			    	
+			    	region = 	standing.getKeyFrame(0, true);
+			    	bullet.launch(dt);
+			    	System.out.println(1);
+		    	break;
+			    case HURT:
+			    	region = hurt.getKeyFrame(stateTime, false);
+			    	break;
+	
+			    case DIE:
+			    	region = die.getKeyFrame(stateTime, false);
+			    	break;
+			    
+			    default:
+			        region = standing.getKeyFrame(0, true);
+			        break;
+			}
+			
+			previousState = currentState;
+	
+			
+		}
 		return region;
 	}
 
@@ -172,80 +204,144 @@ public abstract class Hero extends Sprite{
 		if(damageObject.getBody().getPosition().x > body.getPosition().x) hurtDirection = 0;
 		else hurtDirection = 1;
 		Health --;
-		if(Health == 0) handleDie();
+		
+		if(Health <= 0) {
+			handleDie();
+		}
 	}
 
 	private void handleDie() {
 		isDie = true;
+		System.out.println(Health);
 		//screen.game.setScreen(new FlappyMap(screen.game));
 		
 	}
 	protected State getFrameState() {
-		// TODO Auto-generated method stub
-		if(isHurting) {
-			if(!hurt.isAnimationFinished(stateTime)) {
+		if (screen instanceof FirstMap) {
+			
+			
+			// TODO Auto-generated method stub
+			if(isHurting) {
+				if(!hurt.isAnimationFinished(stateTime)) {
+					return State.HURT;
+				}
+				else isHurting = false;
+			}
+			
+			if(isDieing) {
+	//			if(hurtDirection == 0) body.setLinearVelocity( new Vector2((float) (-1.5*speed),0));
+	//			else body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
+				if(!die.isAnimationFinished(stateTime)) {
+					return State.DIE;
+				}
+				else {
+					isDieing = false;
+					
+						((FirstMap) screen).handleDie();
+					
+					
+				
+				}
+			}
+			
+			
+			if(isHurt) {
+				isHurting = true;
+				isHurt = false;
 				return State.HURT;
 			}
-			else isHurting = false;
-		}
-		
-		if(isDieing) {
-//			if(hurtDirection == 0) body.setLinearVelocity( new Vector2((float) (-1.5*speed),0));
-//			else body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
-			if(!die.isAnimationFinished(stateTime)) {
+			
+			if(isDie) {
+				isDieing = true;
+				isDie = false;
 				return State.DIE;
 			}
-			else {
-				isDieing = false;
-				((FirstMap) screen).handleDie();
+			
+			
+			
+			if(isAttacking) {
+				if(currentAttack == 1) {
+					if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
+					else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
+				}
+				if(currentAttack == 2) {
+					if(!attack2.isAnimationFinished(stateTime)) return State.ATTACKING2;
+					else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
+				}
+				if(currentAttack == 3) {
+					if(!attack3.isAnimationFinished(stateTime)) return State.ATTACKING3;
+					else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
+				}
+			}
+			if(Gdx.input.isKeyPressed(Keys.J)) {
+				if(System.currentTimeMillis() - lastAttackTime >= 50) {
+					Collision.heroAttack(screen);
+					isAttacking = true;
+					if(currentAttack == 3) currentAttack = 1;
+					else currentAttack ++;
+					if(currentAttack == 1) return State.ATTACKING1;
+					if(currentAttack == 2) return State.ATTACKING2;
+					if(currentAttack == 3) return State.ATTACKING3;
+				}	
+			}
+			
+			
+			if(System.currentTimeMillis() - lastAttackTime >= 500 ) currentAttack = 0;
+			if(body.getLinearVelocity().y != 0 ) return State.JUMPING;
+			if(body.getLinearVelocity().x != 0 ) return State.RUNNING;
+			
+		}else if (screen instanceof FlappyMap) {
+			if(isHurting) {
+				if(!hurt.isAnimationFinished(stateTime)) {
+					return State.HURT;
+				}
+				else isHurting = false;
+			}
+			
+			if(isDieing) {
+	//			if(hurtDirection == 0) body.setLinearVelocity( new Vector2((float) (-1.5*speed),0));
+	//			else body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
+				if(!die.isAnimationFinished(stateTime)) {
+					return State.DIE;
+				}
+				else {
+					isDieing = false;
+					
+					
+					if (screen instanceof FlappyMap) {
+						((FlappyMap)screen).handleDie();
+					}
+				}
+			}
+			if(isHurt) {
+				isHurting = true;
+				isHurt = false;
+				return State.HURT;
+			}
+			
+			if(isDie) {
+				isDieing = true;
+				isDie = false;
+				return State.DIE;
+			}
+			
+			
+			
+			if(isAttacking) {
+				
+					if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
+					else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
+				
+			}
+			if(Gdx.input.isKeyPressed(Keys.J)) {
+				if(System.currentTimeMillis() - lastAttackTime >= 50) {
+					Collision.heroAttack(screen);
+					isAttacking = true;
+					return State.ATTACKING1;
+					
+				}	
 			}
 		}
-		
-		
-		if(isHurt) {
-			isHurting = true;
-			isHurt = false;
-			return State.HURT;
-		}
-		
-		if(isDie) {
-			isDieing = true;
-			isDie = false;
-			return State.DIE;
-		}
-		
-		
-		
-		if(isAttacking) {
-			if(currentAttack == 1) {
-				if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
-				else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
-			}
-			if(currentAttack == 2) {
-				if(!attack2.isAnimationFinished(stateTime)) return State.ATTACKING2;
-				else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
-			}
-			if(currentAttack == 3) {
-				if(!attack3.isAnimationFinished(stateTime)) return State.ATTACKING3;
-				else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
-			}
-		}
-		if(Gdx.input.isKeyPressed(Keys.J)) {
-			if(System.currentTimeMillis() - lastAttackTime >= 50) {
-				Collision.heroAttack(screen);
-				isAttacking = true;
-				if(currentAttack == 3) currentAttack = 1;
-				else currentAttack ++;
-				if(currentAttack == 1) return State.ATTACKING1;
-				if(currentAttack == 2) return State.ATTACKING2;
-				if(currentAttack == 3) return State.ATTACKING3;
-			}	
-		}
-		
-		
-		if(System.currentTimeMillis() - lastAttackTime >= 500 ) currentAttack = 0;
-		if(body.getLinearVelocity().y != 0 ) return State.JUMPING;
-		if(body.getLinearVelocity().x != 0 ) return State.RUNNING;
 		return State.STANDING;
 	}
 	

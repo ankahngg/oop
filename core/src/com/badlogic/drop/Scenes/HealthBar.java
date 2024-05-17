@@ -2,6 +2,7 @@ package com.badlogic.drop.Scenes;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.gdx.graphics.Color;
@@ -19,7 +20,7 @@ public class HealthBar {
 	private TextureAtlas atlasRanks;
 	private Texture HeroHealthBar,HeroHealth;
 	private Texture BossHealthBar,BossHealth;
-	private FirstMap screen;
+	private PlayScreen screen;
 	private TextureRegion currentRank;
 	SpriteBatch batch;
 	private Stage stage;
@@ -29,7 +30,7 @@ public class HealthBar {
 	private Label HeroHealthLabel;
 	private Label BossHealthLabel;
 	
-	public HealthBar(FirstMap x) {
+	public HealthBar(PlayScreen x) {
 		atlasRanks = new TextureAtlas("Ranks/packs/Ranks.pack");
 		currentRank = atlasRanks.getRegions().get(1);
 		HeroHealthBar = new Texture("HealthBar/bg.png");
@@ -79,7 +80,7 @@ public class HealthBar {
 		batch.end();
 		
 		// draw Boss HeroHeroHealthBar
-		if(screen.isBossSpawn) {
+		if((screen instanceof FirstMap)&& ((FirstMap)screen).isBossSpawn) {
 			batch.begin();
 			x = screen.getCamera().position.x-screen.getGamePort().getWorldWidth()/2;
 			y = screen.getCamera().position.y+screen.getGamePort().getWorldHeight()/2;

@@ -37,11 +37,11 @@ abstract public class Bullet extends Sprite{
 	public double preTime;
 	public double lifeTime = 1000;
 	public double tt = 0;
-	public int posX;
-	public int posY;
+	public float posX;
+	public float posY;
 	public boolean isLaunch=false;
 	
-	public Bullet(World world,PlayScreen screen,int x, int y,int direction) {
+	public Bullet(World world,PlayScreen screen,float x, float y,int direction) {
 		this.world = world;
 		this.screen = screen;
 		this.posX = x;
@@ -91,7 +91,7 @@ abstract public class Bullet extends Sprite{
 		stateTime = bullet.getFrameDuration()*1000;
 	}
 
-	public void defineBullet(int x,int y) {
+	public void defineBullet(float x,float y) {
 		CircleShape shape = new CircleShape();
 		 bdef.position.set(x,y);
 		 bdef.type = BodyDef.BodyType.DynamicBody;

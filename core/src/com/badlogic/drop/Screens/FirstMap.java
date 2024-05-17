@@ -33,9 +33,7 @@ public class FirstMap extends PlayScreen {
 	public int stageLength = 35;
 	public boolean isBossSpawn = true;
 	public final int speed = 10;
-	private Skeleton skeleton1;
-	private FlyingEye Eye1;
-	private Bullet bullet;
+
 	public B2WorldCreator WorldCreator;
 	public boolean canJump = false;
 	public boolean Hitting;

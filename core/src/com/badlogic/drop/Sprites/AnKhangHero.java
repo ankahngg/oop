@@ -24,7 +24,6 @@ public class AnKhangHero extends Hero{
 		if (screen instanceof FirstMap) {
 			defineHero(30,10);
 		}else {
-			System.out.print("FlappyMap");
 			defineHero(0,10);
 		}
 		

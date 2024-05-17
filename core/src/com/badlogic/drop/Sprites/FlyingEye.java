@@ -67,6 +67,7 @@ public class FlyingEye extends Monster{
 		world.destroyBody(b2body);
 		world.destroyBody(bullet.b2body);
 		b2body = null;bullet.b2body=null;
+		if (screen instanceof FirstMap)
 		((FirstMap) screen).StageCreator.eyeMonsters.remove(this);
 		isDied = true;
 	}
