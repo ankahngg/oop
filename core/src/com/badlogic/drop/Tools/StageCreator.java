@@ -26,7 +26,6 @@ public class StageCreator {
 		this.world = world;
 		this.map = map;
 		this.screen = screen;
-		
 	}
 	
 	public boolean isStageClear() {
