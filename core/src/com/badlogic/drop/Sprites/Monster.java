@@ -68,8 +68,8 @@ abstract public class Monster extends Sprite{
 		public boolean runningRight = true;
 		public PlayScreen screen;
 		public SpriteBatch batch;
-		public int posX;
-		public int posY;
+		public float posX;
+		public float posY;
 		
 		public int getHealthMax() {
 			return HealthMax;
@@ -79,7 +79,7 @@ abstract public class Monster extends Sprite{
 		}
 		
 		abstract public void prepareAnimation() ;
-		public Monster(World world, PlayScreen screen, int x, int y, boolean isDynamic) {		
+		public Monster(World world, PlayScreen screen, float x, float y, boolean isDynamic) {		
 			this.world = world;
 			this.Health = 20;
 			this.HealthMax = 20;
@@ -187,7 +187,7 @@ abstract public class Monster extends Sprite{
 			this.Health --;
 		}
 		
-		public void defineMonster(int x,int y) {
+		public void defineMonster(float x,float y) {
 			
 			CircleShape shape = new CircleShape();
 			 bdef.position.set(x,y);

@@ -176,7 +176,7 @@ public abstract class Hero extends Sprite{
 			    case ATTACKING1:
 			    	
 			    	region = standing.getKeyFrame(0, true);
-			    	bullet.launch(dt);
+			    	
 			    	System.out.println(1);
 		    	break;
 			    case HURT:

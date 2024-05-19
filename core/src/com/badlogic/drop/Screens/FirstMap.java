@@ -7,6 +7,7 @@ import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Bullet;
+import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
@@ -74,6 +75,7 @@ public class FirstMap extends PlayScreen {
 		player = new AnKhangHero(world,this);
 		//setup collision 
 		Collision.setup(this);
+		BulletManage.setup(world,this);
 		
 		boss = new Boss(world, this, 40, 5);
 		//create healthBar
@@ -184,6 +186,7 @@ public class FirstMap extends PlayScreen {
 	
 	// method that be called every 1/60s
 	public void update(float dt) {
+		BulletManage.update(dt);
 		handleInput(dt);
 		player.update(dt);
 		boss.update(dt);

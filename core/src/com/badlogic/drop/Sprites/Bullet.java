@@ -26,7 +26,7 @@ abstract public class Bullet extends Sprite{
 	BodyDef bdef = new BodyDef();
 	FixtureDef fdef = new FixtureDef();
 	public Body b2body;
-	public float stateTime=1000;
+	public float stateTime=0;
 	
 	public TextureAtlas atlasBullet;
 	public Animation<TextureRegion> bullet;
@@ -61,7 +61,8 @@ abstract public class Bullet extends Sprite{
 //		tt += dt;
 //		if(tt >= lifeTime) this.getTexture().dispose();
 		stateTime += dt;
-		if(!bullet.isAnimationFinished(stateTime)) {
+		if(bullet.isAnimationFinished(stateTime)) remove();
+		else {
 			setRegion(bullet.getKeyFrame(stateTime,false));
 			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
 					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
@@ -70,25 +71,22 @@ abstract public class Bullet extends Sprite{
 			Movement();
 			screen.game.getBatch().begin();
 			this.draw(screen.game.getBatch());
-			screen.game.getBatch().end();						
+			screen.game.getBatch().end();									
 		}
-		else {
-			b2body.setTransform(new Vector2(posX,posY), 0);
-		}
-		
 	}
 	
-	public void launch(float dt) {
-		stateTime = 0;
+	
+	
+	public void remove() {
+		BulletManage.remove(this);
 	}
-
+	
 	public void Movement() {
-		if(direction == 0) b2body.setLinearVelocity(new Vector2(-10,0));
-		else b2body.setLinearVelocity(new Vector2(10,0));
+		 b2body.setLinearVelocity(new Vector2(10*direction,0));
 	}
 	
 	public void onHit() {
-		stateTime = bullet.getFrameDuration()*1000;
+		remove();
 	}
 
 	public void defineBullet(float x,float y) {

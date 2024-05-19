@@ -42,9 +42,11 @@ public class FlyingEye extends Monster{
 		MonsterWidth = getRegionWidth();
 	}
 	
-	public FlyingEye(World world, PlayScreen screen,int x, int y) {		
+	public FlyingEye(World world, PlayScreen screen,float x, float y) {		
 		super(world, screen,x,y,false);
 		this.Health = 2;
+		posX = x;
+		posY = y;
 		bullet = new EyeBullet(world, screen, x, y, 0);
 		isIntialLeft = true;
 		monsterDef.setUserData(this);
@@ -56,9 +58,9 @@ public class FlyingEye extends Monster{
 		
 		if(isDied) return;
 		if(running.isAnimationFinished(stateTime)) {
-			bullet.launch(dt);
+			BulletManage.addBullet("FlyingEye", posX, posY, -1);
 		}
-		bullet.update(dt);
+		
 		
 	}
 	
