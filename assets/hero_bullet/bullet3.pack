@@ -1,0 +1,33 @@
+
+bullet3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bullet3
+  rotate: false
+  xy: 1, 22
+  size: 29, 19
+  orig: 33, 36
+  offset: 4, 11
+  index: 0
+bullet3
+  rotate: false
+  xy: 1, 1
+  size: 29, 19
+  orig: 33, 36
+  offset: 2, 10
+  index: 1
+bullet3
+  rotate: false
+  xy: 32, 22
+  size: 29, 19
+  orig: 33, 36
+  offset: 2, 10
+  index: 2
+bullet3
+  rotate: false
+  xy: 32, 1
+  size: 29, 19
+  orig: 33, 36
+  offset: 1, 10
+  index: 3

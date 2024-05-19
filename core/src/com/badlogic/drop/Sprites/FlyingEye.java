@@ -53,7 +53,6 @@ public class FlyingEye extends Monster{
 	public void update(float dt) {
 		// TODO Auto-generated method stub
 		super.update(dt);
-//		if(isDie) return;
 		
 		if(isDied) return;
 		if(running.isAnimationFinished(stateTime)) {
