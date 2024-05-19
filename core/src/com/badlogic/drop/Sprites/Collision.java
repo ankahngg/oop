@@ -25,6 +25,7 @@ public class Collision {
 	public static final short FLYINGEYE_BITS = 64;
 	public static final short MONSTERBULLET_BITS = 128;
 	public static final short STAGEBOUND_BITS = 256;
+	public static final short HEROBULLET_BITS = 512;
 	public static PlayScreen screen;
 	
 	public static ArrayList<Monster> monsters = new ArrayList<Monster>();
@@ -53,12 +54,14 @@ public class Collision {
 		
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
+		if (x.getUserData()==null || y.getUserData() ==null) return;
 		((AnKhangHero) x.getUserData()).handleHurt(y);
 		((Bullet) y.getUserData()).onHit();
 	}
 	public static void heroHurt(Contact contact) {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
+		if (x.getUserData()==null) return;
 		((AnKhangHero) x.getUserData()).handleHurt(y);
 	}
 	
@@ -85,6 +88,7 @@ public class Collision {
 	public static void resetJump(Contact contact) {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
+		if (screen instanceof FirstMap)
 		 ((FirstMap) screen).canJump = true;
 	}
 

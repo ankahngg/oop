@@ -1,0 +1,61 @@
+
+energy-ball.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+energy-ball
+  rotate: false
+  xy: 1, 1
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: 4
+energy-ball
+  rotate: false
+  xy: 12, 3
+  size: 11, 9
+  orig: 11, 9
+  offset: 0, 0
+  index: 5
+energy-ball
+  rotate: false
+  xy: 25, 3
+  size: 11, 9
+  orig: 11, 9
+  offset: 0, 0
+  index: 7
+energy-ball
+  rotate: false
+  xy: 38, 4
+  size: 10, 8
+  orig: 10, 8
+  offset: 0, 0
+  index: 1
+energy-ball
+  rotate: false
+  xy: 50, 4
+  size: 10, 8
+  orig: 10, 8
+  offset: 0, 0
+  index: 3
+energy-ball
+  rotate: false
+  xy: 62, 1
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: 6
+energy-ball
+  rotate: false
+  xy: 73, 2
+  size: 8, 10
+  orig: 8, 10
+  offset: 0, 0
+  index: 0
+energy-ball
+  rotate: false
+  xy: 83, 2
+  size: 8, 10
+  orig: 8, 10
+  offset: 0, 0
+  index: 2

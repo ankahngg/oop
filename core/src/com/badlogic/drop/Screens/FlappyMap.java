@@ -1,10 +1,16 @@
 package com.badlogic.drop.Screens;
 
+import java.lang.constant.DynamicCallSiteDesc;
 import java.util.LinkedList;
+
+import javax.swing.plaf.basic.BasicDesktopIconUI;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
+import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
+import com.badlogic.drop.Sprites.Collision;
+import com.badlogic.drop.Sprites.EnergyBall;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.Monster;
@@ -24,7 +30,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -32,8 +43,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class FlappyMap extends PlayScreen{
 	private final int SPEED = 5;
-	private final int GRAVITY = -50;
+	private final int GRAVITY = -30;
 	private final int DISTANCE = 10;
+	private final int MAP_LENGTH = 200;
+	private final int BOSS_BEGIN_POSITION = 650;
 	private float timeCount;
 	private TextureAtlas flyEngineAtlas;
 	private LinkedList<Monster> monsters;
@@ -67,20 +80,50 @@ public class FlappyMap extends PlayScreen{
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
 		player = new AnKhangHero(world,this);
+		player.setBullet(new EnergyBall(world, this, player.getX(), player.getY(), 0));
 		player.body.setLinearVelocity(SPEED,0);
 		timeCount = 0;
+		
+		//set up collision
+		Collision.setup(this);
+		
+		//create heath bar
+		healthbar = new HealthBar(this);
+		
+		// Create bounds
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyDef.BodyType.StaticBody;
+
+		// Define top and bottom boundaries
+		Body body = world.createBody(bodyDef);
+
+		EdgeShape topEdge = new EdgeShape();
+		topEdge.set(new Vector2(0, gamePort.getWorldHeight()), new Vector2(gamePort.getWorldWidth()*50, gamePort.getWorldHeight()));
+
+		EdgeShape bottomEdge = new EdgeShape();
+		bottomEdge.set(new Vector2(0, 0), new Vector2(gamePort.getWorldWidth()*50, 0));
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = topEdge;
+		body.createFixture(fixtureDef);
+
+		fixtureDef.shape = bottomEdge;
+		fixtureDef.friction=0;
+		body.createFixture(fixtureDef);
+		
+
 	}
 	public TextureAtlas getAtlas() {
 		return atlas;
 	}
 	private void prepareMonster() {
 		int intitDistance = 0;
-		int monsterQuantity = 20;
+		int monsterQuantity = 60;
 		monsters = new LinkedList<Monster>();
 		
 		for (int i =0 ; i<monsterQuantity;i++) {
 			FlyingEye flyingEye = new FlyingEye(world, this, 3+intitDistance, (int) (Math.random()*20));
-			
+			flyingEye.monsterDef.setSensor(true);
 			monsters.add(flyingEye);
 			intitDistance+=DISTANCE;
 		}
@@ -98,12 +141,15 @@ public class FlappyMap extends PlayScreen{
 		flyEngineAnimation.setPlayMode(PlayMode.LOOP);
 		
 	}
+	
 	// method that be called every 1/60s
 	public void update(float dt) {
 		//update monster
 		for (Monster monster :monsters) {
 			monster.update(dt);
 		}
+		//update healthbar
+		healthbar.update(dt);
 		//time count for speed up
 		timeCount+=dt;
 		
@@ -113,7 +159,6 @@ public class FlappyMap extends PlayScreen{
 		handleInput(dt);
 		player.update(dt);
 		world.step(1/60f, 6, 2);
-		
 		
 		camera.position.x = player.getX()+10;
 		renderer.setView(camera);
@@ -133,7 +178,9 @@ public class FlappyMap extends PlayScreen{
 		}
 		
 	}
-	
+	public void handleDie() {
+		game.setScreen(new FlappyMap(game));
+	}
 	@Override
 	public void render(float delta) {
 		

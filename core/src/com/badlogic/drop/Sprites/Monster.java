@@ -196,7 +196,6 @@ abstract public class Monster extends Sprite{
 			 b2body = world.createBody(bdef);
 			 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 			 fdef.shape = shape;
-			
 			 monsterDef = b2body.createFixture(fdef);
 		}
 
