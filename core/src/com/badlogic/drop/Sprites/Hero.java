@@ -119,6 +119,7 @@ public abstract class Hero extends Sprite{
 	public TextureRegion getFrame(float dt) {
 		TextureRegion region = new TextureRegion();
 		currentState = getFrameState();
+		stateTime = (currentState == previousState ? stateTime + dt : 0);
 		if (screen instanceof FirstMap) {
 			switch (currentState) {
 		    case JUMPING:
@@ -149,22 +150,23 @@ public abstract class Hero extends Sprite{
 		    default:
 		        region = standing.getKeyFrame(stateTime, true);
 		        break;
-		}
-		
-		float vel = body.getLinearVelocity().x;
-		
-		if((vel < 0 || !runningRight) && !region.isFlipX()) {
-			region.flip(true,false);
-			runningRight = false;
+			}
 			
+			float vel = body.getLinearVelocity().x;
+			
+			if((vel < 0 || !runningRight) && !region.isFlipX()) {
+				region.flip(true,false);
+				runningRight = false;
+				
+			}
+			else if((vel > 0 || runningRight) && region.isFlipX()) {
+				region.flip(true,false);
+				runningRight = true;
+			}
+			
+			previousState = currentState;
 		}
-		else if((vel > 0 || runningRight) && region.isFlipX()) {
-			region.flip(true,false);
-			runningRight = true;
-		}
-		
-		previousState = currentState;
-		}else if (screen instanceof FlappyMap) {
+		else if (screen instanceof FlappyMap) {
 			
 			
 			stateTime = (currentState == previousState ? stateTime + dt : 0);
@@ -173,7 +175,7 @@ public abstract class Hero extends Sprite{
 			    
 			    case ATTACKING1:
 			    	
-			    	region = 	standing.getKeyFrame(0, true);
+			    	region = standing.getKeyFrame(0, true);
 			    	bullet.launch(dt);
 			    	System.out.println(1);
 		    	break;
@@ -219,7 +221,6 @@ public abstract class Hero extends Sprite{
 	protected State getFrameState() {
 		if (screen instanceof FirstMap) {
 			
-			
 			// TODO Auto-generated method stub
 			if(isHurting) {
 				if(!hurt.isAnimationFinished(stateTime)) {
@@ -236,15 +237,9 @@ public abstract class Hero extends Sprite{
 				}
 				else {
 					isDieing = false;
-					
-						((FirstMap) screen).handleDie();
-					
-					
-				
+					((FirstMap) screen).handleDie();
 				}
 			}
-			
-			
 			if(isHurt) {
 				isHurting = true;
 				isHurt = false;
@@ -256,8 +251,6 @@ public abstract class Hero extends Sprite{
 				isDie = false;
 				return State.DIE;
 			}
-			
-			
 			
 			if(isAttacking) {
 				if(currentAttack == 1) {
@@ -273,6 +266,7 @@ public abstract class Hero extends Sprite{
 					else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
 				}
 			}
+			
 			if(Gdx.input.isKeyPressed(Keys.J)) {
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
@@ -288,9 +282,14 @@ public abstract class Hero extends Sprite{
 			
 			if(System.currentTimeMillis() - lastAttackTime >= 500 ) currentAttack = 0;
 			if(body.getLinearVelocity().y != 0 ) return State.JUMPING;
-			if(body.getLinearVelocity().x != 0 ) return State.RUNNING;
+			if(body.getLinearVelocity().x != 0 ) {
+				return State.RUNNING;
+			}
 			
-		}else if (screen instanceof FlappyMap) {
+			return State.STANDING;
+		}
+			
+		else if (screen instanceof FlappyMap) {
 			if(isHurting) {
 				if(!hurt.isAnimationFinished(stateTime)) {
 					return State.HURT;
@@ -338,11 +337,12 @@ public abstract class Hero extends Sprite{
 					Collision.heroAttack(screen);
 					isAttacking = true;
 					return State.ATTACKING1;
-					
-				}	
+				}
 			}
+			return State.STANDING;
 		}
 		return State.STANDING;
+		
 	}
 	
 	public float getStateTime() {
