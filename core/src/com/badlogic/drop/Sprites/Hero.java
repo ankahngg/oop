@@ -117,7 +117,7 @@ public abstract class Hero extends Sprite{
 				getRegionHeight()/CuocChienSinhTon.PPM);
 	}
 	public TextureRegion getFrame(float dt) {
-		TextureRegion region = new TextureRegion();
+		TextureRegion region=null;
 		currentState = getFrameState();
 		if (screen instanceof FirstMap) {
 			switch (currentState) {
@@ -166,7 +166,6 @@ public abstract class Hero extends Sprite{
 		previousState = currentState;
 		}else if (screen instanceof FlappyMap) {
 			
-			
 			stateTime = (currentState == previousState ? stateTime + dt : 0);
 		
 			switch (currentState) {
@@ -175,7 +174,7 @@ public abstract class Hero extends Sprite{
 			    	
 			    	region = 	standing.getKeyFrame(0, true);
 			    	bullet.launch(dt);
-			    	System.out.println(1);
+			    	
 		    	break;
 			    case HURT:
 			    	region = hurt.getKeyFrame(stateTime, false);
