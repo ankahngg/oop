@@ -56,12 +56,13 @@ public class Collision {
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		if (x.getUserData()==null || y.getUserData() ==null) return;
 		((AnKhangHero) x.getUserData()).handleHurt(y);
+		System.out.println("dcum");
 		((Bullet) y.getUserData()).onHit();
 	}
 	public static void heroHurt(Contact contact) {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
-		if (x.getUserData()==null) return;
+		if (x.getUserData()==null || y.getUserData() == null) return;
 		((AnKhangHero) x.getUserData()).handleHurt(y);
 	}
 	
@@ -70,8 +71,6 @@ public class Collision {
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		StageBound bound = ((StageBound) y.getUserData());
 		AnKhangHero hero = ((AnKhangHero) x.getUserData());
-		
-		
 		
 	}
 	

@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.ObjectSet;
 
 public class BulletManage {
 	public static ObjectSet<Bullet> bullets =  new ObjectSet<Bullet>();
+	
 	static World world;
 	static PlayScreen screen;
 	
@@ -30,8 +31,9 @@ public class BulletManage {
 	}
 	
 	public static void remove(Bullet bl) {
-		System.out.println("wtfff");
-		world.destroyBody(bl.b2body);
 		bullets.remove(bl);
+		world.destroyBody(bl.b2body);
+		bl.b2body = null;
+		System.out.println("xoa body");
 	}
 }

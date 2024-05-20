@@ -40,6 +40,7 @@ abstract public class Bullet extends Sprite{
 	public float posX;
 	public float posY;
 	public boolean isLaunch=false;
+	private boolean isDied = false;
 	
 	public Bullet(World world,PlayScreen screen,float x, float y,int direction) {
 		this.world = world;
@@ -62,7 +63,8 @@ abstract public class Bullet extends Sprite{
 //		if(tt >= lifeTime) this.getTexture().dispose();
 		stateTime += dt;
 		if(bullet.isAnimationFinished(stateTime)) remove();
-		else {
+		System.out.println(isDied);
+		if(!isDied) {
 			setRegion(bullet.getKeyFrame(stateTime,false));
 			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
 					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
@@ -78,7 +80,9 @@ abstract public class Bullet extends Sprite{
 	
 	
 	public void remove() {
+		isDied  = true;
 		BulletManage.remove(this);
+		
 	}
 	
 	public void Movement() {
@@ -86,6 +90,7 @@ abstract public class Bullet extends Sprite{
 	}
 	
 	public void onHit() {
+		System.out.println("onHit");
 		remove();
 	}
 
