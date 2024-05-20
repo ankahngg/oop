@@ -1,5 +1,7 @@
 package com.badlogic.drop.Tools;
 
+import javax.lang.model.type.NullType;
+
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -9,9 +11,10 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 
 public class WorldContactListener implements ContactListener {
 	public boolean isContact(short id1, short id2, Contact contact) {
+		
 		Fixture x = contact.getFixtureA();
 		Fixture y = contact.getFixtureB();
-		
+		if (x==null||y==null) return false;
 		short xx = x.getFilterData().categoryBits;
 		short yy = y.getFilterData().categoryBits;	
 		
@@ -48,9 +51,14 @@ public class WorldContactListener implements ContactListener {
     public void endContact(Contact contact) {
         // Remove the contact from the set when it ends
         //contacts.remove(contact);
-    	if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.startInstructionColi = false;
+    	try {
+			if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.startInstructionColi = false;
     	 if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = false;
     	 if(isContact(Collision.MONSTER_BITS,Collision.HEROATTACK_BITS, contact)) Collision.monsterInRangeAttackRemove(contact);
+    	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
     	
         
     }

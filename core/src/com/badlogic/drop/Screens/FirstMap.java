@@ -187,6 +187,7 @@ public class FirstMap extends PlayScreen {
 	// method that be called every 1/60s
 	public void update(float dt) {
 		BulletManage.update(dt);
+		BulletManage.remove();
 		handleInput(dt);
 		player.update(dt);
 		boss.update(dt);

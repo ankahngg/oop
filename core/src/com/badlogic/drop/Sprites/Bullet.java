@@ -78,7 +78,7 @@ abstract public class Bullet extends Sprite{
 	
 	
 	public void remove() {
-		BulletManage.remove(this);
+		BulletManage.markRemoved(this);;
 	}
 	
 	public void Movement() {
@@ -86,6 +86,7 @@ abstract public class Bullet extends Sprite{
 	}
 	
 	public void onHit() {
+//		this.b2body.destroyFixture(bulletDef);
 		remove();
 	}
 
