@@ -33,7 +33,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class FirstMap extends PlayScreen {
 	public int stageLength = 35;
 	public boolean isBossSpawn = true;
-	public final int speed = 10;
+	public final int SPEED = 10;
 
 	public B2WorldCreator WorldCreator;
 	public boolean canJump = false;
@@ -85,6 +85,8 @@ public class FirstMap extends PlayScreen {
 		firstEntry.set(0, false);
 		nextStage();
 		
+		
+		speed =SPEED;
 	}
 
 	public TextureAtlas getAtlas() {

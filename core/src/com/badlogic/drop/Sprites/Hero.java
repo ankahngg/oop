@@ -88,8 +88,9 @@ public abstract class Hero extends Sprite{
 		this.screen = screen;
 		isDie = false;
 	}
-	public void setBullet(Bullet bullet) {
-		this.bullet = bullet;
+	public void setBullet(World world,PlayScreen screen,float x, float y,int direction) {
+//		this.bullet = new EnergyBall(world, screen, x, y, direction);
+		BulletManage.addBullet("EnergyBall", x, y, direction);
 	}
 	public Body getBody() {
 		return body;
@@ -334,6 +335,7 @@ public abstract class Hero extends Sprite{
 			if(Gdx.input.isKeyPressed(Keys.J)) {
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
+					BulletManage.addBullet("EnergyBall", this.getX(), this.getY(), 1,screen.getSpeed());
 					isAttacking = true;
 					return State.ATTACKING1;
 				}
