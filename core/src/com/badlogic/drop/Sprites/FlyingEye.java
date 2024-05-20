@@ -65,7 +65,9 @@ public class FlyingEye extends Monster{
 	}
 	
 	public void removeMonster() {
+		if (b2body!=null)
 		world.destroyBody(b2body);
+		if(bullet.b2body!=null)
 		world.destroyBody(bullet.b2body);
 		b2body = null;bullet.b2body=null;
 		if (screen instanceof FirstMap)

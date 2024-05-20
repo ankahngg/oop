@@ -46,6 +46,7 @@ public class BulletManage {
 	public static void remove() {
 		for (Bullet bl : removeBullet) {
 			world.destroyBody(bl.b2body);
+			bl.b2body=null;
 			bullets.remove(bl);
 			removeBullet.remove(bl);
 		}
