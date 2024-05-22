@@ -4,18 +4,22 @@ import java.lang.constant.DynamicCallSiteDesc;
 import java.util.LinkedList;
 
 import javax.swing.plaf.basic.BasicDesktopIconUI;
+import javax.swing.text.View;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
+import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Bullet;
 import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EnergyBall;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
+import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.drop.Sprites.Monster;
+import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
@@ -116,8 +120,8 @@ public class FlappyMap extends PlayScreen{
 		fixtureDef.shape = bottomEdge;
 		fixtureDef.friction=0;
 		body.createFixture(fixtureDef);
-		
 
+		
 	}
 	public TextureAtlas getAtlas() {
 		return atlas;
@@ -150,18 +154,27 @@ public class FlappyMap extends PlayScreen{
 	
 	// method that be called every 1/60s
 	public void update(float dt) {
+		BulletManage.update(dt,speed);
+		BulletManage.remove();
+		speed =SPEED*(1+ timeCount/10);
+		player.body.setLinearVelocity(speed,player.body.getLinearVelocity().y);
 		//update monster
-		for (Monster monster :monsters) {
+		for (int i = 0; i< monsters.size();i++) {
+			Monster monster = monsters.get(i);
 			monster.update(dt);
+			if (monster.getX()<camera.position.x-gamePort.getWorldWidth()) {
+				monsters.remove(monster);
+			}
 		}
 		//update healthbar
 		healthbar.update(dt);
 		//time count for speed up
-		timeCount+=dt;
-		
+			timeCount+=dt;
+			
 		player.currentState = State.STANDING;
-
-
+		
+		
+		
 		handleInput(dt);
 		player.update(dt);
 		world.step(1/60f, 6, 2);
@@ -175,7 +188,7 @@ public class FlappyMap extends PlayScreen{
 		return player.body;
 	}
 	private void heroJump() {
-		getBody().setLinearVelocity(SPEED*(1+ timeCount/10), 17);
+		getBody().setLinearVelocity(speed, 17);
 
 	}
 	protected void handleInput(float dt) {
@@ -185,7 +198,9 @@ public class FlappyMap extends PlayScreen{
 		
 	}
 	public void handleDie() {
-		game.setScreen(new FlappyMap(game));
+		
+		
+	
 	}
 	@Override
 	public void render(float delta) {

@@ -40,7 +40,9 @@ abstract public class Bullet extends Sprite{
 	public float posX;
 	public float posY;
 	public boolean isLaunch=false;
-	
+	public Bullet() {
+		
+	}
 	public Bullet(World world,PlayScreen screen,float x, float y,int direction) {
 		this.world = world;
 		this.screen = screen;
@@ -68,11 +70,31 @@ abstract public class Bullet extends Sprite{
 					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
 					getRegionWidth()/CuocChienSinhTon.PPM,
 					getRegionHeight()/CuocChienSinhTon.PPM);
-			Movement();
+			
 			screen.game.getBatch().begin();
 			this.draw(screen.game.getBatch());
-			screen.game.getBatch().end();									
+			screen.game.getBatch().end();
+			
+			Movement();									
 		}
+	}
+	public void update(float dt,float speed) {
+		stateTime += dt;
+		if(bullet.isAnimationFinished(stateTime)) remove();
+		else {
+			setRegion(bullet.getKeyFrame(stateTime,false));
+			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
+					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
+					getRegionWidth()/CuocChienSinhTon.PPM,
+					getRegionHeight()/CuocChienSinhTon.PPM);
+			
+			screen.game.getBatch().begin();
+			this.draw(screen.game.getBatch());
+			screen.game.getBatch().end();
+			
+			Movement(speed,1);									
+		}
+		
 	}
 	
 	
@@ -86,6 +108,7 @@ abstract public class Bullet extends Sprite{
 	}
 	public void Movement(float speed,float direction1) {
 		b2body.setLinearVelocity(SPEED*this.direction+speed*direction1,0);
+		System.out.println(SPEED*this.direction+speed*direction1);
 	}
 	public void onHit() {
 //		this.b2body.destroyFixture(bulletDef);

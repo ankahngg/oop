@@ -214,8 +214,6 @@ public abstract class Hero extends Sprite{
 
 	private void handleDie() {
 		isDie = true;
-		System.out.println(Health);
-		//screen.game.setScreen(new FlappyMap(screen.game));
 		
 	}
 	protected State getFrameState() {
@@ -335,6 +333,7 @@ public abstract class Hero extends Sprite{
 			if(Gdx.input.isKeyPressed(Keys.J)) {
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
+					
 					BulletManage.addBullet("EnergyBall", this.getX(), this.getY(), 1,screen.getSpeed());
 					isAttacking = true;
 					return State.ATTACKING1;

@@ -45,7 +45,7 @@ public class FlyingEye extends Monster{
 	
 	public FlyingEye(World world, PlayScreen screen,float x, float y) {		
 		super(world, screen,x,y,false);
-		this.Health = 2;
+		this.Health = 1;
 		posX = x;
 		posY = y;
 		bullet = new EyeBullet(world, screen, x, y, 0);
