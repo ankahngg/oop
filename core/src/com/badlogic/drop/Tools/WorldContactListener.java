@@ -1,6 +1,6 @@
 package com.badlogic.drop.Tools;
 
-import javax.lang.model.type.NullType;
+
 
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -15,6 +15,7 @@ public class WorldContactListener implements ContactListener {
 		Fixture x = contact.getFixtureA();
 		Fixture y = contact.getFixtureB();
 		if (x==null||y==null) return false;
+
 		short xx = x.getFilterData().categoryBits;
 		short yy = y.getFilterData().categoryBits;	
 		
@@ -29,16 +30,19 @@ public class WorldContactListener implements ContactListener {
     		// Add the contact to the set when it begins
 
 			if(isContact(Collision.HERO_BITS,Collision.GROUND_BITS,contact)) Collision.resetJump(contact);
-	        if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.startInstructionColi = true;
-	        if(isContact(Collision.HERO_BITS,Collision.STAGEBOUND_BITS,contact)) Collision.heroCollideBound(contact);
-	        if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = true;
-	        if(isContact(Collision.MONSTERBULLET_BITS,Collision.HERO_BITS,contact)) Collision.heroBulletHurt(contact);
-	        if(isContact(Collision.SPINE_BITS,Collision.HERO_BITS,contact)) Collision.heroHurt(contact);
-	        if(isContact(Collision.MONSTERBULLET_BITS,Collision.HERO_BITS, contact)) Collision.heroHurt(contact);
-	      
-	        if(isContact(Collision.MONSTER_BITS,Collision.HERO_BITS, contact)) {
-	        	Collision.heroHurt(contact);
+	        if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) {
+	        	Collision.instructionCollide(contact);
+	        	Collision.InstructionColi = true;
 	        }
+	        if(isContact(Collision.HEROBULLET_BITS,Collision.MONSTER_BITS,contact)) {
+	        	Collision.monsterBulletHurt(contact);
+	        	
+	        }
+	        
+	        if(isContact(Collision.HERO_BITS,Collision.STAGEBOUND_BITS,contact)) Collision.heroCollideBound(contact);
+	  
+	        if(isContact(Collision.MONSTERBULLET_BITS,Collision.HERO_BITS,contact)) Collision.heroBulletHurt(contact);
+
 	        if(isContact(Collision.MONSTER_BITS,Collision.HEROATTACK_BITS, contact)) Collision.monsterInRangeAttackAdd(contact);
 	    
 		} catch (Exception e) {
@@ -52,8 +56,8 @@ public class WorldContactListener implements ContactListener {
         // Remove the contact from the set when it ends
         //contacts.remove(contact);
     	try {
-			if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.startInstructionColi = false;
-    	 if(isContact(Collision.HEROATTACK_BITS,Collision.BOSS_BITS,contact)) Collision.bossInRangeAttack = false;
+			if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) Collision.InstructionColi = false;
+
     	 if(isContact(Collision.MONSTER_BITS,Collision.HEROATTACK_BITS, contact)) Collision.monsterInRangeAttackRemove(contact);
     	
 		} catch (Exception e) {

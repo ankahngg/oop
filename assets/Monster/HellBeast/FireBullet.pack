@@ -1,0 +1,40 @@
+
+FireBullet.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+FireBullet
+  rotate: false
+  xy: 1, 55
+  size: 31, 17
+  orig: 31, 34
+  offset: 0, 8
+  index: 4
+FireBullet
+  rotate: false
+  xy: 1, 40
+  size: 31, 13
+  orig: 31, 34
+  offset: 0, 9
+  index: 1
+FireBullet
+  rotate: false
+  xy: 1, 25
+  size: 31, 13
+  orig: 31, 34
+  offset: 0, 9
+  index: 2
+FireBullet
+  rotate: false
+  xy: 1, 10
+  size: 31, 13
+  orig: 31, 34
+  offset: 0, 9
+  index: 3
+FireBullet
+  rotate: false
+  xy: 1, 1
+  size: 20, 7
+  orig: 31, 34
+  offset: 1, 12
+  index: 0

@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Instruction extends SensorObject {
-	private SpriteBatch batch;
-	private Texture texture;
+	public SpriteBatch batch;
+	public Texture texture;
 	public Instruction(World world, TiledMap map, Rectangle bounds, PlayScreen screen) {
 		super(world,map,bounds);
 		fixture.setUserData(this);
@@ -23,7 +23,7 @@ public class Instruction extends SensorObject {
 		batch.begin();
 		batch.draw(texture, 
 				this.body.getPosition().x-texture.getWidth()/CuocChienSinhTon.PPM/2, 
-				this.body.getPosition().y+3 ,
+				this.body.getPosition().y+3,
 				texture.getWidth()/CuocChienSinhTon.PPM,texture.getHeight()/CuocChienSinhTon.PPM);
 		batch.end();
 		

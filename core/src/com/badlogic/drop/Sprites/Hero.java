@@ -12,6 +12,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -23,12 +24,14 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Hero extends Sprite{
-	public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3,HURT,DIE };
+	public enum State {FALLING,JUMPING,STANDING,RUNNING,ATTACKING1,ATTACKING2,ATTACKING3,HURT,DIE,FIRING };
 	public enum Input {LEFT,RIGHT,JUMP,STOP,CROUCH};
 	public State currentState;
 	public State previousState;
 	public Input currentInput;
 	public int currentRank;
+	public int stageSkill = 0;
+	public int damage = 1;
 	public World world;
 	public Body body;
 	public Body hitbox;
@@ -64,6 +67,11 @@ public abstract class Hero extends Sprite{
 	protected double lastAttackTime = 0;
 	protected int currentAttack = 0;
 	
+	protected double FireCoolDown = 1000;
+	protected double lastFireTime = 0;
+	protected int currentFire = 0;
+	
+	
 	protected float HeroHeight;
 	protected float stateTime;
 	protected boolean runningRight = true;
@@ -75,6 +83,7 @@ public abstract class Hero extends Sprite{
 	public boolean isAttacking;
 	public boolean isDieing;
 	public boolean isDie;
+	public boolean isFiring;
 	public int hurtDirection;
 	
 	protected int Health;
@@ -83,6 +92,7 @@ public abstract class Hero extends Sprite{
 	protected Fixture attackFixture;
 	protected PlayScreen screen;
 	protected Bullet bullet;
+	private TextureRegion region;
 	public Hero(World world, PlayScreen screen) {
 		this.world = world;
 		this.screen = screen;
@@ -118,7 +128,7 @@ public abstract class Hero extends Sprite{
 				getRegionHeight()/CuocChienSinhTon.PPM);
 	}
 	public TextureRegion getFrame(float dt) {
-		TextureRegion region=null;
+		region=null;
 		currentState = getFrameState();
 		stateTime = (currentState == previousState ? stateTime + dt : 0);
 		if (screen instanceof FirstMap) {
@@ -146,6 +156,9 @@ public abstract class Hero extends Sprite{
 
 		    case DIE:
 		    	region = die.getKeyFrame(stateTime, false);
+		    	break;
+		    case FIRING:
+		    	region = attack3.getKeyFrame(stateTime,false);
 		    	break;
 		    
 		    default:
@@ -176,9 +189,7 @@ public abstract class Hero extends Sprite{
 			    case ATTACKING1:
 			    	
 			    	region = standing.getKeyFrame(0, true);
-
-			    	
-		    	break;
+			    	break;
 			    case HURT:
 			    	region = hurt.getKeyFrame(stateTime, false);
 			    	break;
@@ -214,12 +225,15 @@ public abstract class Hero extends Sprite{
 
 	private void handleDie() {
 		isDie = true;
+
 		
 	}
 	protected State getFrameState() {
 		if (screen instanceof FirstMap) {
 			
 			// TODO Auto-generated method stub
+			if(body.getPosition().y < 0) handleDie(); 
+			
 			if(isHurting) {
 				if(!hurt.isAnimationFinished(stateTime)) {
 					return State.HURT;
@@ -250,6 +264,14 @@ public abstract class Hero extends Sprite{
 				return State.DIE;
 			}
 			
+			if(isFiring) {
+				if(!attack3.isAnimationFinished(stateTime)) return State.FIRING;
+				else {
+					isFiring = false;
+					lastFireTime = System.currentTimeMillis();
+				}
+			}
+			
 			if(isAttacking) {
 				if(currentAttack == 1) {
 					if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
@@ -265,6 +287,7 @@ public abstract class Hero extends Sprite{
 				}
 			}
 			
+			
 			if(Gdx.input.isKeyPressed(Keys.J)) {
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
@@ -275,6 +298,17 @@ public abstract class Hero extends Sprite{
 					if(currentAttack == 2) return State.ATTACKING2;
 					if(currentAttack == 3) return State.ATTACKING3;
 				}	
+			}
+			
+			if(Gdx.input.isKeyPressed(Keys.K) && ((FirstMap) screen).stagePass >= stageSkill) {
+				if(System.currentTimeMillis() - lastFireTime >= FireCoolDown) {
+					isFiring = true;
+					int hurtDirection = 1;
+					if(this.isFlipX()) hurtDirection = -1;
+					else hurtDirection = 1;
+					BulletManage.addBullet("HeroBullet1", body.getPosition().x, body.getPosition().y, hurtDirection);
+					return State.FIRING;
+				}
 			}
 			
 			
@@ -355,7 +389,7 @@ public abstract class Hero extends Sprite{
 		 shape.setAsBox(getRegionWidth()/CuocChienSinhTon.PPM/2, getRegionHeight()/CuocChienSinhTon.PPM/2,new Vector2(0,0),0);
 		 //shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 		 fdef.shape = shape;
-		 fdef.friction = 0.05f;
+		 fdef.friction = 0f;
 		 normalDef = body.createFixture(fdef);
 		 normalDef.setUserData("herobody");
 		 

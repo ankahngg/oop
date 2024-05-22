@@ -1,0 +1,33 @@
+
+Breath.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+hell-beast-breath
+  rotate: false
+  xy: 1, 4
+  size: 44, 60
+  orig: 64, 64
+  offset: 13, 0
+  index: 0
+hell-beast-breath
+  rotate: false
+  xy: 47, 6
+  size: 40, 58
+  orig: 64, 64
+  offset: 21, 0
+  index: 2
+hell-beast-breath
+  rotate: false
+  xy: 89, 1
+  size: 35, 63
+  orig: 64, 64
+  offset: 21, 0
+  index: 1
+hell-beast-breath
+  rotate: false
+  xy: 126, 16
+  size: 40, 48
+  orig: 64, 64
+  offset: 14, 0
+  index: 3

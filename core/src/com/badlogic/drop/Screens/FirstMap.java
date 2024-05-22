@@ -11,6 +11,7 @@ import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
+import com.badlogic.drop.Sprites.HellBeast;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.StageBound;
 import com.badlogic.drop.Tools.B2WorldCreator;
@@ -36,9 +37,11 @@ public class FirstMap extends PlayScreen {
 	public final int SPEED = 10;
 
 	public B2WorldCreator WorldCreator;
+	public double teleCd=1000;
+	public double lastTele=0;
 	public boolean canJump = false;
 	public boolean Hitting;
-	public int stageNum = 5;
+	public int stageNum = 10;
 	public int stagePass = -1;
 	public int stageCr;
 	public int crCheckpoint = 0;
@@ -46,6 +49,7 @@ public class FirstMap extends PlayScreen {
 	public Rectangle tmp;
 	public ArrayList<Boolean> firstEntry = new ArrayList<Boolean>();
 	public ArrayList<Boolean> stageComplete = new ArrayList<Boolean>();
+	
 	private boolean isOnStage = false;
 	
 	public FirstMap(CuocChienSinhTon game) {
@@ -101,8 +105,10 @@ public class FirstMap extends PlayScreen {
 	public void handleDie() {
 		Vector2 pos = WorldCreator.checkpoints.get(0);
 		for(Vector2 p : WorldCreator.checkpoints) {
-			if((int) p.x/35/CuocChienSinhTon.PPM <= stagePass) pos = p;
+			System.out.println((int)p.x/35/CuocChienSinhTon.PPM);
+			if((int) (p.x/35/CuocChienSinhTon.PPM) <= stagePass) pos = p;
 		}
+		System.out.println(pos);
 		
 		StageCreator.clearMonster();
 		
@@ -153,7 +159,9 @@ public class FirstMap extends PlayScreen {
 //		}
 		if(Gdx.input.isKeyJustPressed(Keys.P) && Gdx.input.isKeyPressed(Keys.ALT_LEFT)) {
 			// +1 vào health
-			nextStage();
+			stageCr = 5;
+			stagePass = 4;
+			player.body.setTransform(new Vector2(35*stageCr+2,3) , 0);
 			
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {
@@ -161,14 +169,26 @@ public class FirstMap extends PlayScreen {
 			stop = false;
 		}
 		
+		
 		if(Gdx.input.isKeyPressed(Keys.D)) {
 			stop = false;
 			player.body.setLinearVelocity( new Vector2(speed,vel.y));
 		}
 		
+		if(Gdx.input.isKeyJustPressed(Keys.L) && System.currentTimeMillis()-lastTele > teleCd) {
+			if(!Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.D)) {
+				if(!player.isFlipX()) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
+				else player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
+			}
+			else if(Gdx.input.isKeyPressed(Keys.D)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
+			else if(Gdx.input.isKeyPressed(Keys.A)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
+			lastTele = System.currentTimeMillis();
+		}
+		
+		
 		if(Gdx.input.isKeyJustPressed(Keys.W) && canJump && vel.y == 0) {
 			canJump = false;
-			player.body.applyLinearImpulse(new Vector2(0,25), player.getBody().getWorldCenter(),true);
+			player.body.applyLinearImpulse(new Vector2(0,22), player.getBody().getWorldCenter(),true);
 			stop = false;
 		}
 		
@@ -184,12 +204,17 @@ public class FirstMap extends PlayScreen {
 			if(x!=null)
 			x.update(dt);
 		}
+		for(HellBeast x : StageCreator.hellBeast) {
+			if(x!=null)
+			x.update(dt);
+		}
 	}
 	
 	// method that be called every 1/60s
 	public void update(float dt) {
+		
 		BulletManage.update(dt);
-		BulletManage.remove();
+		
 		handleInput(dt);
 		player.update(dt);
 		boss.update(dt);
@@ -201,7 +226,7 @@ public class FirstMap extends PlayScreen {
 		world.step(1/60f, 6, 2);
 		//handle camera out of bound
 		
-		stageCr = (int) ((player.body.getPosition().x-(player.getRegionWidth()/2)/CuocChienSinhTon.PPM)/stageLength);
+		stageCr = (int) ((player.body.getPosition().x-(player.getRegionWidth()/2-10)/CuocChienSinhTon.PPM)/stageLength);
 		
 		camera.position.x = stageCr * stageLength + (float) stageLength/2;
 		

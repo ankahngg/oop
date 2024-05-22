@@ -1,0 +1,12 @@
+
+Hurt.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+hell-beast-idle
+  rotate: false
+  xy: 1, 1
+  size: 43, 63
+  orig: 55, 67
+  offset: 7, 0
+  index: 1
