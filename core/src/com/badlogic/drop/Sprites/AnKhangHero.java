@@ -14,7 +14,7 @@ public class AnKhangHero extends Hero{
 	
 	public AnKhangHero(World world, PlayScreen screen) {	
 		super(world, screen);
-		this.Health = 5;
+		this.Health = 10;
 		this.HealthMax = 10;
 		this.currentRank = 0;
 
@@ -45,9 +45,9 @@ public class AnKhangHero extends Hero{
 		atlasHurting = new TextureAtlas("Hero2/packs/Hurt2.pack");
 		atlasDieing = new TextureAtlas("Hero2/packs/Die.pack");
 		
-		attack1 = new Animation<TextureRegion>(0.05f, atlasAttack1.getRegions());
-		attack2 = new Animation<TextureRegion>(0.05f, atlasAttack2.getRegions());
-		attack3 = new Animation<TextureRegion>(0.05f, atlasAttack3.getRegions());
+		attack1 = new Animation<TextureRegion>(0.08f, atlasAttack1.getRegions());
+		attack2 = new Animation<TextureRegion>(0.08f, atlasAttack2.getRegions());
+		attack3 = new Animation<TextureRegion>(0.08f, atlasAttack3.getRegions());
 		running = new Animation<TextureRegion>(0.1f, atlasRunning.getRegions());
 		jumping = new Animation<TextureRegion>(0.1f, atlasJumping.getRegions());
 		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
@@ -68,8 +68,8 @@ public class AnKhangHero extends Hero{
 		PolygonShape hitbox = new PolygonShape();
 		if(runningRight != currentDirection) {
 			if(attackFixture != null) body.destroyFixture(attackFixture);
-			if(runningRight) hitbox.setAsBox(2, 2,new Vector2(2,1),0);
-			else hitbox.setAsBox(2, 2,new Vector2(-2,1),0);
+			if(runningRight) hitbox.setAsBox(2, 3,new Vector2(2,1),0);
+			else hitbox.setAsBox(2, 3,new Vector2(-2,1),0);
 			fdef.shape = hitbox;
 			fdef.isSensor = true;
 			attackFixture = body.createFixture(fdef);

@@ -41,10 +41,11 @@ abstract public class Monster extends Sprite{
 		public int Health;
 		public int HealthMax;
 		
-		
+		public double attackCd = 1000;
 		public double lastAttackTime = 0;
 		public double lastTeleTime = 0;
 		public double TeleCd = 50;
+		public double lastCheckJump = 0;
 		public Body b2body;
 		public Body hitbox;
 		BodyDef bdef = new BodyDef();
@@ -53,7 +54,8 @@ abstract public class Monster extends Sprite{
 		public Fixture hitboxDef;
 		
 		double t = 1000;
-		public boolean isAttacking = false;
+		public boolean isAttacking1 = false;
+		public boolean isAttacking2 = false;
 		public boolean isHurting = false;
 		public boolean isDieing = false;
 		
@@ -63,6 +65,8 @@ abstract public class Monster extends Sprite{
 		public boolean isDie = false;
 		public boolean isDied = false;
 		public boolean isIntialLeft = false;
+		public float MonsterScaleX=1;
+		public float MonsterScaleY=1;
 		public int MonsterHeight;
 		public int MonsterWidth;
 		public boolean runningRight = true;
@@ -70,6 +74,8 @@ abstract public class Monster extends Sprite{
 		public SpriteBatch batch;
 		public float posX;
 		public float posY;
+		public HealthBarMonster HealthBar;
+		public float radius;
 		
 		public int getHealthMax() {
 			return HealthMax;
@@ -82,26 +88,31 @@ abstract public class Monster extends Sprite{
 		public Monster(World world, PlayScreen screen, float x, float y, boolean isDynamic) {		
 			this.world = world;
 			this.Health = 20;
-			this.HealthMax = 20;
+			this.HealthMax = 5;
 			this.screen = screen;
 			this.isDynamic = isDynamic;
 			this.posX = x;
 			this.posY = y;
 			this.batch = screen.game.getBatch();
+			HealthBar = new HealthBarMonster(screen);
 			prepareAnimation();
 			defineMonster(x,y);
 			setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
-			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
 			
+			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
 		}
 		
 		public void update(float dt) {
 			setRegion(getFrame(dt));
-			if(isDied) return;
-			setBounds(b2body.getPosition().x-MonsterWidth/CuocChienSinhTon.PPM/2,
-					b2body.getPosition().y-MonsterHeight/CuocChienSinhTon.PPM/2,
-					getRegionWidth()/CuocChienSinhTon.PPM,
-					getRegionHeight()/CuocChienSinhTon.PPM);
+			if(b2body != null) {
+				posX = b2body.getPosition().x;
+				posY = b2body.getPosition().y;		
+			}
+			if(!isDied) {
+				setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
+				HealthBar.update(Health, HealthMax, posX, posY+radius);
+			}
+			
 			movement();
 			batch.begin();
 			this.draw(batch);
@@ -110,10 +121,7 @@ abstract public class Monster extends Sprite{
 		
 		abstract public void removeMonster();
 			
-		
-		
 		abstract public void movement();	
-		
 		
 		public TextureRegion getFrame(float dt) {
 			TextureRegion region;
@@ -171,8 +179,8 @@ abstract public class Monster extends Sprite{
 					}				
 				}
 				
-				previousState = currentState;
 			}
+			previousState = currentState;
 
 			return region;
 		}
@@ -184,7 +192,7 @@ abstract public class Monster extends Sprite{
 		abstract public State getFrameState(float dt) ;
 		
 		void onHit() {
-			this.Health --;
+			this.Health -= screen.getPlayer().damage;
 		}
 		
 		public void defineMonster(float x,float y) {
@@ -193,9 +201,13 @@ abstract public class Monster extends Sprite{
 			 bdef.position.set(x,y);
 			 if(isDynamic) bdef.type = BodyDef.BodyType.DynamicBody;
 			 else  bdef.type = BodyDef.BodyType.StaticBody;
+			 
 			 b2body = world.createBody(bdef);
+			 
 			 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
+			 radius = getRegionHeight()/CuocChienSinhTon.PPM/2;
 			 fdef.shape = shape;
+			 fdef.density = 0.8f;
 			 monsterDef = b2body.createFixture(fdef);
 		}
 

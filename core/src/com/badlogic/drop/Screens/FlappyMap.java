@@ -74,6 +74,7 @@ public class FlappyMap extends PlayScreen{
 		world = new World(new Vector2(0,GRAVITY),true);
 		b2dr = new Box2DDebugRenderer();
 		new B2WorldCreator(world, map, this);
+		System.out.println(world ==null);
 		// create monsters
 		prepareMonster();
 		// create hero

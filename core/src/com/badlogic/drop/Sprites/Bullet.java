@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -35,12 +36,15 @@ abstract public class Bullet extends Sprite{
 	public float SpriteWidth;
 	public int direction;
 	public double preTime;
+	public int speed=10;
 	public double lifeTime = 1000;
 	public double tt = 0;
 	public float posX;
 	public float posY;
 	public boolean isLaunch=false;
-	private boolean isDied = false;
+	public boolean isDied = false;
+	public TextureRegion region;
+	public boolean tracing = false;
 	
 	public Bullet(World world,PlayScreen screen,float x, float y,int direction) {
 		this.world = world;
@@ -54,6 +58,12 @@ abstract public class Bullet extends Sprite{
 		SpriteWidth = getRegionWidth();
 		defineBullet(x,y);
 		
+		
+		
+	}
+	
+	public void SetSpeed(int x) {
+		speed = x;
 	}
 	
 	abstract public void prepareAnimation() ;
@@ -63,9 +73,12 @@ abstract public class Bullet extends Sprite{
 //		if(tt >= lifeTime) this.getTexture().dispose();
 		stateTime += dt;
 		if(bullet.isAnimationFinished(stateTime)) remove();
-		System.out.println(isDied);
 		if(!isDied) {
-			setRegion(bullet.getKeyFrame(stateTime,false));
+			region = bullet.getKeyFrame(stateTime,false);
+			if(!region.isFlipX()) {
+				if(direction == -1) region.flip(true, false);
+			}
+			setRegion(region);
 			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
 					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
 					getRegionWidth()/CuocChienSinhTon.PPM,
@@ -80,17 +93,15 @@ abstract public class Bullet extends Sprite{
 	
 	
 	public void remove() {
-		isDied  = true;
-		BulletManage.remove(this);
-		
+		isDied = true;
+		BulletManage.markRemoved(this);
 	}
 	
 	public void Movement() {
-		 b2body.setLinearVelocity(new Vector2(10*direction,0));
+		 b2body.setLinearVelocity(new Vector2(speed*direction,0));
 	}
 	
 	public void onHit() {
-		System.out.println("onHit");
 		remove();
 	}
 

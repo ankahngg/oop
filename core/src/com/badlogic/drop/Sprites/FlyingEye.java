@@ -44,12 +44,14 @@ public class FlyingEye extends Monster{
 	
 	public FlyingEye(World world, PlayScreen screen,float x, float y) {		
 		super(world, screen,x,y,false);
+		System.out.println(y+"*");
 		this.Health = 2;
-		posX = x;
-		posY = y;
-		bullet = new EyeBullet(world, screen, x, y, 0);
+		
+		
 		isIntialLeft = true;
+		
 		monsterDef.setUserData(this);
+		
 	}
 	@Override
 	public void update(float dt) {
@@ -58,16 +60,16 @@ public class FlyingEye extends Monster{
 		
 		if(isDied) return;
 		if(running.isAnimationFinished(stateTime)) {
-			BulletManage.addBullet("FlyingEye", posX, posY, -1);
+			BulletManage.addBullet("FlyingEye", b2body.getPosition().x, b2body.getPosition().y, -1);
 		}
 		
 		
 	}
 	
 	public void removeMonster() {
+		if (b2body!=null)
 		world.destroyBody(b2body);
-		world.destroyBody(bullet.b2body);
-		b2body = null;bullet.b2body=null;
+		b2body = null;
 		if (screen instanceof FirstMap)
 		((FirstMap) screen).StageCreator.eyeMonsters.remove(this);
 		isDied = true;

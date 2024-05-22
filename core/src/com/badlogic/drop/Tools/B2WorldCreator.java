@@ -11,7 +11,9 @@ import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.Instruction;
 import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.StageBound;
+import com.badlogic.drop.Sprites.StartInstruction;
 import com.badlogic.drop.Sprites.Skeleton;
+import com.badlogic.drop.Sprites.SkillInstruction;
 import com.badlogic.drop.Sprites.Spine;
 import com.badlogic.gdx.maps.MapGroupLayer;
 import com.badlogic.gdx.maps.MapLayer;
@@ -27,6 +29,7 @@ import com.badlogic.gdx.utils.ObjectSet;
 
 public class B2WorldCreator {
 	public static Instruction startInstruc;
+	public static Instruction skillInstruc;
 	public static Spine spine;
 	
 	public ArrayList<Vector2> checkpoints = new ArrayList<Vector2>();
@@ -38,17 +41,21 @@ public class B2WorldCreator {
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
 				new Brick(world, map, rect,false);
 			}
+			
 			for(MapObject object : map.getLayers().get("SensorObject").getObjects().getByType(RectangleMapObject.class)) {
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
 				Vector2 pos = new Vector2(rect.x,rect.y);
 				checkpoints.add(pos);
-				startInstruc = new Instruction(world, map, rect, screen);
+				int stage = (int) (rect.x/CuocChienSinhTon.PPM/35);
+				if(stage == 0) startInstruc = new StartInstruction(world, map, rect, screen);
+				if(stage == 5) skillInstruc = new SkillInstruction(world, map, rect, screen);
+				
 			}
 			
 			for(MapObject object : map.getLayers().get("StageBound").getObjects().getByType(RectangleMapObject.class)) {
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
 				StageBound x = new StageBound(world, map, rect,false);
-				System.out.println(rect.x/CuocChienSinhTon.PPM+"*");
+				
 				stageBounds.add(x);
 			}
 		}

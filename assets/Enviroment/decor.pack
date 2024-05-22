@@ -1,0 +1,89 @@
+
+decor2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+shop_anim
+  rotate: false
+  xy: 1, 127
+  size: 708, 128
+  orig: 708, 128
+  offset: 0, 0
+  index: -1
+shop
+  rotate: false
+  xy: 1, 27
+  size: 118, 98
+  orig: 118, 98
+  offset: 0, 0
+  index: -1
+fence
+  rotate: false
+  xy: 711, 236
+  size: 73, 19
+  orig: 73, 19
+  offset: 0, 0
+  index: 1
+fence
+  rotate: false
+  xy: 1, 6
+  size: 72, 19
+  orig: 72, 19
+  offset: 0, 0
+  index: 2
+lamp
+  rotate: false
+  xy: 121, 68
+  size: 23, 57
+  orig: 23, 57
+  offset: 0, 0
+  index: -1
+rock
+  rotate: false
+  xy: 711, 216
+  size: 45, 18
+  orig: 45, 18
+  offset: 0, 0
+  index: 3
+sign
+  rotate: false
+  xy: 121, 35
+  size: 22, 31
+  orig: 22, 31
+  offset: 0, 0
+  index: -1
+rock
+  rotate: false
+  xy: 786, 243
+  size: 27, 12
+  orig: 27, 12
+  offset: 0, 0
+  index: 2
+rock
+  rotate: false
+  xy: 75, 14
+  size: 20, 11
+  orig: 20, 11
+  offset: 0, 0
+  index: 1
+grass
+  rotate: false
+  xy: 1, 1
+  size: 8, 3
+  orig: 8, 3
+  offset: 0, 0
+  index: 1
+grass
+  rotate: false
+  xy: 146, 120
+  size: 10, 5
+  orig: 10, 5
+  offset: 0, 0
+  index: 2
+grass
+  rotate: false
+  xy: 711, 210
+  size: 9, 4
+  orig: 9, 4
+  offset: 0, 0
+  index: 3

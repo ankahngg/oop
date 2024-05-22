@@ -14,8 +14,9 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 public class Collision {
 
 	public static boolean bossInRangeAttack = true;
-	public static boolean startInstructionColi = false;
-	public static final short GROUND_BITS = 512;
+	public static boolean InstructionColi = false;
+	public static Instruction CrInstruction;
+	public static final short GROUND_BITS = 1024;
 	public static final short HERO_BITS = 1;
 	public static final short INSTRUCTION_BITS = 2;
 	public static final short HEROATTACK_BITS = 4;
@@ -43,12 +44,30 @@ public class Collision {
 	
 	public static void heroAttack(PlayScreen screen) {
 		for(Monster m : monsters) {
+			if(!m.isHurting)
 			m.onHit();
 		}
-
+	}
+	
+	public static void monsterBulletHurt(Contact contact) {
+		Fixture x = getFix(Collision.HEROBULLET_BITS,contact);
+		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
+		if (x.getUserData()==null || y.getUserData() ==null) return;
+		((Monster) y.getUserData()).onHit();
+		((Bullet) x.getUserData()).onHit();
+	}
+	
+	
+	public static void instructionCollide(Contact contact) {
+		Fixture x = getFix(Collision.HERO_BITS,contact);
+		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
+		if (x.getUserData()==null || y.getUserData() ==null) return;
+		CrInstruction = (Instruction) y.getUserData();	
 	}
 	public static void update(float dt) {
-		if(startInstructionColi) B2WorldCreator.startInstruc.onHit();
+		if(InstructionColi) CrInstruction.onHit();
+		
+		
 	}
 	public static void heroBulletHurt(Contact contact) {
 		
