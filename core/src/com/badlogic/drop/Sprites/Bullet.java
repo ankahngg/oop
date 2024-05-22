@@ -20,7 +20,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 abstract public class Bullet extends Sprite{
-			
+	public final float SPEED = 10;
 	public World world;
 	public PlayScreen screen;
 	public boolean isActive = true;
@@ -98,9 +98,14 @@ abstract public class Bullet extends Sprite{
 	}
 	
 	public void Movement() {
-		 b2body.setLinearVelocity(new Vector2(speed*direction,0));
+
+		 b2body.setLinearVelocity(new Vector2(SPEED*direction,0));
 	}
-	
+
+
+	public void Movement(float speed,float direction1) {
+		b2body.setLinearVelocity(SPEED*this.direction+speed*direction1,0);
+	}
 	public void onHit() {
 		remove();
 	}

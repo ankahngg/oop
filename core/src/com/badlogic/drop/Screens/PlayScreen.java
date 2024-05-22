@@ -33,7 +33,8 @@ public abstract class PlayScreen implements Screen {
 	//Box2d
 	protected World world;
 	protected Box2DDebugRenderer b2dr;
-	
+	// speed
+	protected float speed;
 	//Hero
 	protected Hero player;
 	
@@ -104,6 +105,9 @@ public abstract class PlayScreen implements Screen {
 		renderer.dispose();
 		world.dispose();
 		b2dr.dispose();
+	}
+	public float getSpeed() {
+		return speed;
 	}
 	
 	

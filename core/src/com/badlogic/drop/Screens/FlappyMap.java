@@ -9,6 +9,8 @@ import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
+import com.badlogic.drop.Sprites.Bullet;
+import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EnergyBall;
 import com.badlogic.drop.Sprites.EyeBullet;
@@ -42,7 +44,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class FlappyMap extends PlayScreen{
-	private final int SPEED = 5;
+	private static final int SPEED = 5;
 	private final int GRAVITY = -30;
 	private final int DISTANCE = 10;
 	private final int MAP_LENGTH = 200;
@@ -74,19 +76,22 @@ public class FlappyMap extends PlayScreen{
 		world = new World(new Vector2(0,GRAVITY),true);
 		b2dr = new Box2DDebugRenderer();
 		new B2WorldCreator(world, map, this);
-		System.out.println(world ==null);
+		
 		// create monsters
 		prepareMonster();
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
 		player = new AnKhangHero(world,this);
-		player.setBullet(new EnergyBall(world, this, player.getX(), player.getY(), 0));
-		player.body.setLinearVelocity(SPEED,0);
+		
+		speed =SPEED*(1+ timeCount/10);
+		player.body.setLinearVelocity(speed,0);
 		timeCount = 0;
 		
 		//set up collision
 		Collision.setup(this);
+		//set up bullet manage
+		BulletManage.setup(world, this);
 		
 		//create heath bar
 		healthbar = new HealthBar(this);
@@ -221,6 +226,9 @@ public class FlappyMap extends PlayScreen{
 	void updatePlayer(float dt) {
 		
 		
+	}
+	public float getSpeed() {
+		return speed;
 	}
 
 		

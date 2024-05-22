@@ -15,7 +15,7 @@ public class EnergyBall extends Bullet{
 
 	@Override
 	public void prepareAnimation() {
-		atlasBullet = new TextureAtlas("Hero2/packs/energy-ball.atlas");
+		atlasBullet = new TextureAtlas("Hero2/packs/energy-ball.pack");
 		bullet = new Animation<TextureRegion>(0.15f, atlasBullet.getRegions());
 		setRegion(atlasBullet.getRegions().get(0));
 	}

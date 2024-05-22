@@ -1,5 +1,6 @@
 package com.badlogic.drop.Sprites;
 
+import java.util.IllegalFormatFlagsException;
 import java.util.Iterator;
 
 import com.badlogic.drop.CuocChienSinhTon;
@@ -44,7 +45,6 @@ public class FlyingEye extends Monster{
 	
 	public FlyingEye(World world, PlayScreen screen,float x, float y) {		
 		super(world, screen,x,y,false);
-		System.out.println(y+"*");
 		this.Health = 2;
 		
 		
@@ -67,9 +67,11 @@ public class FlyingEye extends Monster{
 	}
 	
 	public void removeMonster() {
-		if (b2body!=null)
 		world.destroyBody(b2body);
-		b2body = null;
+
+		if (bullet.b2body!=null)
+		world.destroyBody(bullet.b2body);
+		b2body = null;bullet.b2body=null;
 		if (screen instanceof FirstMap)
 		((FirstMap) screen).StageCreator.eyeMonsters.remove(this);
 		isDied = true;

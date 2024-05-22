@@ -24,6 +24,7 @@ public class BulletManage {
 			bl = new EyeBullet(world,screen,x,y,direction);
 			bullets.add(bl);
 		}else if (kind.equals("EnergyBall")) {
+			System.out.println(12);
 			bl = new EnergyBall(world, screen, x, y, direction);
 			bullets.add(bl);
 		}else if (kind == "HeroBullet1") {
@@ -36,7 +37,20 @@ public class BulletManage {
 			bullets.add(bl);
 		}
 	}
+	public static void addBullet(String kind, float x, float y, int direction,float speed) {
+		Bullet bl;
 	
+		if(kind == "FlyingEye") {
+			bl = new EyeBullet(world,screen,x,y,direction);
+			bl.Movement(speed, direction);
+			bullets.add(bl);
+		}else if (kind.equals("EnergyBall")) {
+			System.out.println(12);
+			bl = new EnergyBall(world, screen, x, y, direction);
+			bl.Movement(speed, direction);
+			bullets.add(bl);
+		}
+	}
 	public static void update(float dt) {
 		for(Bullet bl : bullets) {
 			bl.update(dt);
