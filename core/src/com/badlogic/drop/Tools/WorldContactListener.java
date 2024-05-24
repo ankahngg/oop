@@ -29,6 +29,7 @@ public class WorldContactListener implements ContactListener {
     	try {
     		// Add the contact to the set when it begins
 
+    		if(isContact(Collision.HERO_BITS,Collision.ITEM_BITS,contact)) Collision.itemEffect(contact);
 			if(isContact(Collision.HERO_BITS,Collision.GROUND_BITS,contact)) Collision.resetJump(contact);
 	        if(isContact(Collision.HERO_BITS,Collision.INSTRUCTION_BITS,contact)) {
 	        	Collision.instructionCollide(contact);
@@ -36,6 +37,11 @@ public class WorldContactListener implements ContactListener {
 	        }
 	        if(isContact(Collision.HEROBULLET_BITS,Collision.MONSTER_BITS,contact)) {
 	        	Collision.monsterBulletHurt(contact);
+	        	
+	        }
+	        if(isContact(Collision.HERO_BITS,Collision.MONSTER_BITS,contact)) {
+	        	System.out.println("collide");
+	        	Collision.heroCollideMonster(contact);
 	        	
 	        }
 	        

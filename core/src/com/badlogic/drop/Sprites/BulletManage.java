@@ -66,10 +66,9 @@ public class BulletManage {
 				world.destroyBody(bl.b2body);
 				bl.b2body=null;
 				bullets.remove(bl);
-				removeBullet.remove(bl);
-			}
-			
+			}	
 		}
+		removeBullet.clear();
 
 		
 	}

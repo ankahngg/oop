@@ -59,10 +59,15 @@ public class Skeleton extends Monster{
 		if(b2body == null) return;
 		Vector2 vel = b2body.getLinearVelocity();
 		if(!isHurting) {
-			if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
-				b2body.setLinearVelocity(new Vector2(-4,vel.y));
-			else 
-				b2body.setLinearVelocity(new Vector2(4,vel.y));			
+			if(screen.getPlayer().getBody().getPosition().x-0.1 < b2body.getPosition().x
+				&& 	screen.getPlayer().getBody().getPosition().x+0.1 > b2body.getPosition().x)
+				b2body.setLinearVelocity(new Vector2(0,vel.y));
+			else {
+				if(screen.getPlayer().getBody().getPosition().x-0.1 > b2body.getPosition().x)
+					b2body.setLinearVelocity(new Vector2(+4,vel.y));
+				else if(screen.getPlayer().getBody().getPosition().x+0.1 < b2body.getPosition().x)
+					b2body.setLinearVelocity(new Vector2(-4,vel.y));
+			}
 		}
 	}
 	
@@ -72,7 +77,7 @@ public class Skeleton extends Monster{
 	
 	@Override
 	public void removeMonster() {
-		((FirstMap) screen).StageCreator.skeMonsters.remove(this);
+		((FirstMap) screen).StageCreator.monstersRemove.add(this);
 		
 	}
 	
@@ -106,6 +111,7 @@ public class Skeleton extends Monster{
 			isDieing = true;
 			isDie = false;
 			isHurt = false;
+			isHurting = false;
 			world.destroyBody(this.b2body);
 			b2body = null;
 			return State.DIE;
@@ -175,14 +181,6 @@ public class Skeleton extends Monster{
 		return State.RUNNING;
 	}
 	
-	void onHit() {
-		this.Health --;
-		if(this.Health == 0) {
-			isDie = true;
-		}
-		else {
-			isHurt = true;
-		}
-	}
+	
 	
 }

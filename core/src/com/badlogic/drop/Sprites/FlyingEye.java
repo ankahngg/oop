@@ -52,6 +52,7 @@ public class FlyingEye extends Monster{
 		isIntialLeft = true;
 		
 		monsterDef.setUserData(this);
+		Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
 		
 	}
 	@Override
@@ -72,7 +73,7 @@ public class FlyingEye extends Monster{
 		world.destroyBody(b2body);
 		b2body = null;
 		if (screen instanceof FirstMap)
-		((FirstMap) screen).StageCreator.eyeMonsters.remove(this);
+		((FirstMap) screen).StageCreator.monstersRemove.add(this);
 		isDied = true;
 	}
 	
@@ -124,16 +125,7 @@ public class FlyingEye extends Monster{
 		
 	}
 	
-	void onHit() {
-		//System.out.println("lol");
-		this.Health --;
-		if(this.Health == 0) {
-			isDie = true;
-		}
-		else {
-			isHurt = true;
-		}
-	}
+	
 	
 	public void defineMonster(int x,int y) {
 		

@@ -6,6 +6,7 @@ import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Tools.B2WorldCreator;
+import com.badlogic.drop.Tools.Items;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -27,6 +28,7 @@ public class Collision {
 	public static final short MONSTERBULLET_BITS = 128;
 	public static final short STAGEBOUND_BITS = 256;
 	public static final short HEROBULLET_BITS = 512;
+	public static final short ITEM_BITS = 2056;
 	public static PlayScreen screen;
 	
 	public static ArrayList<Monster> monsters = new ArrayList<Monster>();
@@ -47,6 +49,11 @@ public class Collision {
 			//if(!m.isHurting)
 			m.onHit();
 		}
+	}
+	public static void itemEffect(Contact contact) {
+		Fixture x = getFix(Collision.HERO_BITS,contact);
+		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
+		((Items) y.getUserData()).effect();
 	}
 	
 	public static void monsterBulletHurt(Contact contact) {
@@ -74,15 +81,14 @@ public class Collision {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		if (x.getUserData()==null || y.getUserData() ==null) return;
-		((AnKhangHero) x.getUserData()).handleHurt(y);
-		System.out.println("dcum");
+		if(((AnKhangHero) x.getUserData()).shieldBegin == -1) ((AnKhangHero) x.getUserData()).handleHurt(y);
 		((Bullet) y.getUserData()).onHit();
 	}
 	public static void heroHurt(Contact contact) {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		if (x.getUserData()==null || y.getUserData() == null) return;
-		((AnKhangHero) x.getUserData()).handleHurt(y);
+		if(((AnKhangHero) x.getUserData()).shieldBegin == -1) ((AnKhangHero) x.getUserData()).handleHurt(y);
 	}
 	
 	public static void heroCollideBound(Contact contact) {
@@ -90,8 +96,14 @@ public class Collision {
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		StageBound bound = ((StageBound) y.getUserData());
 		AnKhangHero hero = ((AnKhangHero) x.getUserData());
-		
 	}
+	public static void heroCollideMonster(Contact contact) {
+		Fixture x = getFix(Collision.HERO_BITS,contact);
+		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
+		AnKhangHero hero = ((AnKhangHero) x.getUserData());
+		if(hero.isHurtWhenCollide) hero.handleHurt(y);
+	}
+	
 	
 	public static void monsterInRangeAttackAdd(Contact contact) {
 		Fixture x = getFix(Collision.HEROATTACK_BITS,contact);

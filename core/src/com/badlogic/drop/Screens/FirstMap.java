@@ -1,6 +1,7 @@
 package com.badlogic.drop.Screens;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Scenes.HealthBar;
@@ -12,9 +13,12 @@ import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.HellBeast;
+import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.StageBound;
 import com.badlogic.drop.Tools.B2WorldCreator;
+import com.badlogic.drop.Tools.Heart;
+import com.badlogic.drop.Tools.Items;
 import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
@@ -77,6 +81,7 @@ public class FirstMap extends PlayScreen {
 		StageCreator = new StageCreator(world, map, this);
 		//create player
 		player = new AnKhangHero(world,this);
+		player.isHurtWhenCollide = true;
 		//setup collision 
 		Collision.setup(this);
 		BulletManage.setup(world,this);
@@ -108,7 +113,6 @@ public class FirstMap extends PlayScreen {
 			System.out.println((int)p.x/35/CuocChienSinhTon.PPM);
 			if((int) (p.x/35/CuocChienSinhTon.PPM) <= stagePass) pos = p;
 		}
-		System.out.println(pos);
 		
 		StageCreator.clearMonster();
 		
@@ -196,18 +200,27 @@ public class FirstMap extends PlayScreen {
 	}
 	
 	public void monsterUpdate(float dt) {
-		for(FlyingEye x : StageCreator.eyeMonsters) {
+		for(Items x : StageCreator.items) {
 			if(x!=null)
 			x.update(dt);
 		}
-		for(Skeleton x : StageCreator.skeMonsters) {
-			if(x!=null)
-			x.update(dt);
+		if(!StageCreator.itemsRemove.isEmpty()) {
+			for(Items x : StageCreator.itemsRemove) {
+				if(x!=null)
+				world.destroyBody(x.b2body);
+				StageCreator.items.remove(x);
+			}
+			StageCreator.itemsRemove.clear();
 		}
-		for(HellBeast x : StageCreator.hellBeast) {
-			if(x!=null)
-			x.update(dt);
+		
+		for(Monster x : StageCreator.monsters) {
+			if(x!=null) x.update(dt);
 		}
+		for(Monster x : StageCreator.monstersRemove) {
+			StageCreator.monsters.remove(x);
+		}
+		StageCreator.monstersRemove.clear();
+		
 	}
 	
 	// method that be called every 1/60s

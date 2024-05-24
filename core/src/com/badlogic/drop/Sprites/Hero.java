@@ -71,7 +71,7 @@ public abstract class Hero extends Sprite{
 	protected double lastFireTime = 0;
 	protected int currentFire = 0;
 	
-	
+	public double shieldBegin = -1;
 	protected float HeroHeight;
 	protected float stateTime;
 	protected boolean runningRight = true;
@@ -84,19 +84,23 @@ public abstract class Hero extends Sprite{
 	public boolean isDieing;
 	public boolean isDie;
 	public boolean isFiring;
+	public boolean isHurtWhenCollide = false;
 	public int hurtDirection;
 	
-	protected int Health;
-	protected int HealthMax;
+	public int Health;
+	public int HealthMax;
 
 	protected Fixture attackFixture;
 	protected PlayScreen screen;
 	protected Bullet bullet;
 	private TextureRegion region;
+	private Shield shield;
 	public Hero(World world, PlayScreen screen) {
 		this.world = world;
 		this.screen = screen;
 		isDie = false;
+		shield = new Shield(world, screen);
+		
 	}
 	public void setBullet(World world,PlayScreen screen,float x, float y,int direction) {
 //		this.bullet = new EnergyBall(world, screen, x, y, direction);
@@ -121,6 +125,10 @@ public abstract class Hero extends Sprite{
 	protected abstract void prepareAnimation();
 	
 	public void update(float dt) {
+		if(shieldBegin != -1) {
+			if(System.currentTimeMillis()-shieldBegin >= 5000) shieldBegin = -1;
+			else shield.update(body.getPosition().x, body.getPosition().y, dt);
+		}
 		setRegion(getFrame(dt));
 		setBounds(body.getPosition().x-getRegionWidth()/CuocChienSinhTon.PPM/2,
 				body.getPosition().y-HeroHeight/CuocChienSinhTon.PPM/2,
@@ -211,6 +219,7 @@ public abstract class Hero extends Sprite{
 	}
 
 	public void handleHurt(Fixture damageObject) {
+		if(shieldBegin != -1) return;
 		isHurt = true;
 		isAttacking = false;
 		
@@ -254,6 +263,8 @@ public abstract class Hero extends Sprite{
 			}
 			if(isHurt) {
 				isHurting = true;
+				isAttacking = false;
+				isFiring = false;
 				isHurt = false;
 				return State.HURT;
 			}
