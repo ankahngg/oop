@@ -44,7 +44,7 @@ public class Collision {
 	
 	public static void heroAttack(PlayScreen screen) {
 		for(Monster m : monsters) {
-			if(!m.isHurting)
+			//if(!m.isHurting)
 			m.onHit();
 		}
 	}

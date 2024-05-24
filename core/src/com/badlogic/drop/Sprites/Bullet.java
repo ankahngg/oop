@@ -63,6 +63,7 @@ abstract public class Bullet extends Sprite{
 	}
 	
 	public void SetSpeed(int x) {
+		
 		speed = x;
 	}
 	
@@ -98,8 +99,9 @@ abstract public class Bullet extends Sprite{
 	}
 	
 	public void Movement() {
-
-		 b2body.setLinearVelocity(new Vector2(SPEED*direction,0));
+		
+		
+		 b2body.setLinearVelocity(new Vector2(speed*direction,0));
 	}
 
 
