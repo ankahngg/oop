@@ -3,6 +3,7 @@ package com.badlogic.drop.Sprites;
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,6 +21,17 @@ public class AnKhangHero extends Hero{
 
 		prepareAnimation();
 		
+		if (screen instanceof FirstMap) {
+			defineHero(30,10);
+		}else {
+			defineHero(0,10);
+		}
+		
+		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
+		currentState = State.STANDING;
+		previousState = State.STANDING;
+		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS,null);
+		normalDef.setUserData(this);
 		
 		
 		

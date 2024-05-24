@@ -11,11 +11,13 @@ import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
+import com.badlogic.drop.Sprites.Aura;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Bullet;
 import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.DragonBallMonster1;
+import com.badlogic.drop.Sprites.DragonBallMonster2;
 import com.badlogic.drop.Sprites.EnergyBall;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
@@ -55,7 +57,7 @@ public class FlappyMap extends PlayScreen{
 	private final int GRAVITY = -30;
 	private final int DISTANCE = 10;
 	private final int MAP_LENGTH = 200;
-	private final int BOSS_BEGIN_POSITION = 650;
+	private final int BOSS_BEGIN_POSITION = 700;
 	private float timeCount;
 	private float lastBoundPosX;
 	private boolean isBossAppeared;
@@ -63,7 +65,7 @@ public class FlappyMap extends PlayScreen{
 	private LinkedList<Monster> monsters;
 	private Animation<TextureRegion> flyEngineAnimation;
 	private Random random;
-	
+	private Aura bossAura;
 	public FlappyMap(CuocChienSinhTon game) {
 		//utils
 		random = new Random();
@@ -117,7 +119,10 @@ public class FlappyMap extends PlayScreen{
 		//create boss
 		boss = createBoss();
 		isBossAppeared=false;
-
+		
+		bossAura = new Aura(world, this,boss.getWidth());
+		
+		
 	}
 	private void createBounds() {
 		// Create bounds
@@ -150,7 +155,7 @@ public class FlappyMap extends PlayScreen{
 		monsters = new LinkedList<Monster>();
 		int type;
 		for (int i =0 ; i<monsterQuantity;i++) {
-			type=random.nextInt(2);
+			type=random.nextInt(3);
 			Monster monster=createMonster(type, initDistance);
 			
 			initDistance+=DISTANCE;
@@ -166,7 +171,14 @@ public class FlappyMap extends PlayScreen{
 			monster.monsterDef.setSensor(true);
 			monster.standing.setFrameDuration(0.1f);
 			break;
-
+		case 1:
+			monster = new DragonBallMonster1(world, this, 3+initDistance,1+ (int) (Math.random()*18));
+			monster.monsterDef.setSensor(true);
+			break;
+		case 2:
+			monster = new DragonBallMonster2(world, this, 3+initDistance, (int) (Math.random()*20));
+			monster.monsterDef.setSensor(true);
+			break;
 		default:
 			monster = new DragonBallMonster1(world, this, 3+initDistance, (int) (Math.random()*20));
 			monster.monsterDef.setSensor(true);
@@ -200,7 +212,7 @@ public class FlappyMap extends PlayScreen{
 		if(isBossAppeared) {
 			boss.b2body.setLinearVelocity((speed), 0);
 		}
-
+		bossAura.update(boss.getX(), boss.getY(),dt);
 		boss.update(dt);
 		
 		//add bounds
@@ -285,11 +297,11 @@ public class FlappyMap extends PlayScreen{
 //	    // Render the map
 //	    renderer.setView(camera);
 //	    renderer.render();
-
 		b2dr.render(world, camera.combined);
 		game.batch.begin();
 		player.draw(game.batch);
 		game.batch.draw(flyEngineAnimation.getKeyFrame(player.getStateTime()), getBody().getPosition().x-player.getRegionWidth()/1.2f/CuocChienSinhTon.PPM, getBody().getPosition().y-player.getRegionHeight()/CuocChienSinhTon.PPM,flyEngineAnimation.getKeyFrame(0).getRegionWidth()*0.75f/CuocChienSinhTon.PPM,flyEngineAnimation.getKeyFrame(delta).getRegionHeight()*0.8f/CuocChienSinhTon.PPM);
+	
 		game.batch.end();
 		
 		worldContactListener = new WorldContactListener();

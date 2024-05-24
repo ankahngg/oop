@@ -102,17 +102,8 @@ public abstract class Hero extends Sprite{
 		isDie = false;
 		
 
-		if (screen instanceof FirstMap) {
-			defineHero(30,10);
-		}else {
-			defineHero(0,10);
-		}
 		
-		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
-		currentState = State.STANDING;
-		previousState = State.STANDING;
-		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS,null);
-		normalDef.setUserData(this);
+		
 		
 		shield = new Shield(world, screen);
 		
@@ -414,7 +405,7 @@ public abstract class Hero extends Sprite{
 		 body = world.createBody(bdef);
 		 PolygonShape shape = new PolygonShape();
 		 shape.setAsBox(getRegionWidth()/CuocChienSinhTon.PPM/2, getRegionHeight()/CuocChienSinhTon.PPM/2,new Vector2(0,0),0);
-		 //shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
+//		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 		 fdef.shape = shape;
 		 fdef.friction = 0f;
 		 normalDef = body.createFixture(fdef);

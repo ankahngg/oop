@@ -16,10 +16,12 @@ public class DragonBallMonster1 extends Monster{
 		super(world, screen, x, y, false);
 		posX = x;
 		posY = y;
-		this.Health = 2;
+		this.Health = 4;
 		isIntialLeft = true;
 		
 		monsterDef.setUserData(this);
+		Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
+
 	}
 	@Override
 	public void prepareAnimation() {
@@ -66,10 +68,10 @@ public class DragonBallMonster1 extends Monster{
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
 			else {
 				isDieing = false;
-				removeMonster();
+				
 			}
 		}
-		if(isDie) {
+		if(isDie) {removeMonster();
 			isDieing = true;
 			isDie = false;
 			return State.HURT;

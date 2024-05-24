@@ -8,6 +8,8 @@ import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -47,6 +49,7 @@ public abstract class PlayScreen implements Screen {
 	//map
 	protected TextureAtlas atlas;
 	protected TextureRegion region;
+
 	
 	public WorldContactListener worldContactListener;
 
@@ -110,5 +113,5 @@ public abstract class PlayScreen implements Screen {
 		return speed;
 	}
 	
-	
+
 }

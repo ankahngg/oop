@@ -41,6 +41,7 @@ public class Collision {
 		  Filter filter = new Filter();
 		  filter.categoryBits = filterBit;
 		  if(maskBit != null) filter.maskBits = maskBit;
+		  if(fixture!=null)
 		  fixture.setFilterData(filter);	
 		}
 	
@@ -103,6 +104,7 @@ public class Collision {
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		StageBound bound = ((StageBound) y.getUserData());
 		AnKhangHero hero = ((AnKhangHero) x.getUserData());
+		System.out.println("bound");
 	}
 	public static void heroCollideMonster(Contact contact) {
 		Fixture x = getFix(Collision.HERO_BITS,contact);

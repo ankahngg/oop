@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Boss extends Monster{
+	
 	public int getHealthMax() {
 		return this.HealthMax;
 	}
@@ -34,6 +35,7 @@ public class Boss extends Monster{
 		setRegion(atlasStanding.getRegions().get(1));
 		MonsterHeight = getRegionHeight();
 		MonsterWidth = getRegionWidth();
+		
 	}
 	
 	public Boss(World world, PlayScreen screen, float x, float y) {		
@@ -61,6 +63,7 @@ public class Boss extends Monster{
 //			lastTeleTime = System.currentTimeMillis();
 //		}	
 	}
+	
 	
 	double t = 1000;
 	boolean isAttacking = false;

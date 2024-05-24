@@ -1,0 +1,33 @@
+
+aura.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+aura
+  rotate: false
+  xy: 1, 6
+  size: 123, 134
+  orig: 123, 134
+  offset: 0, 0
+  index: 2
+aura
+  rotate: false
+  xy: 126, 11
+  size: 126, 129
+  orig: 126, 129
+  offset: 0, 0
+  index: 1
+aura
+  rotate: false
+  xy: 254, 16
+  size: 108, 124
+  orig: 108, 124
+  offset: 0, 0
+  index: 0
+aura
+  rotate: false
+  xy: 364, 1
+  size: 100, 139
+  orig: 100, 139
+  offset: 0, 0
+  index: 3

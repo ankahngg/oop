@@ -13,19 +13,21 @@ public class DragonBallMonster2 extends Monster{
 		super(world, screen, x, y, false);
 		posX = x;
 		posY = y;
-		this.Health = 2;
+		this.Health = 3;
 		isIntialLeft = true;
 		
 		monsterDef.setUserData(this);
+		Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
+
 	}
 	@Override
 	public void prepareAnimation() {
 		// TODO Auto-generated method stub
-		atlasStanding =new TextureAtlas("Monster/DragonballMonster2/running/49.atlas");
-		atlasRunning =new TextureAtlas("Monster/DragonballMonster2/running/49.atlas");
-		atlasDie =new TextureAtlas("Monster/DragonballMonster1/die/49.atlas");
-		atlasHurt =new TextureAtlas("Monster/DragonballMonster1/hurt/49.atlas");
-		atlasAttack1 = new TextureAtlas("Monster/DragonballMonster1/attacking/49.atlas");
+		atlasStanding =new TextureAtlas("Monster/DragonballMonster2/running/79.atlas");
+		atlasRunning =new TextureAtlas("Monster/DragonballMonster2/running/79.atlas");
+		atlasDie =new TextureAtlas("Monster/DragonballMonster2/die/Die.pack");
+		atlasHurt =new TextureAtlas("Monster/DragonballMonster2/hurt/79.atlas");
+		atlasAttack1 = new TextureAtlas("Monster/DragonballMonster2/attack/79.atlas");
 		
 		attack1 = new Animation<TextureRegion>(0.1f,atlasAttack1.getRegions());
 		running = new Animation<TextureRegion>(0.2f,atlasRunning.getRegions());
@@ -63,10 +65,10 @@ public class DragonBallMonster2 extends Monster{
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
 			else {
 				isDieing = false;
-				removeMonster();
+				
 			}
 		}
-		if(isDie) {
+		if(isDie) {removeMonster();
 			isDieing = true;
 			isDie = false;
 			return State.HURT;
