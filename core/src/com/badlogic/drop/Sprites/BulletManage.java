@@ -24,8 +24,7 @@ public class BulletManage {
 			bl = new EyeBullet(world,screen,x,y,direction);
 			bullets.add(bl);
 		}else if (kind.equals("EnergyBall")) {
-			System.out.println(12);
-			bl = new EnergyBall(world, screen, x, y, direction);
+			bl = new EnergyBall(world, screen, x, y, direction,10);
 			bullets.add(bl);
 		}else if (kind == "HeroBullet1") {
 			bl = new HeroBullet1(world, screen, x, y, direction);
@@ -45,8 +44,7 @@ public class BulletManage {
 			bl.Movement(speed, direction);
 			bullets.add(bl);
 		}else if (kind.equals("EnergyBall")) {
-			System.out.println(12);
-			bl = new EnergyBall(world, screen, x, y, direction);
+			bl = new EnergyBall(world, screen, x, y, direction,4);
 			bl.Movement(speed, direction);
 			bullets.add(bl);
 		}
@@ -55,16 +53,31 @@ public class BulletManage {
 		for(Bullet bl : bullets) {
 			bl.update(dt);
 		}
-		for (Bullet bl : removeBullet) {
-			if(bl.b2body !=null) world.destroyBody(bl.b2body);
-			bl.b2body=null;
-			bullets.remove(bl);
-			removeBullet.remove(bl);
+
+		
+	}
+	public static void update(float dt,float speed) {
+		for(Bullet bl : bullets) {
+			bl.update(dt,speed);
+			
 		}
 	}
 	
 	public static void markRemoved(Bullet bl) {
+		
+
 		removeBullet.add(bl);
+	}
+	public static void remove() {
+		for (Bullet bl : removeBullet) {
+			if (bl!=null) {
+				world.destroyBody(bl.b2body);
+				bl.b2body=null;
+				bullets.remove(bl);
+				removeBullet.remove(bl);
+			}
+			
+		}
 	}
 }
 	
