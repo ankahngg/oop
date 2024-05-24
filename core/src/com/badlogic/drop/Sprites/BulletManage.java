@@ -44,8 +44,16 @@ public class BulletManage {
 			bl.Movement(speed, direction);
 			bullets.add(bl);
 		}else if (kind.equals("EnergyBall")) {
-			bl = new EnergyBall(world, screen, x, y, direction,4);
+			bl = new EnergyBall(world, screen, x, y, direction);
 			bl.Movement(speed, direction);
+			bullets.add(bl);
+		}else if (kind == "HeroBullet1") {
+			bl = new HeroBullet1(world, screen, x, y, direction);
+			bullets.add(bl);
+		}
+		else if (kind == "FireBullet") {
+			bl = new FireBullet(world, screen, x, y, direction);
+			bl.tracing = true;
 			bullets.add(bl);
 		}
 	}
