@@ -76,10 +76,19 @@ public class Skeleton extends Monster{
 		
 	}
 	
-	public void HurtKnockBack() {
-		double t = 200;
-		
-	}
+//	public void HurtKnockBack() {
+//		double crTime = System.currentTimeMillis();
+//		
+//		
+//		double t = 200;
+//		if(System.currentTimeMillis()-crTime <t) {
+//			if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
+//				b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
+//			else 
+//				b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);		
+//		}
+//		
+//	}
 	
 	public State getFrameState(float dt) {
 		if(b2body != null) {
@@ -101,21 +110,21 @@ public class Skeleton extends Monster{
 			return State.DIE;
 		}
 		if(isHurt) {
-			System.out.println("damage");
 			isAttacking1 = false;
 			isHurting = true;
 			isHurt = false;
 			stateTime = 0;
+			//HurtKnockBack();
 			return State.HURT;
 		}
 		
 		if(isHurting) {
-			if(stateTime < hurt.getAnimationDuration()/50) {
-				if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
-					b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
-				else 
-					b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);				
-			}
+//			if(stateTime < hurt.getAnimationDuration()/50) {
+//				if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
+//					b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
+//				else 
+//					b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);				
+//			}
 			if(!hurt.isAnimationFinished(stateTime)) return State.HURT;
 			else isHurting = false;
 		}
