@@ -105,6 +105,7 @@ public class Skeleton extends Monster{
 			isAttacking1 = false;
 			isDieing = true;
 			isDie = false;
+			isHurt = false;
 			world.destroyBody(this.b2body);
 			b2body = null;
 			return State.DIE;
