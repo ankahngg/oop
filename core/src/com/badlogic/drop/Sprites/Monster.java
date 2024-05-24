@@ -112,7 +112,9 @@ abstract public class Monster extends Sprite{
 				setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
 				HealthBar.update(Health, HealthMax, posX, posY+radius);
 			}
-			
+			if(isDied) {
+				removeMonster();
+			}
 			movement();
 			batch.begin();
 			this.draw(batch);
