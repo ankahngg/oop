@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="400" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="45" nextobjectid="124">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="400" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="55" nextobjectid="131">
  <tileset firstgid="1" source="tileset/graveyard.tsx"/>
  <tileset firstgid="169" source="tileset/background.tsx"/>
  <tileset firstgid="505" source="tileset/mountains.tsx"/>
@@ -88,7 +88,16 @@
   <object id="90" x="3922" y="1.83333" height="319"/>
   <object id="91" x="4482" y="1.5" width="3" height="319"/>
  </objectgroup>
+ <objectgroup id="46" name="Heart"/>
+ <objectgroup id="47" name="Strength"/>
+ <objectgroup id="48" name="Shield"/>
  <group id="20" name="Stage1">
+  <objectgroup id="51" name="Shield">
+   <object id="126" x="720" y="153.333" width="13.3333" height="12"/>
+  </objectgroup>
+  <objectgroup id="50" name="Heart">
+   <object id="125" x="676.667" y="148" width="12.6667" height="10"/>
+  </objectgroup>
   <objectgroup id="23" name="Skeleton">
    <object id="54" x="863" y="244" width="15" height="16"/>
   </objectgroup>
@@ -99,6 +108,16 @@
  <group id="26" name="Stage2">
   <objectgroup id="27" name="FlyingEye">
    <object id="59" x="1529" y="181" width="13" height="16"/>
+  </objectgroup>
+  <objectgroup id="54" name="Strength">
+   <object id="130" x="1211.33" y="179.333" width="16.6667" height="16.6667"/>
+  </objectgroup>
+  <objectgroup id="53" name="Shield">
+   <object id="128" x="720" y="153.333" width="13.3333" height="12"/>
+   <object id="129" x="1435.33" y="182.667" width="12" height="11.3333"/>
+  </objectgroup>
+  <objectgroup id="52" name="Heart">
+   <object id="127" x="676.667" y="148" width="12.6667" height="10"/>
   </objectgroup>
   <objectgroup id="28" name="Skeleton">
    <object id="66" x="1318.5" y="253" width="15" height="14"/>

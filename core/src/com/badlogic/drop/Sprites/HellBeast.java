@@ -64,7 +64,7 @@ public class HellBeast extends Monster{
 		world.destroyBody(b2body);
 		b2body = null;
 		if (screen instanceof FirstMap)
-		((FirstMap) screen).StageCreator.hellBeast.remove(this);
+		((FirstMap) screen).StageCreator.monstersRemove.add(this);
 		isDied = true;
 	}
 	

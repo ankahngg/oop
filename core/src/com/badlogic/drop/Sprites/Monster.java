@@ -195,6 +195,12 @@ abstract public class Monster extends Sprite{
 		
 		void onHit() {
 			this.Health -= screen.getPlayer().damage;
+			if(this.Health <= 0) {
+				isDie = true;
+			}
+			else {
+				isHurt = true;
+			}
 		}
 		
 		public void defineMonster(float x,float y) {

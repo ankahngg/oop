@@ -58,6 +58,8 @@ public class B2WorldCreator {
 				
 				stageBounds.add(x);
 			}
+			
+			
 		}
 	}
 }

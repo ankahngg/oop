@@ -36,9 +36,9 @@ public class AnKhangHero extends Hero{
 		atlasHurting = new TextureAtlas("Hero2/packs/Hurt2.pack");
 		atlasDieing = new TextureAtlas("Hero2/packs/Die.pack");
 		
-		attack1 = new Animation<TextureRegion>(0.08f, atlasAttack1.getRegions());
-		attack2 = new Animation<TextureRegion>(0.08f, atlasAttack2.getRegions());
-		attack3 = new Animation<TextureRegion>(0.08f, atlasAttack3.getRegions());
+		attack1 = new Animation<TextureRegion>(0.05f, atlasAttack1.getRegions());
+		attack2 = new Animation<TextureRegion>(0.05f, atlasAttack2.getRegions());
+		attack3 = new Animation<TextureRegion>(0.05f, atlasAttack3.getRegions());
 		running = new Animation<TextureRegion>(0.1f, atlasRunning.getRegions());
 		jumping = new Animation<TextureRegion>(0.1f, atlasJumping.getRegions());
 		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
