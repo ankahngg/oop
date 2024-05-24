@@ -119,6 +119,8 @@ abstract public class Monster extends Sprite{
 			batch.begin();
 			this.draw(batch);
 			batch.end();
+			
+			if (isDie) return;
 		}
 		
 		abstract public void removeMonster();
@@ -128,7 +130,6 @@ abstract public class Monster extends Sprite{
 		public TextureRegion getFrame(float dt) {
 			TextureRegion region;
 			currentState = getFrameState(dt);
-			
 			stateTime = (currentState == previousState ? stateTime + dt : 0);
 			switch (currentState) {
 			    case RUNNING:
@@ -183,7 +184,6 @@ abstract public class Monster extends Sprite{
 				
 			}
 			previousState = currentState;
-
 			return region;
 		}
 		public void onWallCollision() {

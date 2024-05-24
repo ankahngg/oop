@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Monster.State;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -61,8 +62,13 @@ public class FlyingEye extends Monster{
 		
 		if(isDied) return;
 		if(running.isAnimationFinished(stateTime)) {
+			if(screen instanceof FirstMap) {
 			BulletManage.addBullet("FlyingEye", b2body.getPosition().x, b2body.getPosition().y, -1);
+		}else {
+			BulletManage.addBullet("FlyingEye", b2body.getPosition().x, b2body.getPosition().y, -1,1);
 		}
+		}
+		
 		
 		
 	}
@@ -73,6 +79,9 @@ public class FlyingEye extends Monster{
 		b2body = null;
 		if (screen instanceof FirstMap)
 		((FirstMap) screen).StageCreator.eyeMonsters.remove(this);
+//		else if (screen instanceof FlappyMap) {
+//			screen
+//		}
 		isDied = true;
 	}
 	
@@ -125,7 +134,6 @@ public class FlyingEye extends Monster{
 	}
 	
 	void onHit() {
-		//System.out.println("lol");
 		this.Health --;
 		if(this.Health == 0) {
 			isDie = true;

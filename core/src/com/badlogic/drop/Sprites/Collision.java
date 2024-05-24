@@ -70,18 +70,19 @@ public class Collision {
 		
 	}
 	public static void heroBulletHurt(Contact contact) {
-		
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		if (x.getUserData()==null || y.getUserData() ==null) return;
 		((AnKhangHero) x.getUserData()).handleHurt(y);
-		System.out.println("dcum");
 		((Bullet) y.getUserData()).onHit();
 	}
 	public static void heroHurt(Contact contact) {
+		System.out.println("heroHurt");
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
-		if (x.getUserData()==null || y.getUserData() == null) return;
+		if (x.getUserData()==null || y.getUserData() == null) {
+			return; 
+		}
 		((AnKhangHero) x.getUserData()).handleHurt(y);
 	}
 	

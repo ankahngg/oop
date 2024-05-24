@@ -1,6 +1,7 @@
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -35,7 +36,7 @@ public class Boss extends Monster{
 		MonsterWidth = getRegionWidth();
 	}
 	
-	public Boss(World world, FirstMap screen, int x, int y) {		
+	public Boss(World world, PlayScreen screen, float x, float y) {		
 		super(world, screen,x,y,true);
 		Collision.setCategoryFilter(monsterDef, Collision.BOSS_BITS,null);
 	}

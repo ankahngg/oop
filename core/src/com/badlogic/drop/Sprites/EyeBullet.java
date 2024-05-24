@@ -28,7 +28,7 @@ public class EyeBullet extends Bullet {
 	public void update(float dt) {
 //		tt += dt;
 //		if(tt >= lifeTime) this.getTexture().dispose();
-		
+		System.out.println(getX());
 		stateTime += dt;
 		if(stateTime > bullet.getAnimationDuration()*2) remove();
 		if(!isDied) {

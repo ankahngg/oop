@@ -7,6 +7,7 @@ import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -37,8 +38,8 @@ public abstract class Hero extends Sprite{
 	public Body hitbox;
 	BodyDef bdef = new BodyDef();
 	CircleShape shape = new CircleShape();
-	FixtureDef fdef = new FixtureDef();
-	Fixture normalDef,crouchDef;
+	public FixtureDef fdef = new FixtureDef();
+	public Fixture normalDef,crouchDef;
 	
 	protected TextureAtlas atlasRunning;
 	protected TextureAtlas atlasJumping;
@@ -97,6 +98,21 @@ public abstract class Hero extends Sprite{
 		this.world = world;
 		this.screen = screen;
 		isDie = false;
+		
+
+		if (screen instanceof FirstMap) {
+			defineHero(30,10);
+		}else {
+			defineHero(0,10);
+		}
+		
+		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
+		currentState = State.STANDING;
+		previousState = State.STANDING;
+		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS,null);
+		normalDef.setUserData(this);
+		
+		
 	}
 	public void setBullet(World world,PlayScreen screen,float x, float y,int direction) {
 //		this.bullet = new EnergyBall(world, screen, x, y, direction);
@@ -368,7 +384,7 @@ public abstract class Hero extends Sprite{
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
 					
-					BulletManage.addBullet("EnergyBall", this.getX(), this.getY(), 1,screen.getSpeed());
+					BulletManage.addBullet("HeroBullet1", this.getX(), this.getY(), 1,screen.getSpeed());
 					isAttacking = true;
 					return State.ATTACKING1;
 				}
@@ -382,7 +398,8 @@ public abstract class Hero extends Sprite{
 	public float getStateTime() {
 		return stateTime;
 	}
-	protected void defineHero() {
+	protected void defineHero(int x,int y) {
+		bdef.position.set(x,y);
 		bdef.type = BodyDef.BodyType.DynamicBody;
 		 body = world.createBody(bdef);
 		 PolygonShape shape = new PolygonShape();

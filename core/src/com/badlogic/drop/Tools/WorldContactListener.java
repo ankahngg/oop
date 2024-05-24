@@ -44,7 +44,9 @@ public class WorldContactListener implements ContactListener {
 	        if(isContact(Collision.MONSTERBULLET_BITS,Collision.HERO_BITS,contact)) Collision.heroBulletHurt(contact);
 
 	        if(isContact(Collision.MONSTER_BITS,Collision.HEROATTACK_BITS, contact)) Collision.monsterInRangeAttackAdd(contact);
-	    
+	        if(isContact(Collision.MONSTER_BITS, Collision.HERO_BITS, contact)) {Collision.heroHurt(contact);
+	     
+	        }
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

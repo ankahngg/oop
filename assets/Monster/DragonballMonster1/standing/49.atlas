@@ -1,0 +1,33 @@
+
+49.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+49
+  rotate: false
+  xy: 1, 1
+  size: 61, 58
+  orig: 61, 58
+  offset: 0, 0
+  index: 3
+49
+  rotate: false
+  xy: 64, 4
+  size: 55, 55
+  orig: 55, 55
+  offset: 0, 0
+  index: 2
+49
+  rotate: false
+  xy: 121, 5
+  size: 55, 54
+  orig: 55, 54
+  offset: 0, 0
+  index: 0
+49
+  rotate: false
+  xy: 178, 2
+  size: 47, 57
+  orig: 47, 57
+  offset: 0, 0
+  index: 1

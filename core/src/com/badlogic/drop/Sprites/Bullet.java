@@ -3,6 +3,7 @@ package com.badlogic.drop.Sprites;
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -42,7 +44,7 @@ abstract public class Bullet extends Sprite{
 	public float posX;
 	public float posY;
 	public boolean isLaunch=false;
-
+	public boolean isInfinited=false;
 	
 	public boolean isDied = false;
 	public TextureRegion region;
@@ -78,7 +80,14 @@ abstract public class Bullet extends Sprite{
 //		tt += dt;
 //		if(tt >= lifeTime) this.getTexture().dispose();
 		stateTime += dt;
-		if(bullet.isAnimationFinished(stateTime)) remove();
+		if(!isInfinited) {
+			if(bullet.isAnimationFinished(stateTime)) remove();
+			
+		}
+		if((this.getX()>screen.getGamePort().getScreenX()+screen.getGamePort().getScreenWidth()/2)
+				||(this.getX()<screen.getGamePort().getScreenX()-screen.getGamePort().getScreenWidth()/2)) {
+			remove();
+		}
 		if(!isDied) {
 			region = bullet.getKeyFrame(stateTime,false);
 			if(!region.isFlipX()) {
@@ -99,20 +108,26 @@ abstract public class Bullet extends Sprite{
 	}
 	public void update(float dt,float speed) {
 		stateTime += dt;
-		if(bullet.isAnimationFinished(stateTime)) remove();
-		else {
-			setRegion(bullet.getKeyFrame(stateTime,false));
-			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
-					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
-					getRegionWidth()/CuocChienSinhTon.PPM,
-					getRegionHeight()/CuocChienSinhTon.PPM);
+		if(!isInfinited) {
+			if(bullet.isAnimationFinished(stateTime)) remove();
 			
-			screen.game.getBatch().begin();
-			this.draw(screen.game.getBatch());
-			screen.game.getBatch().end();
-			
-			Movement(speed,1);									
 		}
+		
+				setRegion(bullet.getKeyFrame(stateTime,false));
+				setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
+						b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
+						getRegionWidth()/CuocChienSinhTon.PPM,
+						getRegionHeight()/CuocChienSinhTon.PPM);
+				
+				screen.game.getBatch().begin();
+				this.draw(screen.game.getBatch());
+				screen.game.getBatch().end();
+				
+				if(this instanceof HeroBullet1) Movement(speed,1);	
+//				else
+//				Movement(speed,-1);									
+			
+		
 		
 	}
 	
@@ -132,7 +147,6 @@ abstract public class Bullet extends Sprite{
 
 	public void Movement(float speed,float direction1) {
 		b2body.setLinearVelocity(SPEED*this.direction+speed*direction1,0);
-		System.out.println(SPEED*this.direction+speed*direction1);
 	}
 	public void onHit() {
 		remove();
@@ -148,6 +162,10 @@ abstract public class Bullet extends Sprite{
 		 fdef.shape = shape;
 		 fdef.isSensor = true;
 		 bulletDef = b2body.createFixture(fdef);
+	}
+	public void setInfinited(boolean x) {
+		this.isInfinited=x;
+		bullet.setPlayMode(PlayMode.LOOP);
 	}
 
 	

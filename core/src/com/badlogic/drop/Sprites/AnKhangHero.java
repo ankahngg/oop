@@ -21,18 +21,9 @@ public class AnKhangHero extends Hero{
 		prepareAnimation();
 		
 		
-		if (screen instanceof FirstMap) {
-			defineHero(30,10);
-		}else {
-			defineHero(0,10);
-		}
 		
 		
-		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
-		currentState = State.STANDING;
-		previousState = State.STANDING;
-		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS,null);
-		normalDef.setUserData(this);
+		
 	}
 	
 	public void prepareAnimation() {
@@ -60,6 +51,7 @@ public class AnKhangHero extends Hero{
 	
 	public void update(float dt) {
 		super.update(dt);
+		if(screen instanceof FirstMap)
 		attackFix();
 	}
 	
@@ -79,10 +71,5 @@ public class AnKhangHero extends Hero{
 		}
 	}
 
-	protected void defineHero(int x,int y) {
-		// TODO Auto-generated method stub
-		 bdef.position.set(x,y);
-		 super.defineHero();
-		 
-	}
+	
 }	
