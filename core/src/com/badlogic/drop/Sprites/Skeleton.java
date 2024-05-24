@@ -76,19 +76,19 @@ public class Skeleton extends Monster{
 		
 	}
 	
-//	public void HurtKnockBack() {
-//		double crTime = System.currentTimeMillis();
-//		
-//		
-//		double t = 200;
-//		if(System.currentTimeMillis()-crTime <t) {
-//			if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
-//				b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
-//			else 
-//				b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);		
-//		}
-//		
-//	}
+	public void HurtKnockBack() {
+		double crTime = System.currentTimeMillis();
+		
+		
+		double t = 200;
+		if(System.currentTimeMillis()-crTime <t) {
+			if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
+				b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
+			else 
+				b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);		
+		}
+		
+	}
 	
 	public State getFrameState(float dt) {
 		if(b2body != null) {
@@ -114,7 +114,7 @@ public class Skeleton extends Monster{
 			isHurting = true;
 			isHurt = false;
 			stateTime = 0;
-			//HurtKnockBack();
+			HurtKnockBack();
 			return State.HURT;
 		}
 		

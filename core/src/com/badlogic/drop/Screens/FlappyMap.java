@@ -155,7 +155,6 @@ public class FlappyMap extends PlayScreen{
 	// method that be called every 1/60s
 	public void update(float dt) {
 		BulletManage.update(dt,speed);
-		BulletManage.remove();
 		speed =SPEED*(1+ timeCount/10);
 		player.body.setLinearVelocity(speed,player.body.getLinearVelocity().y);
 		//update monster

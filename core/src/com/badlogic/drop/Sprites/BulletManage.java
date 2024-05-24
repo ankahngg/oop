@@ -53,6 +53,15 @@ public class BulletManage {
 		for(Bullet bl : bullets) {
 			bl.update(dt);
 		}
+		for (Bullet bl : removeBullet) {
+			if (bl!=null) {
+				world.destroyBody(bl.b2body);
+				bl.b2body=null;
+				bullets.remove(bl);
+				removeBullet.remove(bl);
+			}
+			
+		}
 
 		
 	}
@@ -68,17 +77,7 @@ public class BulletManage {
 
 		removeBullet.add(bl);
 	}
-	public static void remove() {
-		for (Bullet bl : removeBullet) {
-			if (bl!=null) {
-				world.destroyBody(bl.b2body);
-				bl.b2body=null;
-				bullets.remove(bl);
-				removeBullet.remove(bl);
-			}
-			
-		}
-	}
+	
 }
 	
 
