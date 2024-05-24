@@ -48,7 +48,8 @@ public class Skeleton extends Monster{
 	
 	public Skeleton(World world, PlayScreen screen,int x, int y) {		
 		super(world, screen,x,y,true);
-		this.Health = 5;
+		this.Health = 6;
+		this.HealthMax = 6;
 		this.MonsterScaleX = this.MonsterScaleY = 1.5f;
 		isIntialLeft = false;
 		monsterDef.setUserData(this);
@@ -75,6 +76,20 @@ public class Skeleton extends Monster{
 		
 	}
 	
+	public void HurtKnockBack() {
+		double crTime = System.currentTimeMillis();
+		
+		
+		double t = 200;
+		if(System.currentTimeMillis()-crTime <t) {
+			if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
+				b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
+			else 
+				b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);		
+		}
+		
+	}
+	
 	public State getFrameState(float dt) {
 		if(b2body != null) {
 			posYHero = screen.getPlayer().body.getPosition().y;
@@ -86,13 +101,31 @@ public class Skeleton extends Monster{
 		}
 		
 		
+		if(isDie) {
+			isAttacking1 = false;
+			isDieing = true;
+			isDie = false;
+			isHurt = false;
+			world.destroyBody(this.b2body);
+			b2body = null;
+			return State.DIE;
+		}
+		if(isHurt) {
+			isAttacking1 = false;
+			isHurting = true;
+			isHurt = false;
+			stateTime = 0;
+			HurtKnockBack();
+			return State.HURT;
+		}
+		
 		if(isHurting) {
-			if(stateTime < hurt.getAnimationDuration()/50) {
-				if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
-					b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
-				else 
-					b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);				
-			}
+//			if(stateTime < hurt.getAnimationDuration()/50) {
+//				if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
+//					b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
+//				else 
+//					b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);				
+//			}
 			if(!hurt.isAnimationFinished(stateTime)) return State.HURT;
 			else isHurting = false;
 		}
@@ -107,20 +140,6 @@ public class Skeleton extends Monster{
 		}
 		
 		
-		if(isDie) {
-			isAttacking1 = false;
-			isDieing = true;
-			isDie = false;
-			world.destroyBody(this.b2body);
-			b2body = null;
-			return State.DIE;
-		}
-		if(isHurt) {
-			isAttacking1 = false;
-			isHurting = true;
-			isHurt = false;
-			return State.HURT;
-		}
 		
 		if(isAttacking1) {
 			if(!attack1.isAnimationFinished(stateTime)) {

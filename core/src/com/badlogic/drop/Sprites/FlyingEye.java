@@ -48,11 +48,7 @@ public class FlyingEye extends Monster{
 
 		posX = x;
 		posY = y;
-		bullet = new EyeBullet(world, screen, x, y, 0);
 		this.Health = 2;
-		
-		
-
 		isIntialLeft = true;
 		
 		monsterDef.setUserData(this);
@@ -72,11 +68,9 @@ public class FlyingEye extends Monster{
 	}
 	
 	public void removeMonster() {
+		if(b2body != null)
 		world.destroyBody(b2body);
-
-		if (bullet.b2body!=null)
-		world.destroyBody(bullet.b2body);
-		b2body = null;bullet.b2body=null;
+		b2body = null;
 		if (screen instanceof FirstMap)
 		((FirstMap) screen).StageCreator.eyeMonsters.remove(this);
 		isDied = true;

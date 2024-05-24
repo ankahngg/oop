@@ -99,7 +99,7 @@ abstract public class Monster extends Sprite{
 			defineMonster(x,y);
 			setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
 			
-			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
+			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,(short) ((32767)-Collision.HERO_BITS));
 		}
 		
 		public void update(float dt) {
@@ -112,7 +112,9 @@ abstract public class Monster extends Sprite{
 				setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
 				HealthBar.update(Health, HealthMax, posX, posY+radius);
 			}
-			
+			if(isDied) {
+				removeMonster();
+			}
 			movement();
 			batch.begin();
 			this.draw(batch);
@@ -204,9 +206,11 @@ abstract public class Monster extends Sprite{
 			 
 			 b2body = world.createBody(bdef);
 			 
+			 
 			 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 			 radius = getRegionHeight()/CuocChienSinhTon.PPM/2;
 			 fdef.shape = shape;
+			 
 			 fdef.density = 0.8f;
 			 monsterDef = b2body.createFixture(fdef);
 		}
