@@ -48,7 +48,8 @@ public class Skeleton extends Monster{
 	
 	public Skeleton(World world, PlayScreen screen,int x, int y) {		
 		super(world, screen,x,y,true);
-		this.Health = 5;
+		this.Health = 6;
+		this.HealthMax = 6;
 		this.MonsterScaleX = this.MonsterScaleY = 1.5f;
 		isIntialLeft = false;
 		monsterDef.setUserData(this);
@@ -75,6 +76,11 @@ public class Skeleton extends Monster{
 		
 	}
 	
+	public void HurtKnockBack() {
+		double t = 200;
+		
+	}
+	
 	public State getFrameState(float dt) {
 		if(b2body != null) {
 			posYHero = screen.getPlayer().body.getPosition().y;
@@ -85,6 +91,23 @@ public class Skeleton extends Monster{
 			widthHero = screen.getPlayer().getRegionWidth()/CuocChienSinhTon.PPM;
 		}
 		
+		
+		if(isDie) {
+			isAttacking1 = false;
+			isDieing = true;
+			isDie = false;
+			world.destroyBody(this.b2body);
+			b2body = null;
+			return State.DIE;
+		}
+		if(isHurt) {
+			System.out.println("damage");
+			isAttacking1 = false;
+			isHurting = true;
+			isHurt = false;
+			stateTime = 0;
+			return State.HURT;
+		}
 		
 		if(isHurting) {
 			if(stateTime < hurt.getAnimationDuration()/50) {
@@ -107,20 +130,6 @@ public class Skeleton extends Monster{
 		}
 		
 		
-		if(isDie) {
-			isAttacking1 = false;
-			isDieing = true;
-			isDie = false;
-			world.destroyBody(this.b2body);
-			b2body = null;
-			return State.DIE;
-		}
-		if(isHurt) {
-			isAttacking1 = false;
-			isHurting = true;
-			isHurt = false;
-			return State.HURT;
-		}
 		
 		if(isAttacking1) {
 			if(!attack1.isAnimationFinished(stateTime)) {
