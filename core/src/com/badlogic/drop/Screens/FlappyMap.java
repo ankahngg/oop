@@ -13,6 +13,8 @@ import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
 import com.badlogic.drop.Sprites.Aura;
 import com.badlogic.drop.Sprites.Boss;
+import com.badlogic.drop.Sprites.Boss1;
+import com.badlogic.drop.Sprites.Boss2;
 import com.badlogic.drop.Sprites.Bullet;
 import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
@@ -22,6 +24,7 @@ import com.badlogic.drop.Sprites.EnergyBall;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.Hero;
+import com.badlogic.drop.Sprites.HungKing;
 import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.Hero.State;
@@ -57,7 +60,7 @@ public class FlappyMap extends PlayScreen{
 	private final int GRAVITY = -30;
 	private final int DISTANCE = 10;
 	private final int MAP_LENGTH = 200;
-	private final int BOSS_BEGIN_POSITION = 700;
+	private final int BOSS_BEGIN_POSITION = 40;
 	private float timeCount;
 	private float lastBoundPosX;
 	private boolean isBossAppeared;
@@ -99,7 +102,7 @@ public class FlappyMap extends PlayScreen{
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
-		player = new AnKhangHero(world,this);
+		player = new HungKing(world,this);
 		
 		speed =SPEED*(1+ timeCount/10);
 		player.body.setLinearVelocity(speed,0);
@@ -134,10 +137,10 @@ public class FlappyMap extends PlayScreen{
 		Body body = world.createBody(bodyDef);
 
 		EdgeShape topEdge = new EdgeShape();
-		topEdge.set(new Vector2(player.getX(), gamePort.getWorldHeight()-1.5f), new Vector2(gamePort.getWorldWidth()*300, gamePort.getWorldHeight()));
+		topEdge.set(new Vector2(player.getX(), gamePort.getWorldHeight()-1f), new Vector2(gamePort.getWorldWidth()*300, gamePort.getWorldHeight()));
 		System.out.println(player.getRegionHeight()/CuocChienSinhTon.PPM);
 		EdgeShape bottomEdge = new EdgeShape();
-		bottomEdge.set(new Vector2(player.getX(), 2), new Vector2(gamePort.getWorldWidth()*50, 0));
+		bottomEdge.set(new Vector2(player.getX(), 1), new Vector2(gamePort.getWorldWidth()*50, 0));
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = topEdge;
 		body.createFixture(fixtureDef);
@@ -188,7 +191,7 @@ public class FlappyMap extends PlayScreen{
 		return monster;
 	}
 	private Boss createBoss() {
-		Boss boss = new Boss(world, this, BOSS_BEGIN_POSITION,CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM/2 );
+		Boss boss = new Boss2(world, this, BOSS_BEGIN_POSITION,CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM/2);
 		boss.b2body.setGravityScale(0);
 		return boss;
 	}

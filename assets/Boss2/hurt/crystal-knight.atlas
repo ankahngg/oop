@@ -1,0 +1,26 @@
+
+crystal-knight.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+crystal-knight
+  rotate: false
+  xy: 1, 1
+  size: 51, 61
+  orig: 51, 61
+  offset: 0, 0
+  index: 0
+crystal-knight
+  rotate: false
+  xy: 1, 1
+  size: 51, 61
+  orig: 51, 61
+  offset: 0, 0
+  index: 3
+crystal-knight
+  rotate: false
+  xy: 54, 1
+  size: 51, 61
+  orig: 51, 61
+  offset: 0, 0
+  index: 1

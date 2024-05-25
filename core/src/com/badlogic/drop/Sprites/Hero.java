@@ -233,9 +233,9 @@ public abstract class Hero extends Sprite{
 		
 			switch (currentState) {
 			    
-			    case ATTACKING1:
+			    case FIRING:
 			    	
-			    	region = standing.getKeyFrame(0, true);
+			    	region = standing.getKeyFrame(stateTime);
 			    	break;
 			    case HURT:
 			    	region = hurt.getKeyFrame(stateTime, false);
@@ -420,7 +420,7 @@ public abstract class Hero extends Sprite{
 					
 					BulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,screen.getSpeed());
 					isAttacking = true;
-					return State.ATTACKING1;
+					return State.FIRING;
 				}
 			}
 			return State.STANDING;

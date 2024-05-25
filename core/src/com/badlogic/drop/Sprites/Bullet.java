@@ -90,7 +90,9 @@ abstract public class Bullet extends Sprite{
 			remove();
 		}
 		if(!isDied) {
+			if(!isInfinited)
 			region = bullet.getKeyFrame(stateTime,false);
+			
 			if(!region.isFlipX()) {
 				if(direction == -1) region.flip(true, false);
 			}
@@ -108,13 +110,21 @@ abstract public class Bullet extends Sprite{
 		}
 	}
 	public void update(float dt,float speed) {
+		
 		stateTime += dt;
 		if(!isInfinited) {
+			region = bullet.getKeyFrame(stateTime,false);
 			if(bullet.isAnimationFinished(stateTime)) remove();
-			
+			else setRegion(region);
+		}
+		else {
+			if (stateTime>bullet.getAnimationDuration())
+				region = bullet.getKeyFrame(bullet.getAnimationDuration()-bullet.getFrameDuration());
+			else region = bullet.getKeyFrame(stateTime, isInfinited);
+			setRegion(region);
 		}
 		
-				setRegion(bullet.getKeyFrame(stateTime,false));
+				
 				setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
 						b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
 						getRegionWidth()/CuocChienSinhTon.PPM,
@@ -125,8 +135,7 @@ abstract public class Bullet extends Sprite{
 				screen.game.getBatch().end();
 				
 				if(this instanceof HeroBullet1) Movement(speed,1);	
-//				else
-//				Movement(speed,-1);									
+								
 			
 		
 		
@@ -159,7 +168,7 @@ abstract public class Bullet extends Sprite{
 		 bdef.type = BodyDef.BodyType.DynamicBody;
 		 bdef.gravityScale = 0;
 		 b2body = world.createBody(bdef);
-		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
+		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM);
 		 fdef.shape = shape;
 		 fdef.isSensor = true;
 		 bulletDef = b2body.createFixture(fdef);

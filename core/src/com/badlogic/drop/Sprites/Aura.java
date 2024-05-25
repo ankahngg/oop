@@ -29,7 +29,7 @@ public class Aura extends Sprite{
 		
 		batch = screen.game.getBatch();
 		
-		auraAtlas = new TextureAtlas("Boss/packs/aura.pack");
+		auraAtlas = new TextureAtlas("aura/aura.pack");
 		aura = new Animation<TextureRegion>(0.1f,auraAtlas.getRegions());
 		aura.setPlayMode(PlayMode.LOOP);
 		
@@ -47,7 +47,7 @@ public class Aura extends Sprite{
 		setRegion(aura.getKeyFrame(stateTime,true));
 		height = getRegionHeight()/CuocChienSinhTon.PPM;
 		width = getRegionHeight()/CuocChienSinhTon.PPM;
-		setBounds(x-width/3, y, width,height);
+		setBounds(x-width/4, y, width,height);
 		batch.begin();
 		this.draw(batch);
 		batch.end();

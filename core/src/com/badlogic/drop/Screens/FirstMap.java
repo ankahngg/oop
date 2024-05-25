@@ -6,7 +6,7 @@ import java.util.Iterator;
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
-import com.badlogic.drop.Sprites.Boss;
+import com.badlogic.drop.Sprites.Boss1;
 import com.badlogic.drop.Sprites.Bullet;
 import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
@@ -87,7 +87,7 @@ public class FirstMap extends PlayScreen {
 		Collision.setup(this);
 		BulletManage.setup(world,this);
 		
-		boss = new Boss(world, this, 40, 5);
+		boss = new Boss1(world, this, 40, 5);
 		//create healthBar
 		healthbar = new HealthBar(this);
 		boss.b2body.setActive(false);
