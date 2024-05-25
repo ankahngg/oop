@@ -34,6 +34,9 @@ public class BulletManage {
 			bl = new FireBullet(world, screen, x, y, direction);
 			bl.tracing = true;
 			bullets.add(bl);
+		}else if(kind == "Thunder") {
+			bl = new HeroBullet2(world, screen, x, y, direction);
+			bullets.add(bl);
 		}
 	}
 	public static void addBullet(String kind, float x, float y, int direction,float speed) {
@@ -46,9 +49,15 @@ public class BulletManage {
 		}else if (kind.equals("EnergyBall")) {
 			bl = new EnergyBall(world, screen, x, y, direction);
 			bl.Movement(speed, direction);
+			bl.setInfinited(true);
 			bullets.add(bl);
 		}else if (kind == "HeroBullet1") {
 			bl = new HeroBullet1(world, screen, x, y, direction);
+			bl.Movement(speed, direction);
+			bl.setInfinited(true);
+			bullets.add(bl);
+		}else if(kind == "Thunder") {
+			bl = new HeroBullet2(world, screen, x, y, direction);
 			bl.Movement(speed, direction);
 			bl.setInfinited(true);
 			bullets.add(bl);

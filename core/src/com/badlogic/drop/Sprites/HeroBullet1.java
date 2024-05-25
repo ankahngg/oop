@@ -10,14 +10,11 @@ public class HeroBullet1 extends Bullet {
 	public HeroBullet1(World world, PlayScreen screen, float x, float y, int direction) {
 		super(world, screen, x, y, direction);
 		SetSpeed(20);
-		bulletDef.setUserData(this);
-		Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
+
 	}
 
 	@Override
 	public void prepareAnimation() {
 		atlasBullet = new TextureAtlas("hero_bullet/bullet1.pack");
-		bullet = new Animation<TextureRegion>(0.15f, atlasBullet.getRegions());
-		setRegion(atlasBullet.getRegions().get(0));
 	}
 }

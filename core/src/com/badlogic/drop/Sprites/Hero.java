@@ -90,18 +90,33 @@ public abstract class Hero extends Sprite{
 	
 	public int Health;
 	public int HealthMax;
-
+	public String bulletType;
 	protected Fixture attackFixture;
 	protected PlayScreen screen;
 	protected Bullet bullet;
 	private TextureRegion region;
 	private Shield shield;
-	public Hero(World world, PlayScreen screen) {
+	public Hero(World world, PlayScreen screen,int maxHealth,String bulletType) {
 		this.world = world;
 		this.screen = screen;
 		isDie = false;
+		this.Health = maxHealth;
+		this.HealthMax = maxHealth;
+		this.currentRank = 0;
+		this.bulletType=bulletType;
+		prepareAnimation();
 		
-
+		if (screen instanceof FirstMap) {
+			defineHero(30,10);
+		}else {
+			defineHero(0,10);
+		}
+		
+		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
+		currentState = State.STANDING;
+		previousState = State.STANDING;
+		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS,null);
+		normalDef.setUserData(this);
 		
 		
 		
@@ -109,7 +124,6 @@ public abstract class Hero extends Sprite{
 		
 	}
 	public void setBullet(World world,PlayScreen screen,float x, float y,int direction) {
-//		this.bullet = new EnergyBall(world, screen, x, y, direction);
 		BulletManage.addBullet("EnergyBall", x, y, direction);
 	}
 	public Body getBody() {
@@ -140,6 +154,25 @@ public abstract class Hero extends Sprite{
 				body.getPosition().y-HeroHeight/CuocChienSinhTon.PPM/2,
 				getRegionWidth()/CuocChienSinhTon.PPM, 
 				getRegionHeight()/CuocChienSinhTon.PPM);
+		
+		if(screen instanceof FirstMap)
+			attackFix();
+	}
+	
+	private void attackFix() {
+		PolygonShape hitbox = new PolygonShape();
+		if(runningRight != currentDirection) {
+			if(attackFixture != null) body.destroyFixture(attackFixture);
+			if(runningRight) hitbox.setAsBox(2, 3,new Vector2(2,1),0);
+			else hitbox.setAsBox(2, 3,new Vector2(-2,1),0);
+			fdef.shape = hitbox;
+			fdef.isSensor = true;
+			attackFixture = body.createFixture(fdef);
+			attackFixture.setUserData("DamageRange");
+			currentDirection = runningRight;
+			Collision.setCategoryFilter(attackFixture, Collision.HEROATTACK_BITS,null);
+
+		}
 	}
 	public TextureRegion getFrame(float dt) {
 		region=null;
@@ -323,7 +356,7 @@ public abstract class Hero extends Sprite{
 					int hurtDirection = 1;
 					if(this.isFlipX()) hurtDirection = -1;
 					else hurtDirection = 1;
-					BulletManage.addBullet("HeroBullet1", body.getPosition().x, body.getPosition().y, hurtDirection);
+					BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, hurtDirection);
 					return State.FIRING;
 				}
 			}
@@ -385,7 +418,7 @@ public abstract class Hero extends Sprite{
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
 					
-					BulletManage.addBullet("HeroBullet1", this.getX(), this.getY(), 1,screen.getSpeed());
+					BulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,screen.getSpeed());
 					isAttacking = true;
 					return State.ATTACKING1;
 				}

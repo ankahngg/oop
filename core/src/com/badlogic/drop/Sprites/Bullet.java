@@ -65,7 +65,8 @@ abstract public class Bullet extends Sprite{
 		SpriteWidth = getRegionWidth();
 		defineBullet(x,y);
 		
-		
+		bulletDef.setUserData(this);
+		Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
 		
 	}
 	

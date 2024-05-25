@@ -1,0 +1,124 @@
+
+thunder.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+thunder
+  rotate: false
+  xy: 1, 21
+  size: 49, 39
+  orig: 49, 39
+  offset: 0, 0
+  index: 10
+thunder
+  rotate: false
+  xy: 52, 22
+  size: 48, 38
+  orig: 48, 38
+  offset: 0, 0
+  index: 11
+thunder
+  rotate: false
+  xy: 102, 20
+  size: 45, 40
+  orig: 45, 40
+  offset: 0, 0
+  index: 9
+thunder
+  rotate: false
+  xy: 149, 19
+  size: 44, 41
+  orig: 44, 41
+  offset: 0, 0
+  index: 14
+thunder
+  rotate: false
+  xy: 195, 20
+  size: 43, 40
+  orig: 43, 40
+  offset: 0, 0
+  index: 13
+thunder
+  rotate: false
+  xy: 240, 22
+  size: 44, 38
+  orig: 44, 38
+  offset: 0, 0
+  index: 12
+thunder
+  rotate: false
+  xy: 286, 28
+  size: 44, 32
+  orig: 44, 32
+  offset: 0, 0
+  index: 15
+thunder
+  rotate: false
+  xy: 332, 25
+  size: 41, 35
+  orig: 41, 35
+  offset: 0, 0
+  index: 16
+thunder
+  rotate: false
+  xy: 375, 37
+  size: 29, 23
+  orig: 29, 23
+  offset: 0, 0
+  index: 8
+thunder
+  rotate: false
+  xy: 1, 1
+  size: 28, 18
+  orig: 28, 18
+  offset: 0, 0
+  index: 3
+thunder
+  rotate: false
+  xy: 406, 36
+  size: 20, 24
+  orig: 20, 24
+  offset: 0, 0
+  index: 5
+thunder
+  rotate: false
+  xy: 428, 37
+  size: 19, 23
+  orig: 19, 23
+  offset: 0, 0
+  index: 2
+thunder
+  rotate: false
+  xy: 449, 48
+  size: 25, 12
+  orig: 25, 12
+  offset: 0, 0
+  index: 6
+thunder
+  rotate: false
+  xy: 476, 46
+  size: 22, 14
+  orig: 22, 14
+  offset: 0, 0
+  index: 0
+thunder
+  rotate: false
+  xy: 31, 5
+  size: 20, 14
+  orig: 20, 14
+  offset: 0, 0
+  index: 4
+thunder
+  rotate: false
+  xy: 375, 24
+  size: 23, 11
+  orig: 23, 11
+  offset: 0, 0
+  index: 7
+thunder
+  rotate: false
+  xy: 500, 47
+  size: 10, 13
+  orig: 10, 13
+  offset: 0, 0
+  index: 1

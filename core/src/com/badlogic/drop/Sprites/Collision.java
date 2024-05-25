@@ -81,9 +81,9 @@ public class Collision {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		if (x.getUserData()==null || y.getUserData() ==null) return;
-		((AnKhangHero) x.getUserData()).handleHurt(y);
+		((Hero) x.getUserData()).handleHurt(y);
 		
-		if(((AnKhangHero) x.getUserData()).shieldBegin == -1) ((AnKhangHero) x.getUserData()).handleHurt(y);
+		if(((Hero) x.getUserData()).shieldBegin == -1) ((Hero) x.getUserData()).handleHurt(y);
 		((Bullet) y.getUserData()).onHit();
 	}
 	public static void heroHurt(Contact contact) {
@@ -94,22 +94,22 @@ public class Collision {
 		if (x.getUserData()==null || y.getUserData() == null) {
 			return; 
 		}
-		((AnKhangHero) x.getUserData()).handleHurt(y);
+		((Hero) x.getUserData()).handleHurt(y);
 		if (x.getUserData()==null || y.getUserData() == null) return;
-		if(((AnKhangHero) x.getUserData()).shieldBegin == -1) ((AnKhangHero) x.getUserData()).handleHurt(y);
+		if(((Hero) x.getUserData()).shieldBegin == -1) ((Hero) x.getUserData()).handleHurt(y);
 	}
 	
 	public static void heroCollideBound(Contact contact) {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		StageBound bound = ((StageBound) y.getUserData());
-		AnKhangHero hero = ((AnKhangHero) x.getUserData());
+		Hero hero = ((Hero) x.getUserData());
 		System.out.println("bound");
 	}
 	public static void heroCollideMonster(Contact contact) {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
-		AnKhangHero hero = ((AnKhangHero) x.getUserData());
+		Hero hero = ((Hero) x.getUserData());
 		if(hero.isHurtWhenCollide) hero.handleHurt(y);
 	}
 	

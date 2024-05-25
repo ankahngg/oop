@@ -1,0 +1,61 @@
+
+hung-king.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+hung-king
+  rotate: false
+  xy: 1, 1
+  size: 31, 54
+  orig: 31, 54
+  offset: 0, 0
+  index: 0
+hung-king
+  rotate: false
+  xy: 34, 2
+  size: 31, 53
+  orig: 31, 53
+  offset: 0, 0
+  index: 1
+hung-king
+  rotate: false
+  xy: 67, 2
+  size: 29, 53
+  orig: 29, 53
+  offset: 0, 0
+  index: 6
+hung-king
+  rotate: false
+  xy: 98, 1
+  size: 29, 54
+  orig: 29, 54
+  offset: 0, 0
+  index: 7
+hung-king
+  rotate: false
+  xy: 129, 5
+  size: 30, 50
+  orig: 30, 50
+  offset: 0, 0
+  index: 3
+hung-king
+  rotate: false
+  xy: 161, 5
+  size: 29, 50
+  orig: 29, 50
+  offset: 0, 0
+  index: 4
+hung-king
+  rotate: false
+  xy: 192, 4
+  size: 28, 51
+  orig: 28, 51
+  offset: 0, 0
+  index: 2
+hung-king
+  rotate: false
+  xy: 222, 3
+  size: 27, 52
+  orig: 27, 52
+  offset: 0, 0
+  index: 5

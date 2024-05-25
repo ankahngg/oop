@@ -1,0 +1,33 @@
+
+hung-king.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+hung-king
+  rotate: false
+  xy: 1, 13
+  size: 124, 103
+  orig: 124, 103
+  offset: 0, 0
+  index: 2
+hung-king
+  rotate: false
+  xy: 127, 59
+  size: 59, 57
+  orig: 59, 57
+  offset: 0, 0
+  index: 0
+hung-king
+  rotate: false
+  xy: 188, 80
+  size: 67, 36
+  orig: 67, 36
+  offset: 0, 0
+  index: 3
+hung-king
+  rotate: false
+  xy: 127, 1
+  size: 53, 56
+  orig: 53, 56
+  offset: 0, 0
+  index: 1

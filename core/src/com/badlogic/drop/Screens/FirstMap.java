@@ -13,6 +13,7 @@ import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.HellBeast;
+import com.badlogic.drop.Sprites.HungKing;
 import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.StageBound;
@@ -80,7 +81,7 @@ public class FirstMap extends PlayScreen {
 		WorldCreator = new B2WorldCreator(world, map, this);
 		StageCreator = new StageCreator(world, map, this);
 		//create player
-		player = new AnKhangHero(world,this);
+		player = new HungKing(world,this);
 		player.isHurtWhenCollide = true;
 		//setup collision 
 		Collision.setup(this);
