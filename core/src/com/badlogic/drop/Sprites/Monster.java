@@ -85,10 +85,10 @@ abstract public class Monster extends Sprite{
 		}
 		
 		abstract public void prepareAnimation() ;
-		public Monster(World world, PlayScreen screen, float x, float y, boolean isDynamic) {		
+		public Monster(World world, PlayScreen screen, float x, float y,int maxHealth, boolean isDynamic) {		
 			this.world = world;
-			this.Health = 20;
-			this.HealthMax = 5;
+			this.Health = maxHealth;
+			this.HealthMax = maxHealth;
 			this.screen = screen;
 			this.isDynamic = isDynamic;
 			this.posX = x;

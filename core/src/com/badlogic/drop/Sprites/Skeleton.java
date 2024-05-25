@@ -47,9 +47,8 @@ public class Skeleton extends Monster{
 	}
 	
 	public Skeleton(World world, PlayScreen screen,int x, int y) {		
-		super(world, screen,x,y,true);
-		this.Health = 6;
-		this.HealthMax = 6;
+		super(world, screen,x,y,6,true);
+		
 		this.MonsterScaleX = this.MonsterScaleY = 1.5f;
 		isIntialLeft = false;
 		monsterDef.setUserData(this);

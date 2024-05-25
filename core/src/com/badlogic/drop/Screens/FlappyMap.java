@@ -125,15 +125,16 @@ public class FlappyMap extends PlayScreen{
 		
 	}
 	private void createBounds() {
+
 		// Create bounds
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.StaticBody;
-		lastBoundPosX = player.getX() + gamePort.getWorldWidth()*49;
+		lastBoundPosX = player.getX() + gamePort.getWorldWidth()*300;
 		// Define top and bottom bounds
 		Body body = world.createBody(bodyDef);
 
 		EdgeShape topEdge = new EdgeShape();
-		topEdge.set(new Vector2(player.getX(), gamePort.getWorldHeight()-1.5f), new Vector2(gamePort.getWorldWidth()*50, gamePort.getWorldHeight()));
+		topEdge.set(new Vector2(player.getX(), gamePort.getWorldHeight()-1.5f), new Vector2(gamePort.getWorldWidth()*300, gamePort.getWorldHeight()));
 		System.out.println(player.getRegionHeight()/CuocChienSinhTon.PPM);
 		EdgeShape bottomEdge = new EdgeShape();
 		bottomEdge.set(new Vector2(player.getX(), 2), new Vector2(gamePort.getWorldWidth()*50, 0));

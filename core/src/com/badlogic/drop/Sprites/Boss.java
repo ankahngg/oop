@@ -39,16 +39,14 @@ public class Boss extends Monster{
 	}
 	
 	public Boss(World world, PlayScreen screen, float x, float y) {		
-		super(world, screen,x,y,true);
+		super(world, screen,x,y,20,true);
 		Collision.setCategoryFilter(monsterDef, Collision.BOSS_BITS,null);
 	}
 	
-	@Override
+
 	public void removeMonster() {
-		// TODO Auto-generated method stub
 		
 	}
-	
 	public void movement() {
 		
 //		Vector2 po = b2body.getPosition();
@@ -100,8 +98,6 @@ public class Boss extends Monster{
 		return State.STANDING;
 	}
 	
-	void onHit() {
-		this.Health --;
-	}
+	
 	
 }

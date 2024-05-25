@@ -45,11 +45,10 @@ public class FlyingEye extends Monster{
 	}
 	
 	public FlyingEye(World world, PlayScreen screen,float x, float y) {		
-		super(world, screen,x,y,false);
+		super(world, screen,x,y,2,false);
 
 		posX = x;
 		posY = y;
-		this.Health = 2;
 		isIntialLeft = true;
 		
 		monsterDef.setUserData(this);

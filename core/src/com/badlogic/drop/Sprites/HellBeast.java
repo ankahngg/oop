@@ -43,10 +43,9 @@ public class HellBeast extends Monster{
 	}
 	
 	public HellBeast(World world, PlayScreen screen,int x, int y) {		
-		super(world, screen,x,y,false);
+		super(world, screen,x,y,5,false);
 		
-		this.HealthMax=5;
-		this.Health = 5;
+		
 		isIntialLeft = false;
 		
 		monsterDef.setUserData(this);

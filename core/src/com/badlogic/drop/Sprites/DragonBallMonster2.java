@@ -10,10 +10,9 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class DragonBallMonster2 extends Monster{
 	public DragonBallMonster2(World world, PlayScreen screen,float x, float y) {
-		super(world, screen, x, y, false);
+		super(world, screen, x, y,3, false);
 		posX = x;
 		posY = y;
-		this.Health = 3;
 		isIntialLeft = true;
 		
 		monsterDef.setUserData(this);
@@ -86,13 +85,5 @@ public class DragonBallMonster2 extends Monster{
 		}
 		return State.STANDING;
 	}
-	void onHit() {
-		this.Health --;
-		if(this.Health == 0) {
-			isDie = true;
-		}
-		else {
-			isHurt = true;
-		}
-	}
+	
 }

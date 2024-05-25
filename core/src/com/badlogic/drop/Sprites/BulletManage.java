@@ -43,7 +43,6 @@ public class BulletManage {
 			bl = new EyeBullet(world,screen,x,y,direction);
 			bl.Movement(speed, direction);
 			bullets.add(bl);
-			System.out.println(bullets.size+"/");
 		}else if (kind.equals("EnergyBall")) {
 			bl = new EnergyBall(world, screen, x, y, direction);
 			bl.Movement(speed, direction);

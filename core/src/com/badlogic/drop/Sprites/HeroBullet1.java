@@ -12,7 +12,6 @@ public class HeroBullet1 extends Bullet {
 		SetSpeed(20);
 		bulletDef.setUserData(this);
 		Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
-		System.out.println("new");
 	}
 
 	@Override

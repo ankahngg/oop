@@ -32,7 +32,7 @@ public class HealthBarMonster extends Sprite{
 		
 	
 		batch.begin();
-		batch.draw(HealBar, HealthBarX,HealthBarY,HealthBarWidth,HealthBarHeight, 0,0,HealBar.getWidth(),HealBar.getHeight(),false,false);
+		batch.draw(HealBar, HealthBarX,HealthBarY,HealthBarWidth,HealthBarHeight);
 		batch.end();
 		
 		
