@@ -26,8 +26,7 @@ public class Heart extends Item{
 
 	@Override
 	public void effect() {
-		
-		screen.getPlayer().Health += 2;
+		screen.getPlayer().Health = Math.min(screen.getPlayer().getHealthMax(), screen.getPlayer().getHealth()+2);
 		if(screen instanceof FirstMap)
 		((FirstMap) screen).StageCreator.itemsRemove.add(this);
 		else if (screen instanceof FlappyMap)

@@ -74,10 +74,11 @@ public class FlappyMap extends PlayScreen{
 	private Animation<TextureRegion> flyEngineAnimation;
 	private Random random;
 	private Aura bossAura;
+	private boolean isGameOver;
 	public FlappyMap (CuocChienSinhTon game) {
 		//utils
 		random = new Random();
-		
+		isGameOver = false;
 		//
 		game.setMap(MAP.MAP2);
 		atlas = new TextureAtlas("Hero.pack");
@@ -108,6 +109,7 @@ public class FlappyMap extends PlayScreen{
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
+		player.setHealth(player.getHealthMax());
 		player = new HungKing(world,this);
 		
 		speed =SPEED*(1+ timeCount/10);
@@ -134,7 +136,7 @@ public class FlappyMap extends PlayScreen{
 		
 		
 	}
-	
+
 	private void loadMusic() {
 		
 	}
@@ -258,6 +260,13 @@ public class FlappyMap extends PlayScreen{
 	
 	// method that be called every 1/60s
 	public void update(float dt) {
+		if (isGameOver) {
+			if(Gdx.input.justTouched()) {
+				restartGame();
+				isGameOver =false;
+			}
+			return;
+		}
 		if((int)(player.getX()*10)%500==0) {
 			spawnItems(player.getX()+30);
 		}
@@ -322,7 +331,47 @@ public class FlappyMap extends PlayScreen{
 		}
 		
 	}
-	
+	private void restartGame() {
+        // Reset game state variables
+        isGameOver = false;
+        timeCount = 0;
+        isBossAppeared = false;
+
+        // Clear existing entities (monsters, items, etc.)
+        resourceManager.dispose();
+        
+        // Reset player position and velocity
+        resetPlayerPosition();
+        player.Health = player.HealthMax;
+        
+        // Reset camera position
+        camera.position.x = player.getX() + 10;
+
+        // Dispose resources if needed (e.g., music)
+        // Call any other cleanup methods
+
+        // Reload initial map
+//        map = mapLoader.load("map1.tmx");
+        renderer.setMap(map);
+        resourceManager.removeMonster(boss);
+        // Recreate bounds
+        createBounds();
+
+        // Recreate monsters
+        prepareMonster();
+
+        // Recreate boss
+        boss = createBoss();
+
+//        // Reset boss aura
+//        bossAura.reset();
+//
+//        // Reset health bar
+//        healthbar.reset();
+    }
+	public void resetPlayerPosition() {
+		player.getBody().setTransform(0, 10, BOSS_BEGIN_POSITION);
+	}
 	@Override
 	public void render(float delta) {
 		
@@ -370,10 +419,11 @@ public class FlappyMap extends PlayScreen{
 	@Override
 	public void handleDie() {
 		// TODO Auto-generated method stub
-		game.setScreen(new FlappyMap(game));
+		isGameOver = true;
+//		game.setScreen(new FlappyMap(game));
 		
 		try {
-			resourceManager.dispose(this);
+//			resourceManager.dispose(this);
 //			resourceManager = null;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

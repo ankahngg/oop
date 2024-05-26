@@ -69,15 +69,32 @@ public class FlappyResourceManager {
 	public void removeItem(Item item) {
 		markRemovedItems.add(item);
 	}
+	public void removeAll() {
+		for (Monster monster : monsters) {
+			removeMonster(monster);
+		}
+		for (Monster monster : markRemoveMonsters) {
+			screen.world.destroyBody(monster.b2body);
+		}
+		for (Item item : items) {
+			removeItem(item);
+		}
+		for (Item item : markRemovedItems) {
+			world.destroyBody(item.b2body);
+			items.remove(item);
+		}
+		markRemovedItems.clear();
+		markRemoveMonsters.clear();
+	}
+	
 	public void removeMonster(Monster monster) {
 		markRemoveMonsters.add(monster);
 	}
-	public void dispose(FlappyMap map) {
+	public void dispose() {
 		isDisposed = true;
 		markRemovedItems.clear();
 		markRemoveMonsters.clear();
-		markRemovedItems.addAll(items);
-		markRemoveMonsters.addAll(monsters);
+
 
 	}
 }

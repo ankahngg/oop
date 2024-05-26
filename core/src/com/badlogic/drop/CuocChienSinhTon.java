@@ -44,7 +44,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 		@Override
 		public void render() {
 			// TODO Auto-generated method stub
-			super.render();
+			try {
+				super.render();
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+			
 		}
 		
 		public void setNewScreen(Screen screen) {

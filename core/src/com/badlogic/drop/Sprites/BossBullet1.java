@@ -22,7 +22,6 @@ public class BossBullet1 extends Bullet{
 		super(world, screen, x, y, direction);
 		speed = 15;
 		
-		Collision.setCategoryFilter(bulletDef, Collision.MONSTERBULLET_BITS,null);
 	}
 
 	@Override
