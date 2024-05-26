@@ -68,8 +68,10 @@ abstract public class Bullet extends Sprite{
 		if(this instanceof HeroBullet2) defineBullet(x, y, 1);
 		else defineBullet(x,y);
 		
-		bulletDef.setUserData(this);
-		Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
+		if(bulletDef != null) {
+			bulletDef.setUserData(this);
+			Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
+		}
 	}
 	public Bullet(World world,PlayScreen screen,float x, float y,int direction) {
 		this.world = world;
@@ -84,8 +86,11 @@ abstract public class Bullet extends Sprite{
 		if(this instanceof HeroBullet2) defineBullet(x, y, -1);
 		else defineBullet(x,y);
 		
-		bulletDef.setUserData(this);
-		Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
+		if(bulletDef != null) {
+			bulletDef.setUserData(this);
+			Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
+		}
+		
 		
 	}
 	
