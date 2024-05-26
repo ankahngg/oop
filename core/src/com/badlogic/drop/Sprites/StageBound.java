@@ -16,7 +16,7 @@ public class StageBound extends InteractiveTileObject{
 //		body.destroyFixture(fixture);
 //		fdef.friction = 0.1f;
 //		fixture = body.createFixture(fdef;);
-		fixture.setFriction(0.1f);
+		fixture.setFriction(0f);
 		Collision.setCategoryFilter(fixture, Collision.STAGEBOUND_BITS,null);	
 		fixture.setUserData(this);
 		

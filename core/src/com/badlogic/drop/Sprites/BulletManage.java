@@ -38,6 +38,18 @@ public class BulletManage {
 			bl = new HeroBullet2(world, screen, x, y, direction);
 			bullets.add(bl);
 		}
+		else if(kind == "BossBullet1") {
+			bl = new BossBullet1(world, screen, x, y, direction);
+			bullets.add(bl);
+		}
+		else if(kind == "BossBullet2") {
+			bl = new BossBullet2(world, screen, x, y, direction);
+			bullets.add(bl);
+		}
+		else if(kind == "BossBullet3") {
+			bl = new BossBullet3(world, screen, x, y, direction);
+			bullets.add(bl);
+		}
 	}
 	public static void addBullet(String kind, float x, float y, int direction,float speed) {
 		Bullet bl;

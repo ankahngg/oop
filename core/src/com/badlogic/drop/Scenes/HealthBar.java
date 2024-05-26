@@ -45,7 +45,8 @@ public class HealthBar {
 		this.screen = x;
 		batch = x.game.getBatch();
 		player = x.getPlayer();
-		boss = x.getBoss();
+		
+		
 		
 		//set up hud
 //		viewport = new FitViewport(CuocChienSinhTon.V_WIDTH, CuocChienSinhTon.V_HEIGHT, new OrthographicCamera());
@@ -62,6 +63,9 @@ public class HealthBar {
 	
 	public void update(float dt) {
 		// draw Hero HeroHeroHealthBar
+		
+		
+		
 		batch.begin();
 		float x = screen.getCamera().position.x-screen.getGamePort().getWorldWidth()/2;
 		float y = screen.getCamera().position.y+screen.getGamePort().getWorldHeight()/2;
@@ -81,7 +85,9 @@ public class HealthBar {
 		batch.end();
 		
 		// draw Boss HeroHeroHealthBar
-		if((screen instanceof FirstMap)&& ((FirstMap)screen).isBossSpawn) {
+		if((screen instanceof FirstMap)&& !((FirstMap)screen).StageCreator.bosses.isEmpty()) {
+			
+			boss =	((FirstMap)(screen)).StageCreator.bosses.first();
 			batch.begin();
 			x = screen.getCamera().position.x-screen.getGamePort().getWorldWidth()/2;
 			y = screen.getCamera().position.y+screen.getGamePort().getWorldHeight()/2;

@@ -262,8 +262,7 @@ public abstract class Hero extends Sprite{
 		isHurt = true;
 		isAttacking = false;
 		
-		if(damageObject.getBody().getPosition().x > body.getPosition().x) hurtDirection = 0;
-		else hurtDirection = 1;
+		
 		Health --;
 		
 		if(Health <= 0) {

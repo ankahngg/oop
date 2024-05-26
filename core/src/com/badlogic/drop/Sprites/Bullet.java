@@ -43,6 +43,8 @@ abstract public class Bullet extends Sprite{
 	public double tt = 0;
 	public float posX;
 	public float posY;
+	public float scaleX=1;
+	public float scaleY=1;
 	public boolean isLaunch=false;
 	public boolean isInfinited=false;
 	
@@ -65,7 +67,7 @@ abstract public class Bullet extends Sprite{
 		SpriteWidth = getRegionWidth();
 		defineBullet(x,y);
 		
-		bulletDef.setUserData(this);
+		if(bulletDef != null) bulletDef.setUserData(this);
 		Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
 		
 	}
@@ -99,8 +101,8 @@ abstract public class Bullet extends Sprite{
 			setRegion(region);
 			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
 					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
-					getRegionWidth()/CuocChienSinhTon.PPM,
-					getRegionHeight()/CuocChienSinhTon.PPM);
+					getRegionWidth()/CuocChienSinhTon.PPM*scaleX,
+					getRegionHeight()/CuocChienSinhTon.PPM*scaleY);
 			
 			screen.game.getBatch().begin();
 			this.draw(screen.game.getBatch());
@@ -168,7 +170,7 @@ abstract public class Bullet extends Sprite{
 		 bdef.type = BodyDef.BodyType.DynamicBody;
 		 bdef.gravityScale = 0;
 		 b2body = world.createBody(bdef);
-		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM);
+		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2*scaleX);
 		 fdef.shape = shape;
 		 fdef.isSensor = true;
 		 bulletDef = b2body.createFixture(fdef);

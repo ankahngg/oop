@@ -2,6 +2,8 @@ package com.badlogic.drop.Tools;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Sprites.Boss;
+import com.badlogic.drop.Sprites.Boss1;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.HellBeast;
 import com.badlogic.drop.Sprites.Monster;
@@ -21,6 +23,8 @@ public class StageCreator {
 	public ObjectSet<Items> itemsRemove = new ObjectSet<Items>();
 	public ObjectSet<Monster> monsters = new ObjectSet<Monster>();
 	public ObjectSet<Monster> monstersRemove = new ObjectSet<Monster>();
+	public ObjectSet<Boss> bosses = new ObjectSet<Boss>();
+	public ObjectSet<Boss> bossesRemove = new ObjectSet<Boss>();
 	public World world;
 	public TiledMap map;
 	public PlayScreen screen;
@@ -33,7 +37,7 @@ public class StageCreator {
 	}
 	
 	public boolean isStageClear() {
-		if(monsters.isEmpty() && isOnStage) {
+		if(monsters.isEmpty() && isOnStage && bosses.isEmpty()) {
 			isOnStage = false;
 			return true;
 		}
@@ -48,12 +52,13 @@ public class StageCreator {
 		for(Items x : items) {
 			world.destroyBody(x.b2body);
 		}
-//		for(Shield x : shields) {
-//			world.destroyBody(x.b2body);
-//		}
-//		for(Strength x : strengths) {
-//			world.destroyBody(x.b2body);
-//		}
+		
+		for(Boss x : bosses) {
+			world.destroyBody(x.b2body);
+		}
+		
+		bosses.clear();
+		bossesRemove.clear();
 		monstersRemove.clear();
 		monsters.clear();
 		itemsRemove.clear();
@@ -63,6 +68,13 @@ public class StageCreator {
 	
 	
 	public void Creator(int y) {
+		if(y == 8) {
+			float posX = (y+1)*35-2;
+			float posY = 3;
+			Boss1 x = new Boss1(world, screen, posX, posY);
+			bosses.add(x);
+		}
+		
 		int o = 11;
 		isOnStage = true;
 		if(o+y-1 >= map.getLayers().getCount()) return;

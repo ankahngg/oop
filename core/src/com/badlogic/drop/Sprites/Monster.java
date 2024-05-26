@@ -44,7 +44,7 @@ abstract public class Monster extends Sprite{
 		public double attackCd = 1000;
 		public double lastAttackTime = 0;
 		public double lastTeleTime = 0;
-		public double TeleCd = 50;
+		public double TeleCd = 500;
 		public double lastCheckJump = 0;
 		public Body b2body;
 		public Body hitbox;

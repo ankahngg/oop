@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
+import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Boss1;
 import com.badlogic.drop.Sprites.Bullet;
 import com.badlogic.drop.Sprites.BulletManage;
@@ -46,7 +47,7 @@ public class FirstMap extends PlayScreen {
 	public double lastTele=0;
 	public boolean canJump = false;
 	public boolean Hitting;
-	public int stageNum = 10;
+	public int stageNum = 8;
 	public int stagePass = -1;
 	public int stageCr;
 	public int crCheckpoint = 0;
@@ -81,16 +82,15 @@ public class FirstMap extends PlayScreen {
 		WorldCreator = new B2WorldCreator(world, map, this);
 		StageCreator = new StageCreator(world, map, this);
 		//create player
-		player = new HungKing(world,this);
+		player = new AnKhangHero(world,this);
 		player.isHurtWhenCollide = true;
 		//setup collision 
 		Collision.setup(this);
 		BulletManage.setup(world,this);
 		
-		boss = new Boss1(world, this, 40, 5);
 		//create healthBar
 		healthbar = new HealthBar(this);
-		boss.b2body.setActive(false);
+		
 		for(int i=0;i<=stageNum;i++) firstEntry.add(true);
 		firstEntry.set(0, false);
 		nextStage();
@@ -164,8 +164,8 @@ public class FirstMap extends PlayScreen {
 //		}
 		if(Gdx.input.isKeyJustPressed(Keys.P) && Gdx.input.isKeyPressed(Keys.ALT_LEFT)) {
 			// +1 vào health
-			stageCr = 5;
-			stagePass = 4;
+			stageCr = 8;
+			stagePass = 7;
 			player.body.setTransform(new Vector2(35*stageCr+2,3) , 0);
 			
 		}
@@ -193,7 +193,7 @@ public class FirstMap extends PlayScreen {
 		
 		if(Gdx.input.isKeyJustPressed(Keys.W) && canJump && vel.y == 0) {
 			canJump = false;
-			player.body.applyLinearImpulse(new Vector2(0,22), player.getBody().getWorldCenter(),true);
+			player.body.applyLinearImpulse(new Vector2(0,23), player.getBody().getWorldCenter(),true);
 			stop = false;
 		}
 		
@@ -201,10 +201,20 @@ public class FirstMap extends PlayScreen {
 	}
 	
 	public void monsterUpdate(float dt) {
+		for(Boss x : StageCreator.bosses) {
+			if(x!=null) x.update(dt);
+		}
+		
+		for(Boss x : StageCreator.bossesRemove) {
+			StageCreator.bosses.remove(x);
+		}
+		StageCreator.bossesRemove.clear();
+		
 		for(Items x : StageCreator.items) {
 			if(x!=null)
 			x.update(dt);
 		}
+		
 		if(!StageCreator.itemsRemove.isEmpty()) {
 			for(Items x : StageCreator.itemsRemove) {
 				if(x!=null)
@@ -231,7 +241,7 @@ public class FirstMap extends PlayScreen {
 		
 		handleInput(dt);
 		player.update(dt);
-		boss.update(dt);
+		
 		monsterUpdate(dt);
 		
 		Collision.update(dt);
@@ -250,6 +260,7 @@ public class FirstMap extends PlayScreen {
 			StageCreator.Creator(stageCr);
 			closeStage();
 		}
+		
 		if(StageCreator.isStageClear()) nextStage();
 		renderer.setView(camera);
 		camera.update();
