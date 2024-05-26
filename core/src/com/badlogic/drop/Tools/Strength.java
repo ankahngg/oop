@@ -6,7 +6,7 @@ import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Strength extends Items{
+public class Strength extends Item{
 	public Strength(World worldd, PlayScreen screenn,float x, float y) {
 		
 		super(worldd, screenn, x, y);

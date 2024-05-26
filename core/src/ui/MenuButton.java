@@ -98,7 +98,6 @@ public class MenuButton {
             case PLAYING:
                 break;
             case OPTIONS:
-            	 System.out.println("lmao");
                 break;
             case QUIT:
                 // Quit the game

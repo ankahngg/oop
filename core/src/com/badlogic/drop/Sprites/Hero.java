@@ -259,6 +259,7 @@ public abstract class Hero extends Sprite{
 
 	public void handleHurt(Fixture damageObject) {
 		if(shieldBegin != -1) return;
+		screen.playHeroHurtSound();
 		isHurt = true;
 		isAttacking = false;
 		

@@ -1,6 +1,7 @@
 	package com.badlogic.drop;
 	import java.util.HashMap;
 
+
 	import com.badlogic.drop.Screens.FirstMap;
 	import com.badlogic.drop.Screens.FlappyMap;
 	import com.badlogic.drop.Screens.Menu;
@@ -9,6 +10,16 @@
 	import com.badlogic.gdx.graphics.OrthographicCamera;
 	import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+
+import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.FlappyMap;
+import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Tools.FlappyResourceManager;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+	
 	public class CuocChienSinhTon extends Game {
 			
 		public static final int V_WIDTH=560;
@@ -19,17 +30,18 @@
 		private MAP map;
 		OrthographicCamera camera;
 		public SpriteBatch batch;
-		
+		public FlappyResourceManager resourceManager;
 		public SpriteBatch getBatch() {
 			return batch;
 		}
 
 		public void create() {
 			map = MAP.MAP1;
+			
 			batch = new SpriteBatch();
-			this.setScreen(new Menu(this));
+
+			this.setScreen(new Menu(this));			 
 		}
-		
 		@Override
 		public void render() {
 			// TODO Auto-generated method stub

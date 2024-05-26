@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-public abstract class Items extends Sprite{
+public abstract class Item extends Sprite{
 	public Texture texture;
 	public PlayScreen screen;
 	public SpriteBatch batch;
@@ -32,10 +32,10 @@ public abstract class Items extends Sprite{
 	
 
 	private Fixture itemDef;
-	public Items(World worldd, PlayScreen screenn,float x, float y) {
+	public Item(World worldd, PlayScreen screenn,float x, float y) {
 		this.world = worldd;
 		this.screen = screenn;
-		batch = ((FirstMap) screenn).game.getBatch();
+		batch =  screenn.game.getBatch();
 		posX = x;
 		posY = y;
 		prepairTexture();

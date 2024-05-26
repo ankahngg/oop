@@ -55,7 +55,7 @@ public class Menu extends InputAdapter implements Screen {
         Gdx.gl.glClear(Gdx.gl.GL_COLOR_BUFFER_BIT);
         SpriteBatch batch = game.getBatch();
         batch.begin();
-        if (!inGame) { // Only render menu if not in game
+        if (!inGame) { 
             batch.draw(backgroundImg, menuX, menuY, menuWidth, menuHeight);
             for (MenuButton mb : buttons) {
                 mb.draw(batch);
@@ -79,14 +79,15 @@ public class Menu extends InputAdapter implements Screen {
 	  @Override
 	    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 	        Vector2 touchPoint = new Vector2(screenX, Gdx.graphics.getHeight() - screenY); // Invert y-coordinate
-	        if (!inGame) { // Only handle input if not in game
+	        if (!inGame) {
+	        	
 	            for (MenuButton mb : buttons) {
 	                if (isIn(touchPoint, mb)) {
 	                    mb.onClick(); 
 	                    
 	                    if (mb.getState() == Gamestate.PLAYING) {
-	                        game.setScreen(new FlappyMap(game));
-	                        inGame = true; // Set flag to true when transitioning to game screen
+	                        game.setScreen(new FirstMap(game));
+	                        inGame = true; 
 	                    }
 	                    
 	                    return true;

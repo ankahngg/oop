@@ -1,0 +1,96 @@
+
+fire.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+fire
+  rotate: false
+  xy: 1, 13
+  size: 50, 49
+  orig: 50, 49
+  offset: 0, 0
+  index: 5
+fire
+  rotate: false
+  xy: 53, 13
+  size: 49, 49
+  orig: 49, 49
+  offset: 0, 0
+  index: 4
+fire
+  rotate: false
+  xy: 104, 12
+  size: 49, 50
+  orig: 49, 50
+  offset: 0, 0
+  index: 6
+fire
+  rotate: false
+  xy: 155, 18
+  size: 48, 44
+  orig: 48, 44
+  offset: 0, 0
+  index: 3
+fire
+  rotate: false
+  xy: 205, 24
+  size: 49, 38
+  orig: 49, 38
+  offset: 0, 0
+  index: 8
+fire
+  rotate: false
+  xy: 256, 24
+  size: 48, 38
+  orig: 48, 38
+  offset: 0, 0
+  index: 7
+fire
+  rotate: false
+  xy: 306, 21
+  size: 45, 41
+  orig: 45, 41
+  offset: 0, 0
+  index: 9
+fire
+  rotate: false
+  xy: 353, 25
+  size: 43, 37
+  orig: 43, 37
+  offset: 0, 0
+  index: 10
+fire
+  rotate: false
+  xy: 398, 27
+  size: 41, 35
+  orig: 41, 35
+  offset: 0, 0
+  index: 2
+fire
+  rotate: false
+  xy: 441, 27
+  size: 40, 35
+  orig: 40, 35
+  offset: 0, 0
+  index: 1
+fire
+  rotate: false
+  xy: 483, 28
+  size: 23, 34
+  orig: 23, 34
+  offset: 0, 0
+  index: 11
+fire
+  rotate: false
+  xy: 155, 2
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: 0
+fire
+  rotate: false
+  xy: 398, 1
+  size: 15, 24
+  orig: 15, 24
+  offset: 0, 0
+  index: 12
