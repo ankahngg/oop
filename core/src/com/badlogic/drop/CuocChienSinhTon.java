@@ -1,6 +1,16 @@
 	package com.badlogic.drop;
 	import java.util.HashMap;
 
+
+	import com.badlogic.drop.Screens.FirstMap;
+	import com.badlogic.drop.Screens.FlappyMap;
+	import com.badlogic.drop.Screens.Menu;
+	import com.badlogic.gdx.Game;
+	import com.badlogic.gdx.Screen;
+	import com.badlogic.gdx.graphics.OrthographicCamera;
+	import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
@@ -29,11 +39,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 			map = MAP.MAP1;
 			
 			batch = new SpriteBatch();
-
-			PlayScreen screen = new FlappyMap(this);			 
-			 this.setScreen(screen);
+			this.setScreen(new Menu(this));
 		}
-		
 		@Override
 		public void render() {
 			// TODO Auto-generated method stub
