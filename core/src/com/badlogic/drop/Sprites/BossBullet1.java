@@ -72,14 +72,6 @@ public class BossBullet1 extends Bullet{
 		}
 	}
 	
-	public void addFixture() {
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(getRegionWidth()/CuocChienSinhTon.PPM/2*scaleX, getRegionHeight()/CuocChienSinhTon.PPM/2*scaleY,new Vector2(0,0),0);
-		fdef.shape = shape;
-		fdef.isSensor = true;
-		bulletDef = b2body.createFixture(fdef);
-		bulletDef.setUserData(this);
-	}
 	
 	public void defineBullet(float x,float y) {
 		 bdef.position.set(x-getRegionWidth()/CuocChienSinhTon.PPM*scaleX/2,
