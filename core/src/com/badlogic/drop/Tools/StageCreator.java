@@ -19,8 +19,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ObjectSet;
 
 public class StageCreator {
-	public ObjectSet<Items> items = new ObjectSet<Items>();
-	public ObjectSet<Items> itemsRemove = new ObjectSet<Items>();
+	public ObjectSet<Item> items = new ObjectSet<Item>();
+	public ObjectSet<Item> itemsRemove = new ObjectSet<Item>();
 	public ObjectSet<Monster> monsters = new ObjectSet<Monster>();
 	public ObjectSet<Monster> monstersRemove = new ObjectSet<Monster>();
 	public ObjectSet<Boss> bosses = new ObjectSet<Boss>();
@@ -49,7 +49,7 @@ public class StageCreator {
 			world.destroyBody(x.b2body);
 		}
 		
-		for(Items x : items) {
+		for(Item x : items) {
 			world.destroyBody(x.b2body);
 		}
 		

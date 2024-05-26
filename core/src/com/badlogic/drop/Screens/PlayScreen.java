@@ -6,7 +6,11 @@ import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Boss1;
 import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.drop.Tools.WorldContactListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetLoaderParameters.LoadedCallback;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -34,7 +38,7 @@ public abstract class PlayScreen implements Screen {
 	protected OrthogonalTiledMapRenderer renderer;
 	
 	//Box2d
-	protected World world;
+	public World world;
 	protected Box2DDebugRenderer b2dr;
 	// speed
 	protected float speed;
@@ -54,12 +58,19 @@ public abstract class PlayScreen implements Screen {
 	
 	public WorldContactListener worldContactListener;
 
-	
-	
+	// music
+	private Music backgroundMusic;
+	private Sound heroHurtSound;
+
+	public PlayScreen() {
+		loadSound();
+	}
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
-
+	public void loadSound() {
+		heroHurtSound =  Gdx.audio.newSound(Gdx.files.internal("sound/hero/heroHurt.wav"));
+	}
 	public Viewport getGamePort() {
 		return gamePort;
 	}
@@ -113,6 +124,9 @@ public abstract class PlayScreen implements Screen {
 	public float getSpeed() {
 		return speed;
 	}
-	
+	public void playHeroHurtSound() {
+		heroHurtSound.play();
+	}
+	public abstract void handleDie();
 
 }

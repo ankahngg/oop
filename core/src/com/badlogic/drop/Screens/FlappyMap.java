@@ -1,6 +1,5 @@
 package com.badlogic.drop.Screens;
 
-import java.lang.constant.DynamicCallSiteDesc;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -29,6 +28,10 @@ import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.drop.Tools.B2WorldCreator;
+import com.badlogic.drop.Tools.FlappyResourceManager;
+import com.badlogic.drop.Tools.Heart;
+import com.badlogic.drop.Tools.Item;
+import com.badlogic.drop.Tools.Shield;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -42,12 +45,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -65,11 +70,11 @@ public class FlappyMap extends PlayScreen{
 	private float lastBoundPosX;
 	private boolean isBossAppeared;
 	private TextureAtlas flyEngineAtlas;
-	private LinkedList<Monster> monsters;
+	private FlappyResourceManager resourceManager;
 	private Animation<TextureRegion> flyEngineAnimation;
 	private Random random;
 	private Aura bossAura;
-	public FlappyMap(CuocChienSinhTon game) {
+	public FlappyMap (CuocChienSinhTon game) {
 		//utils
 		random = new Random();
 		
@@ -82,7 +87,7 @@ public class FlappyMap extends PlayScreen{
 		camera = new OrthographicCamera();
 		
 		// load background
-		backgroundTexture = new Texture("map1.png");
+		backgroundTexture = new Texture("background/bg1.jpg");
 		
 		// viewport => responsive 
 		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH/CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM,camera);		
@@ -97,8 +102,9 @@ public class FlappyMap extends PlayScreen{
 		b2dr = new Box2DDebugRenderer();
 		new B2WorldCreator(world, map, this);
 		
-		// create monsters
-		prepareMonster();
+		// resource
+		resourceManager = new FlappyResourceManager(world, this);
+		
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
@@ -115,10 +121,11 @@ public class FlappyMap extends PlayScreen{
 		
 		//create heath bar
 		healthbar = new HealthBar(this);
-		
+
 		// Create bounds
 		createBounds();
-		
+		// create monsters
+		prepareMonster();
 		//create boss
 		boss = createBoss();
 		isBossAppeared=false;
@@ -126,6 +133,26 @@ public class FlappyMap extends PlayScreen{
 		bossAura = new Aura(world, this,boss.getWidth());
 		
 		
+	}
+	
+	private void loadMusic() {
+		
+	}
+	private void spawnItems(float posX) {
+		int type = MathUtils.random(1);
+		float posY = MathUtils.random(17)+1;
+		switch (type) {
+		case 0:
+			Item shieldItems = new Shield(world, this, posX, posY);
+			resourceManager.addItems(shieldItems);
+
+			break;
+
+		default:
+			Item heartItems = new Heart(world, this, posX, posY);
+			resourceManager.addItems(heartItems);
+			break;
+		}
 	}
 	private void createBounds() {
 
@@ -138,53 +165,67 @@ public class FlappyMap extends PlayScreen{
 
 		EdgeShape topEdge = new EdgeShape();
 		topEdge.set(new Vector2(player.getX(), gamePort.getWorldHeight()-1f), new Vector2(gamePort.getWorldWidth()*300, gamePort.getWorldHeight()));
-		System.out.println(player.getRegionHeight()/CuocChienSinhTon.PPM);
 		EdgeShape bottomEdge = new EdgeShape();
-		bottomEdge.set(new Vector2(player.getX(), 1), new Vector2(gamePort.getWorldWidth()*50, 0));
+		bottomEdge.set(new Vector2(player.getX(), 1), new Vector2(gamePort.getWorldWidth()*300, 0));
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = topEdge;
 		body.createFixture(fixtureDef);
-
+		
 		fixtureDef.shape = bottomEdge;
 		fixtureDef.friction=0;
-		body.createFixture(fixtureDef);
-		
+		Fixture botFixture =  body.createFixture(fixtureDef);
+//		Collision.setCategoryFilter(botFixture,Collision.MONSTERBULLET_BITS,(short) ((32767)-Collision.HERO_BITS));
+//		botFixture.setUserData(botFixture);
+		botFixture.setSensor(false);
 	}
 	public TextureAtlas getAtlas() {
 		return atlas;
 	}
+	public FlappyResourceManager getResourceManager() {
+		return resourceManager;
+	}
 	private void prepareMonster() {
 		int initDistance = 0;
 		int monsterQuantity = 60;
-		monsters = new LinkedList<Monster>();
 		int type;
 		for (int i =0 ; i<monsterQuantity;i++) {
 			type=random.nextInt(3);
 			Monster monster=createMonster(type, initDistance);
 			
 			initDistance+=DISTANCE;
-			monsters.add(monster);
+			
+			resourceManager.addMonster(monster);
 		}
+
 		
 	}
-	private Monster createMonster(int type,int initDistance) {
+	public void spawnMonsterWave(float posX) {
+		float spawnRange = 10;
+		
+		for (int i = 0; i<10;i++) {
+			float pos = random.nextFloat(spawnRange)-spawnRange/2+posX;
+			Monster monster = createMonster(random.nextInt(3), pos);
+			resourceManager.addMonster(monster);
+		}
+	}
+	private Monster createMonster(int type,float posX) {
 		Monster monster;
 		switch (type) {
 		case 0:
-			monster = new FlyingEye(world, this, 3+initDistance, (int) (Math.random()*20));
+			monster = new FlyingEye(world, this, 3+posX, (int) (Math.random()*20));
 			monster.monsterDef.setSensor(true);
 			monster.standing.setFrameDuration(0.1f);
 			break;
 		case 1:
-			monster = new DragonBallMonster1(world, this, 3+initDistance,1+ (int) (Math.random()*18));
+			monster = new DragonBallMonster1(world, this, 3+posX,1+ (int) (Math.random()*18));
 			monster.monsterDef.setSensor(true);
 			break;
 		case 2:
-			monster = new DragonBallMonster2(world, this, 3+initDistance, (int) (Math.random()*20));
+			monster = new DragonBallMonster2(world, this, 3+posX, (int) (Math.random()*20));
 			monster.monsterDef.setSensor(true);
 			break;
 		default:
-			monster = new DragonBallMonster1(world, this, 3+initDistance, (int) (Math.random()*20));
+			monster = new DragonBallMonster1(world, this, 3+posX, (int) (Math.random()*20));
 			monster.monsterDef.setSensor(true);
 			break;
 		}
@@ -207,9 +248,19 @@ public class FlappyMap extends PlayScreen{
 		flyEngineAnimation.setPlayMode(PlayMode.LOOP);
 		
 	}
+	public static boolean isBulletOutOfScreen(Bullet bl, float x1, float x2) {
+	    float bulletX = bl.b2body.getPosition().x;
+	    return bulletX < x1 || bulletX > x2;
+	}
+	public static boolean isMonstetOutOfScreen(Monster monster,float x1) {
+		return monster.getX()< x1;
+	}
 	
 	// method that be called every 1/60s
 	public void update(float dt) {
+		if((int)(player.getX()*10)%500==0) {
+			spawnItems(player.getX()+30);
+		}
 		if (player.getX()>= BOSS_BEGIN_POSITION-gamePort.getWorldWidth()*0.7f) {
 			isBossAppeared=true;
 		}
@@ -224,41 +275,38 @@ public class FlappyMap extends PlayScreen{
 			createBounds();
 		}
 		//update bullet
+		
 		BulletManage.update(dt,speed);
 		
 		//update player
-		speed =SPEED*(1+ timeCount/10);
-		player.body.setLinearVelocity(speed,player.body.getLinearVelocity().y);
-		//update monster
-		for (int i = 0; i< monsters.size();i++) {
-			Monster monster = monsters.get(i);
-			if (monster.getX()<player.getX()+CuocChienSinhTon.V_WIDTH/CuocChienSinhTon.PPM) {
-				monster.update(dt);
-			}
-			if(monster.isDied) {
-				monsters.remove(i);
-			}
-//			if (monster.getX()<camera.position.x-gamePort.getWorldWidth()) {
-//				monsters.remove(monster);
-//				
-//			}
+		if(getPlayer().getX()<=BOSS_BEGIN_POSITION) {
+			//time count for speed up
+			timeCount+=dt;
+			speed =SPEED*(1+ timeCount/10);
 		}
+		
+		player.body.setLinearVelocity(speed,player.body.getLinearVelocity().y);
+		
+		
 		//update healthbar
 		healthbar.update(dt);
-		//time count for speed up
-			timeCount+=dt;
-			
+		
+		
 		player.currentState = State.STANDING;
 		
 		
 		
 		handleInput(dt);
-		player.update(dt);
 		world.step(1/60f, 6, 2);
 		
 		camera.position.x = player.getX()+10;
 		renderer.setView(camera);
 		camera.update();
+		
+		//resource update
+		resourceManager.update(dt);
+		
+		player.update(dt);
 
 	}
 	public Body getBody() {
@@ -274,11 +322,7 @@ public class FlappyMap extends PlayScreen{
 		}
 		
 	}
-	public void handleDie() {
-		
-		
 	
-	}
 	@Override
 	public void render(float delta) {
 		
@@ -321,6 +365,22 @@ public class FlappyMap extends PlayScreen{
 	}
 	public float getSpeed() {
 		return speed;
+	}
+
+	@Override
+	public void handleDie() {
+		// TODO Auto-generated method stub
+		game.setScreen(new FlappyMap(game));
+		
+		try {
+			resourceManager.dispose(this);
+//			resourceManager = null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 		

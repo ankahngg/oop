@@ -3,6 +3,8 @@
 
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
+import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Tools.FlappyResourceManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,15 +20,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 		private MAP map;
 		OrthographicCamera camera;
 		public SpriteBatch batch;
-		
+		public FlappyResourceManager resourceManager;
 		public SpriteBatch getBatch() {
 			return batch;
 		}
 
 		public void create() {
 			map = MAP.MAP1;
+			
 			batch = new SpriteBatch();
-			this.setScreen(new FirstMap(this));
+
+			PlayScreen screen = new FlappyMap(this);			 
+			 this.setScreen(screen);
 		}
 		
 		@Override
