@@ -15,7 +15,7 @@ public class HeroBullet2 extends Bullet{
 	@Override
 	public void prepareAnimation() {
 		atlasBullet = new TextureAtlas("hero_bullet/thunder/thunder.atlas");
-		bullet = new Animation<TextureRegion>(0.05f, atlasBullet.getRegions());
+		bullet = new Animation<TextureRegion>(0.1f, atlasBullet.getRegions());
 		setRegion(atlasBullet.getRegions().get(0));
 	}
 }

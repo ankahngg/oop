@@ -18,12 +18,7 @@ public class Skeleton extends Monster{
 	private float posYHero;
 	private float posYMonster;
 	
-	public int getHealthMax() {
-		return this.HealthMax;
-	}
-	public int getHealth() {
-		return Health;
-	}
+	
 	
 	public void prepareAnimation() {
 		atlasAttack1 = new TextureAtlas("Monster/SkeletonV2/Attack.pack");

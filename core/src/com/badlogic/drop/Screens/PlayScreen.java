@@ -114,5 +114,6 @@ public abstract class PlayScreen implements Screen {
 		return speed;
 	}
 	
+	public abstract void handleDie();
 
 }

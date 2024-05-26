@@ -246,7 +246,7 @@ public abstract class Hero extends Sprite{
 			    	break;
 			    
 			    default:
-			        region = standing.getKeyFrame(0, true);
+			        region = standing.getKeyFrame(stateTime, true);
 			        break;
 			}
 			
@@ -297,7 +297,7 @@ public abstract class Hero extends Sprite{
 				}
 				else {
 					isDieing = false;
-					((FirstMap) screen).handleDie();
+					screen.handleDie();
 				}
 			}
 			if(isHurt) {

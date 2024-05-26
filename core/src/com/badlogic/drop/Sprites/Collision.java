@@ -87,7 +87,6 @@ public class Collision {
 		((Bullet) y.getUserData()).onHit();
 	}
 	public static void heroHurt(Contact contact) {
-		System.out.println("heroHurt");
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 
@@ -104,7 +103,6 @@ public class Collision {
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		StageBound bound = ((StageBound) y.getUserData());
 		Hero hero = ((Hero) x.getUserData());
-		System.out.println("bound");
 	}
 	public static void heroCollideMonster(Contact contact) {
 		Fixture x = getFix(Collision.HERO_BITS,contact);

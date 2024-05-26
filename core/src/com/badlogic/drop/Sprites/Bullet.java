@@ -63,7 +63,8 @@ abstract public class Bullet extends Sprite{
 		prepareAnimation();
 		SpriteHeight = getRegionHeight();
 		SpriteWidth = getRegionWidth();
-		defineBullet(x,y);
+		if(this instanceof HeroBullet2) defineBullet(x, y, 1);
+		else defineBullet(x,y);
 		
 		bulletDef.setUserData(this);
 		Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
@@ -163,6 +164,17 @@ abstract public class Bullet extends Sprite{
 	}
 
 	public void defineBullet(float x,float y) {
+		CircleShape shape = new CircleShape();
+		 bdef.position.set(x,y);
+		 bdef.type = BodyDef.BodyType.DynamicBody;
+		 bdef.gravityScale = 0;
+		 b2body = world.createBody(bdef);
+		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
+		 fdef.shape = shape;
+		 fdef.isSensor = true;
+		 bulletDef = b2body.createFixture(fdef);
+	}
+	public void defineBullet(float x,float y,float scale) {
 		CircleShape shape = new CircleShape();
 		 bdef.position.set(x,y);
 		 bdef.type = BodyDef.BodyType.DynamicBody;

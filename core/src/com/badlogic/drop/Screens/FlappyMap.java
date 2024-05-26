@@ -82,7 +82,7 @@ public class FlappyMap extends PlayScreen{
 		camera = new OrthographicCamera();
 		
 		// load background
-		backgroundTexture = new Texture("map1.png");
+		backgroundTexture = new Texture("background/bg1.jpg");
 		
 		// viewport => responsive 
 		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH/CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM,camera);		
@@ -98,7 +98,9 @@ public class FlappyMap extends PlayScreen{
 		new B2WorldCreator(world, map, this);
 		
 		// create monsters
-		prepareMonster();
+		monsters = new LinkedList<Monster>();
+
+//		prepareMonster();
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
@@ -125,6 +127,7 @@ public class FlappyMap extends PlayScreen{
 		
 		bossAura = new Aura(world, this,boss.getWidth());
 		
+		spawnMonsterWave(player.getX()+30);
 		
 	}
 	private void createBounds() {
@@ -140,7 +143,7 @@ public class FlappyMap extends PlayScreen{
 		topEdge.set(new Vector2(player.getX(), gamePort.getWorldHeight()-1f), new Vector2(gamePort.getWorldWidth()*300, gamePort.getWorldHeight()));
 		System.out.println(player.getRegionHeight()/CuocChienSinhTon.PPM);
 		EdgeShape bottomEdge = new EdgeShape();
-		bottomEdge.set(new Vector2(player.getX(), 1), new Vector2(gamePort.getWorldWidth()*50, 0));
+		bottomEdge.set(new Vector2(player.getX(), 1), new Vector2(gamePort.getWorldWidth()*300, 0));
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = topEdge;
 		body.createFixture(fixtureDef);
@@ -156,7 +159,6 @@ public class FlappyMap extends PlayScreen{
 	private void prepareMonster() {
 		int initDistance = 0;
 		int monsterQuantity = 60;
-		monsters = new LinkedList<Monster>();
 		int type;
 		for (int i =0 ; i<monsterQuantity;i++) {
 			type=random.nextInt(3);
@@ -165,26 +167,36 @@ public class FlappyMap extends PlayScreen{
 			initDistance+=DISTANCE;
 			monsters.add(monster);
 		}
+
 		
 	}
-	private Monster createMonster(int type,int initDistance) {
+	private void spawnMonsterWave(float posX) {
+		float spawnRange = 10;
+		
+		for (int i = 0; i<10;i++) {
+			float pos = random.nextFloat(spawnRange)-spawnRange/2+posX;
+			Monster monster = createMonster(random.nextInt(3), pos);
+			monsters.add(monster);
+		}
+	}
+	private Monster createMonster(int type,float posX) {
 		Monster monster;
 		switch (type) {
 		case 0:
-			monster = new FlyingEye(world, this, 3+initDistance, (int) (Math.random()*20));
+			monster = new FlyingEye(world, this, 3+posX, (int) (Math.random()*20));
 			monster.monsterDef.setSensor(true);
 			monster.standing.setFrameDuration(0.1f);
 			break;
 		case 1:
-			monster = new DragonBallMonster1(world, this, 3+initDistance,1+ (int) (Math.random()*18));
+			monster = new DragonBallMonster1(world, this, 3+posX,1+ (int) (Math.random()*18));
 			monster.monsterDef.setSensor(true);
 			break;
 		case 2:
-			monster = new DragonBallMonster2(world, this, 3+initDistance, (int) (Math.random()*20));
+			monster = new DragonBallMonster2(world, this, 3+posX, (int) (Math.random()*20));
 			monster.monsterDef.setSensor(true);
 			break;
 		default:
-			monster = new DragonBallMonster1(world, this, 3+initDistance, (int) (Math.random()*20));
+			monster = new DragonBallMonster1(world, this, 3+posX, (int) (Math.random()*20));
 			monster.monsterDef.setSensor(true);
 			break;
 		}
@@ -227,6 +239,7 @@ public class FlappyMap extends PlayScreen{
 		BulletManage.update(dt,speed);
 		
 		//update player
+		if(getPlayer().getX()<=BOSS_BEGIN_POSITION)
 		speed =SPEED*(1+ timeCount/10);
 		player.body.setLinearVelocity(speed,player.body.getLinearVelocity().y);
 		//update monster
