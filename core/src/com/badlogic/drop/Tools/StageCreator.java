@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ObjectSet;
 
 public class StageCreator {
+
 	public ObjectSet<Items> items = new ObjectSet<Items>();
 	public ObjectSet<Items> itemsRemove = new ObjectSet<Items>();
 	public ObjectSet<Monster> monsters = new ObjectSet<Monster>();
