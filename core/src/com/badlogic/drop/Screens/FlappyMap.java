@@ -370,7 +370,7 @@ public class FlappyMap extends PlayScreen{
 	@Override
 	public void handleDie() {
 		// TODO Auto-generated method stub
-		game.setScreen(new FlappyMap(game));
+		//game.setScreen(new FlappyMap(game));
 		
 		try {
 			resourceManager.dispose(this);

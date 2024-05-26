@@ -39,7 +39,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 			map = MAP.MAP1;
 			
 			batch = new SpriteBatch();
-			this.setScreen(new Menu(this));
+			this.setScreen(new FirstMap(this));
 		}
 		@Override
 		public void render() {
