@@ -109,7 +109,7 @@ public class FlappyMap extends PlayScreen{
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
-		player.setHealth(player.getHealthMax());
+
 		player = new HungKing(world,this);
 		
 		speed =SPEED*(1+ timeCount/10);
@@ -337,8 +337,7 @@ public class FlappyMap extends PlayScreen{
         timeCount = 0;
         isBossAppeared = false;
 
-        // Clear existing entities (monsters, items, etc.)
-        resourceManager.dispose();
+        
         
         // Reset player position and velocity
         resetPlayerPosition();
@@ -350,11 +349,12 @@ public class FlappyMap extends PlayScreen{
         // Dispose resources if needed (e.g., music)
         // Call any other cleanup methods
 
-        // Reload initial map
-//        map = mapLoader.load("map1.tmx");
-        renderer.setMap(map);
+
         resourceManager.removeAll();
-        resourceManager.removeMonster(boss);
+//        resourceManager.removeMonster(boss);
+//        resourceManager.dispose();
+     // Clear existing entities (monsters, items, etc.)
+//        resourceManager=new FlappyResourceManager(world, this);
         // Recreate bounds
         createBounds();
 
