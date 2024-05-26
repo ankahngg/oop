@@ -6,7 +6,7 @@ import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Tools.B2WorldCreator;
-import com.badlogic.drop.Tools.Items;
+import com.badlogic.drop.Tools.Item;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
@@ -29,6 +29,7 @@ public class Collision {
 	public static final short STAGEBOUND_BITS = 256;
 	public static final short HEROBULLET_BITS = 512;
 	public static final short ITEM_BITS = 2056;
+	public static final short BOUNDS_BIT = 4056;
 	public static PlayScreen screen;
 	
 	public static ArrayList<Monster> monsters = new ArrayList<Monster>();
@@ -54,7 +55,7 @@ public class Collision {
 	public static void itemEffect(Contact contact) {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
-		((Items) y.getUserData()).effect();
+		((Item) y.getUserData()).effect();
 	}
 	
 	public static void monsterBulletHurt(Contact contact) {

@@ -3,6 +3,7 @@ package com.badlogic.drop.Sprites;
 import java.util.Currency;
 
 import com.badlogic.drop.CuocChienSinhTon;
+import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.gdx.Gdx;
@@ -20,16 +21,22 @@ public class Boss2 extends Boss{
 	Animation<TextureRegion> appear;
 	
 	
-	private float disappearTime = 10.0f; // Thời gian biến mất (giây)
-    private float reappearTime = 20.0f; // Thời gian xuất hiện lại (giây)
+	private float disappearTime = 30.0f; // visble time (s)
+    private float reappearTime = 10.0f; // invisible time (s)
     private float elapsedTime = 0.0f;
     private boolean isVisible = true;
     float dt;
-    private boolean isAppearing=true;
+	private float timeSinceLastAttack;
+	private float attackInterval=3f;
+	
+    private int maxBulletsPerAttack = 50; // Giới hạn số lượng đạn mỗi lần tấn công
+    private int currentBulletCount = 0; // Đếm số lượng đạn đã bắn trong một lần tấn công
+    
 	public Boss2(World world, PlayScreen screen, float x, float y) {		
 		super(world, screen,x,y,200,true);
 		monsterDef.setUserData(this);
 		this.dt = (1f/60);
+		timeSinceLastAttack = 0;
 	}
 
 	@Override
@@ -50,8 +57,8 @@ public class Boss2 extends Boss{
 		elapsedTime += dt;
         if (isVisible && elapsedTime >= disappearTime) {
             // Boss biến mất
+        	((FlappyMap) screen).spawnMonsterWave(getX()+4);
             isVisible = false;
-            isAppearing=false;
             elapsedTime = 0.0f;
         } else if (!isVisible && elapsedTime >= reappearTime) {
             // Boss xuất hiện lại
@@ -69,9 +76,7 @@ public class Boss2 extends Boss{
 			}
 		}
 		if (isVisible) {
-			System.out.println(appear.isAnimationFinished(stateTime));
 			if(appear.isAnimationFinished(stateTime)||isVisible) {
-				isAppearing = true;
 				isVisible = true;
 				if(isHurting) {
 					if(!hurt.isAnimationFinished(stateTime)) {
@@ -87,10 +92,10 @@ public class Boss2 extends Boss{
 						isDieing = false;
 						screen.handleDie();
 					}
-				}
-				if(isHurt) {
+				}if(isHurt) {
+					
 					isHurting = true;
-					isAttacking = false;
+//					isAttacking = false;
 					isFiring = false;
 					isHurt = false;
 					return State.HURT;
@@ -100,9 +105,34 @@ public class Boss2 extends Boss{
 					isDie = false;
 					return State.DIE;
 				}
+
 				if(isAttacking) {
 					
+					if(!(attack1.isAnimationFinished(stateTime)&&attack2.isAnimationFinished(stateTime))) {
+						if (attack1.isAnimationFinished(dt))
+						isAttacking1=false;
+						else if (attack1.isAnimationFinished(dt))
+						isAttacking2=false;
+						return previousState;
+					}
+					else {
+						if (isAttacking1&!isAttacking2) {
+							previousState = currentState;
+							return State.ATTACKING1;
+						}else if (!isAttacking1 && isAttacking2){
+							previousState = currentState;
+							return State.ATTACKING2;
+						}
+							
+					
+					}
+					
+				}else {
+					isAttacking1=false;
+					isAttacking2=false;
 				}
+				
+								
 			}
 			else if (elapsedTime<=appear.getAnimationDuration()) {
 				
@@ -111,20 +141,28 @@ public class Boss2 extends Boss{
 			
 			
 		}
+		isAttacking1=false;
+		isAttacking2=false;
 		return State.STANDING;
 	}
 	@Override
 	public TextureRegion getFrame(float dt) {
 		TextureRegion region;
 		currentState = getFrameState(dt);
-		System.out.println(currentState);
+//		System.out.println(currentState+"-"+isAttacking1+"-"+isAttacking2);
 		stateTime = (currentState == previousState ? stateTime + dt : 0);
 		switch (currentState) {
 		    case STANDING:
+		    	currentBulletCount=0;
 		        region = standing.getKeyFrame(stateTime, true);
 		        break;
 		    case ATTACKING1:
-		    	
+		    	if (currentBulletCount < maxBulletsPerAttack) {
+		    		int angleDegree = MathUtils.random(90, 270);
+	                BulletManage.addBullet("FireBullet", getX(), getY(),(float)angleDegree);
+	                currentBulletCount++;
+	            }
+
 		    	region = attack1.getKeyFrame(stateTime, false);
 		    	break;
 		    case ATTACKING2:
@@ -135,7 +173,7 @@ public class Boss2 extends Boss{
 		    	region = die.getKeyFrame(stateTime, false);
 		    	break;
 		    case HURT:
-		    	System.out.println("hurt");
+		    	currentBulletCount=0;
 		    	region = hurt.getKeyFrame(stateTime, false);
 		    	break;
 		    case DISAPPEARED:
@@ -168,6 +206,7 @@ public class Boss2 extends Boss{
 			removeMonster();
 		}
 		movement();
+		handleAttack(dt);
 		batch.begin();
 		this.draw(batch);
 		batch.end();
@@ -187,7 +226,7 @@ public class Boss2 extends Boss{
 		attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
 		attack2 = new Animation<TextureRegion>(0.1f, atlasAttack2.getRegions());
 		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
-		hurt = new Animation<TextureRegion>(0.5f, atlasHurt.getRegions());
+		hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
 		appear = new Animation<TextureRegion>(0.8f,appearAtlas.getRegions());
 		disappear = new Animation<TextureRegion>(0.8f,disappearAtlas.getRegions());
 		setRegion(atlasStanding.getRegions().get(1));
@@ -195,4 +234,24 @@ public class Boss2 extends Boss{
 		MonsterWidth = getRegionWidth();
 	}
 	
+	//attack after 5s
+	private void handleAttack(float dt) {
+        if (isVisible) {
+            timeSinceLastAttack += dt;
+            if (timeSinceLastAttack >= attackInterval) {
+                isAttacking = true;
+				int type = MathUtils.random(1);
+				switch (type) {
+				case 0:
+					isAttacking1=true;
+					break;
+
+				default:
+					isAttacking2=true;
+					break;
+				}
+                timeSinceLastAttack = 0.0f;
+            }
+        }
+    }
 }

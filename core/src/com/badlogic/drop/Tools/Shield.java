@@ -2,11 +2,12 @@ package com.badlogic.drop.Tools;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Shield extends Items{
+public class Shield extends Item{
 	public Shield(World worldd, PlayScreen screenn,float x, float y) {
 		
 		super(worldd, screenn, x, y);
@@ -27,7 +28,10 @@ public class Shield extends Items{
 	public void effect() {
 		
 		screen.getPlayer().shieldBegin = System.currentTimeMillis();
+		if(screen instanceof FirstMap)
 		((FirstMap) screen).StageCreator.itemsRemove.add(this);
-		
+		else if (screen instanceof FlappyMap) {
+			((FlappyMap)screen).getResourceManager().removeItem(this);
+		}
 	}
 }

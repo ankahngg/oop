@@ -14,6 +14,15 @@ public class FireBullet extends Bullet {
 		bulletDef.setUserData(this);
 		Collision.setCategoryFilter(bulletDef, Collision.MONSTERBULLET_BITS,null);
 	}
+public FireBullet(World world, PlayScreen screen, float x, float y, float dx,float dy) {
+		
+		super(world, screen, x, y);
+	    SetSpeed(dx, dy);
+		speed = 15;
+		bulletDef.setUserData(this);
+		Collision.setCategoryFilter(bulletDef, Collision.MONSTERBULLET_BITS,null);
+	}
+
 
 	@Override
 	public void prepareAnimation() {

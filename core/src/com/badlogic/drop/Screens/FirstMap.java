@@ -19,7 +19,7 @@ import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.StageBound;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.drop.Tools.Heart;
-import com.badlogic.drop.Tools.Items;
+import com.badlogic.drop.Tools.Item;
 import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
@@ -95,7 +95,6 @@ public class FirstMap extends PlayScreen {
 		firstEntry.set(0, false);
 		nextStage();
 		
-		
 		speed =SPEED;
 	}
 
@@ -111,7 +110,6 @@ public class FirstMap extends PlayScreen {
 	public void handleDie() {
 		Vector2 pos = WorldCreator.checkpoints.get(0);
 		for(Vector2 p : WorldCreator.checkpoints) {
-			System.out.println((int)p.x/35/CuocChienSinhTon.PPM);
 			if((int) (p.x/35/CuocChienSinhTon.PPM) <= stagePass) pos = p;
 		}
 		
@@ -201,12 +199,12 @@ public class FirstMap extends PlayScreen {
 	}
 	
 	public void monsterUpdate(float dt) {
-		for(Items x : StageCreator.items) {
+		for(Item x : StageCreator.items) {
 			if(x!=null)
 			x.update(dt);
 		}
 		if(!StageCreator.itemsRemove.isEmpty()) {
-			for(Items x : StageCreator.itemsRemove) {
+			for(Item x : StageCreator.itemsRemove) {
 				if(x!=null)
 				world.destroyBody(x.b2body);
 				StageCreator.items.remove(x);

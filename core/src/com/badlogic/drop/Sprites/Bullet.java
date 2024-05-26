@@ -53,6 +53,22 @@ abstract public class Bullet extends Sprite{
 	public Bullet() {
 			
 		}
+	public Bullet(World world,PlayScreen screen,float x,float y) {
+		this.world = world;
+		this.screen = screen;
+		this.posX = x;
+		this.posY = y;
+		
+		this.direction = direction;
+		prepareAnimation();
+		SpriteHeight = getRegionHeight();
+		SpriteWidth = getRegionWidth();
+		if(this instanceof HeroBullet2) defineBullet(x, y, 1);
+		else defineBullet(x,y);
+		
+		bulletDef.setUserData(this);
+		Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
+	}
 	public Bullet(World world,PlayScreen screen,float x, float y,int direction) {
 		this.world = world;
 		this.screen = screen;
@@ -75,6 +91,13 @@ abstract public class Bullet extends Sprite{
 		
 		speed = x;
 	}
+	public void SetSpeed(float dx, float dy) {
+		Movement(dx,dy,false);
+	}
+	public void Movement(float dx, float dy,boolean nothing) {
+	    b2body.setLinearVelocity(dx, dy);
+	}
+
 	
 	abstract public void prepareAnimation() ;
 	
