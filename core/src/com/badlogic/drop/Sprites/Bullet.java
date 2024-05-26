@@ -61,7 +61,6 @@ abstract public class Bullet extends Sprite{
 		this.posX = x;
 		this.posY = y;
 		
-		this.direction = direction;
 		prepareAnimation();
 		SpriteHeight = getRegionHeight();
 		SpriteWidth = getRegionWidth();

@@ -9,20 +9,21 @@ import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveAction;
+import com.badlogic.gdx.utils.ObjectSet;
 
 public class FlappyResourceManager {
-	private  LinkedList<Monster> monsters;
-	private LinkedList<Monster> markRemoveMonsters;
-	private  LinkedList<Item> items;
-	private  LinkedList<Item> markRemovedItems;
+	private  ObjectSet<Monster> monsters;
+	private ObjectSet<Monster> markRemoveMonsters;
+	private  ObjectSet<Item> items;
+	private  ObjectSet<Item> markRemovedItems;
 	private World world;
 	private PlayScreen screen;
 	public boolean isDisposed = false;
 	public FlappyResourceManager(World world, PlayScreen screen) {
-		monsters= new LinkedList<Monster>();
-		items = new LinkedList<Item>();
-		markRemovedItems = new LinkedList<Item>();
-		markRemoveMonsters = new LinkedList<Monster>();
+		monsters= new ObjectSet<Monster>();
+		items = new ObjectSet<Item>();
+		markRemovedItems = new ObjectSet<Item>();
+		markRemoveMonsters = new ObjectSet<Monster>();
 		this.world = world;
 		this.screen = screen;
 	}
@@ -69,15 +70,34 @@ public class FlappyResourceManager {
 	public void removeItem(Item item) {
 		markRemovedItems.add(item);
 	}
+	public void removeAll() {
+		for (Monster monster : monsters) {
+			removeMonster(monster);
+		}
+		for (Monster monster : markRemoveMonsters) {
+			screen.world.destroyBody(monster.b2body);
+			monster.b2body = null;
+		}
+		for (Item item : items) {
+			removeItem(item);
+		}
+		for (Item item : markRemovedItems) {
+			world.destroyBody(item.b2body);
+			item.b2body = null;
+			items.remove(item);
+		}
+		markRemovedItems.clear();
+		markRemoveMonsters.clear();
+	}
+	
 	public void removeMonster(Monster monster) {
 		markRemoveMonsters.add(monster);
 	}
-	public void dispose(FlappyMap map) {
+	public void dispose() {
 		isDisposed = true;
 		markRemovedItems.clear();
 		markRemoveMonsters.clear();
-		markRemovedItems.addAll(items);
-		markRemoveMonsters.addAll(monsters);
+
 
 	}
 }

@@ -68,6 +68,7 @@ public class FirstMap extends PlayScreen {
 		// load background
 		backgroundTexture = new Texture("bg1.png");
 		
+		
 		// viewport => responsive 
 		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH/CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM,camera);		
 		
@@ -87,6 +88,7 @@ public class FirstMap extends PlayScreen {
 		//setup collision 
 		Collision.setup(this);
 		BulletManage.setup(world,this);
+		b2dr.setDrawBodies(false);
 		
 		//create healthBar
 		healthbar = new HealthBar(this);
