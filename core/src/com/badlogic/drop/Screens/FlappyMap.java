@@ -353,6 +353,7 @@ public class FlappyMap extends PlayScreen{
         // Reload initial map
 //        map = mapLoader.load("map1.tmx");
         renderer.setMap(map);
+        resourceManager.removeAll();
         resourceManager.removeMonster(boss);
         // Recreate bounds
         createBounds();
