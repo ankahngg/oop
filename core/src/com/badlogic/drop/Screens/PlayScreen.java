@@ -39,7 +39,7 @@ public abstract class PlayScreen implements Screen {
 	
 	//Box2d
 	public World world;
-	protected Box2DDebugRenderer b2dr;
+	public Box2DDebugRenderer b2dr;
 	// speed
 	protected float speed;
 	//Hero
@@ -115,6 +115,7 @@ public abstract class PlayScreen implements Screen {
 	}
 	@Override
 	public void dispose() {
+		
 		// TODO Auto-generated method stub
 		map.dispose();
 		renderer.dispose();

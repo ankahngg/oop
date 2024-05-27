@@ -9,6 +9,7 @@ import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.actions.RemoveAction;
+import com.badlogic.gdx.utils.ObjectSet;
 
 public class FlappyResourceManager {
 	public  LinkedList<Monster> monsters;
@@ -89,7 +90,7 @@ public class FlappyResourceManager {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+
 	}
 	
 	public void removeMonster(Monster monster) {

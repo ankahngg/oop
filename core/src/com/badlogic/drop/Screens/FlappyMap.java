@@ -110,7 +110,9 @@ public class FlappyMap extends PlayScreen{
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
 
-		player = new HungKing(world,this);
+
+
+		player = new AnKhangHero(world,this);
 		
 		speed =SPEED*(1+ timeCount/10);
 		player.body.setLinearVelocity(speed,0);
@@ -131,7 +133,7 @@ public class FlappyMap extends PlayScreen{
 		//create boss
 		boss = createBoss();
 		isBossAppeared=false;
-		
+		b2dr.setDrawBodies(false);
 		bossAura = new Aura(world, this,boss.getWidth());
 		
 		
@@ -147,7 +149,6 @@ public class FlappyMap extends PlayScreen{
 		case 0:
 			Item shieldItems = new Shield(world, this, posX, posY);
 			resourceManager.addItems(shieldItems);
-
 			break;
 
 		default:
@@ -176,8 +177,7 @@ public class FlappyMap extends PlayScreen{
 		fixtureDef.shape = bottomEdge;
 		fixtureDef.friction=0;
 		Fixture botFixture =  body.createFixture(fixtureDef);
-//		Collision.setCategoryFilter(botFixture,Collision.MONSTERBULLET_BITS,(short) ((32767)-Collision.HERO_BITS));
-//		botFixture.setUserData(botFixture);
+
 		botFixture.setSensor(false);
 	}
 	public TextureAtlas getAtlas() {
@@ -382,7 +382,6 @@ public class FlappyMap extends PlayScreen{
 		
 		ScreenUtils.clear(0, 0, 0.2f, 1);
 		
-		
         game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
@@ -423,9 +422,9 @@ public class FlappyMap extends PlayScreen{
 	@Override
 	public void handleDie() {
 		// TODO Auto-generated method stub
+
 		isGameOver = true;
 //		game.setScreen(new FlappyMap(game));
-		
 		try {
 			resourceManager.removeAll();
 //			resourceManager = null;
