@@ -36,7 +36,7 @@ public class Boss1 extends Boss{
 	}
 	
 	public Boss1(World world, PlayScreen screen, float x, float y) {		
-		super(world, screen,x,y,2,false);
+		super(world, screen,x,y,20,false);
 		monsterDef.setUserData(this);
 		
 	}

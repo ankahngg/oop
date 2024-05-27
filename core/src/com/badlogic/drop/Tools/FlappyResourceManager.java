@@ -12,34 +12,31 @@ import com.badlogic.gdx.scenes.scene2d.actions.RemoveAction;
 import com.badlogic.gdx.utils.ObjectSet;
 
 public class FlappyResourceManager {
-	private  ObjectSet<Monster> monsters;
-	private ObjectSet<Monster> markRemoveMonsters;
-	private  ObjectSet<Item> items;
-	private  ObjectSet<Item> markRemovedItems;
+	private  LinkedList<Monster> monsters;
+	private LinkedList<Monster> markRemoveMonsters;
+	private  LinkedList<Item> items;
+	private  LinkedList<Item> markRemovedItems;
 	private World world;
 	private PlayScreen screen;
 	public boolean isDisposed = false;
 	public FlappyResourceManager(World world, PlayScreen screen) {
-		monsters= new ObjectSet<Monster>();
-		items = new ObjectSet<Item>();
-		markRemovedItems = new ObjectSet<Item>();
-		markRemoveMonsters = new ObjectSet<Monster>();
+		monsters= new LinkedList<Monster>();
+		items = new LinkedList<Item>();
+		markRemovedItems = new LinkedList<Item>();
+		markRemoveMonsters = new LinkedList<Monster>();
 		this.world = world;
 		this.screen = screen;
 	}
 
 	public  void addItems(Item item) {
-		if(isDisposed) return;
 
 		items.add(item);
 	}
 	public void addMonster(Monster monster) {
-		if(isDisposed) return;
 
 		monsters.add(monster);
 	}
 	public void update(float dt) {
-		if(isDisposed) return;
 		
 		//update monster
 		for (int i = 0; i< monsters.size();i++) {
@@ -76,14 +73,19 @@ public class FlappyResourceManager {
 		}
 		for (Monster monster : markRemoveMonsters) {
 			screen.world.destroyBody(monster.b2body);
-			monster.b2body = null;
+
+			monster.b2body =null;
+			monsters.remove(monster);
+
 		}
 		for (Item item : items) {
 			removeItem(item);
 		}
 		for (Item item : markRemovedItems) {
 			world.destroyBody(item.b2body);
-			item.b2body = null;
+
+			item.b2body=null;
+
 			items.remove(item);
 		}
 		markRemovedItems.clear();
