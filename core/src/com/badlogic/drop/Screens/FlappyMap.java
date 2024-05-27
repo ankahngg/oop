@@ -65,7 +65,7 @@ public class FlappyMap extends PlayScreen{
 	private final int GRAVITY = -30;
 	private final int DISTANCE = 10;
 	private final int MAP_LENGTH = 200;
-	private final int BOSS_BEGIN_POSITION = 40;
+	private final int BOSS_BEGIN_POSITION = 650;
 	private float timeCount;
 	private float lastBoundPosX;
 	private boolean isBossAppeared;
@@ -198,7 +198,6 @@ public class FlappyMap extends PlayScreen{
 			
 			resourceManager.addMonster(monster);
 		}
-
 		
 	}
 	public void spawnMonsterWave(float posX) {
@@ -264,6 +263,7 @@ public class FlappyMap extends PlayScreen{
 			if(Gdx.input.justTouched()) {
 				restartGame();
 				isGameOver =false;
+				isBossAppeared=false;
 			}
 			return;
 		}
@@ -312,10 +312,11 @@ public class FlappyMap extends PlayScreen{
 		renderer.setView(camera);
 		camera.update();
 		
+		player.update(dt);
 		//resource update
 		resourceManager.update(dt);
 		
-		player.update(dt);
+		
 
 	}
 	public Body getBody() {
@@ -349,8 +350,9 @@ public class FlappyMap extends PlayScreen{
         // Dispose resources if needed (e.g., music)
         // Call any other cleanup methods
 
+//        resourceManager.removeAll();
 
-        resourceManager.removeAll();
+
 //        resourceManager.removeMonster(boss);
 //        resourceManager.dispose();
      // Clear existing entities (monsters, items, etc.)
@@ -359,7 +361,7 @@ public class FlappyMap extends PlayScreen{
         createBounds();
 
         // Recreate monsters
-        prepareMonster();
+        
 
         // Recreate boss
         boss = createBoss();
@@ -369,6 +371,7 @@ public class FlappyMap extends PlayScreen{
 //
 //        // Reset health bar
 //        healthbar.reset();
+        prepareMonster();
     }
 	public void resetPlayerPosition() {
 		player.getBody().setTransform(0, 10, BOSS_BEGIN_POSITION);
@@ -424,7 +427,7 @@ public class FlappyMap extends PlayScreen{
 //		game.setScreen(new FlappyMap(game));
 		
 		try {
-//			resourceManager.dispose(this);
+			resourceManager.removeAll();
 //			resourceManager = null;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
