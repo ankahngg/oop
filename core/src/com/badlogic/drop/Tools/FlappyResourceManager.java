@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.RemoveAction;
 import com.badlogic.gdx.utils.ObjectSet;
 
 public class FlappyResourceManager {
-	private  LinkedList<Monster> monsters;
+	public  LinkedList<Monster> monsters;
 	private LinkedList<Monster> markRemoveMonsters;
 	private  LinkedList<Item> items;
 	private  LinkedList<Item> markRemovedItems;
@@ -33,11 +33,10 @@ public class FlappyResourceManager {
 		items.add(item);
 	}
 	public void addMonster(Monster monster) {
-
+		
 		monsters.add(monster);
 	}
 	public void update(float dt) {
-		
 		//update monster
 		for (int i = 0; i< monsters.size();i++) {
 			Monster monster = monsters.get(i);
@@ -49,8 +48,7 @@ public class FlappyResourceManager {
 				monsters.remove(i);
 			}
 			if (monster.getX()<screen.getCamera().position.x-screen.getGamePort().getWorldWidth()) {
-				monsters.remove(monster);
-				
+				removeMonster(monster)	;			
 			}
 		}
 		// items
@@ -68,28 +66,31 @@ public class FlappyResourceManager {
 		markRemovedItems.add(item);
 	}
 	public void removeAll() {
-		for (Monster monster : monsters) {
+		try {
+			for (Monster monster : monsters) {
 			removeMonster(monster);
+			}
+			for (Monster monster : markRemoveMonsters) {
+				if(monster.b2body!=null)
+				screen.world.destroyBody(monster.b2body);
+				monster.b2body =null;
+				monsters.remove(monster);
+			}
+			for (Item item : items) {
+				removeItem(item);
+			}
+			for (Item item : markRemovedItems) {
+				if(item.b2body!=null)
+				world.destroyBody(item.b2body);
+				item.b2body=null;
+				items.remove(item);
+			}
+			markRemovedItems.clear();
+			markRemoveMonsters.clear();
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-		for (Monster monster : markRemoveMonsters) {
-			screen.world.destroyBody(monster.b2body);
 
-			monster.b2body =null;
-			monsters.remove(monster);
-
-		}
-		for (Item item : items) {
-			removeItem(item);
-		}
-		for (Item item : markRemovedItems) {
-			world.destroyBody(item.b2body);
-
-			item.b2body=null;
-
-			items.remove(item);
-		}
-		markRemovedItems.clear();
-		markRemoveMonsters.clear();
 	}
 	
 	public void removeMonster(Monster monster) {
