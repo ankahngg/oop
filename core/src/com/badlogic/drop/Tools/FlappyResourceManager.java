@@ -96,11 +96,5 @@ public class FlappyResourceManager {
 	public void removeMonster(Monster monster) {
 		markRemoveMonsters.add(monster);
 	}
-	public void dispose() {
-		isDisposed = true;
-		markRemovedItems.clear();
-		markRemoveMonsters.clear();
 
-
-	}
 }

@@ -82,7 +82,6 @@ abstract public class Bullet extends Sprite{
 		else {
 			if((b2body.getPosition().x>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
 					||(b2body.getPosition().x<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
-				System.out.println("remove");
 				remove();
 			}			
 		}

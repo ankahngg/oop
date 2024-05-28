@@ -65,7 +65,7 @@ public class FlappyMap extends PlayScreen{
 	private final int GRAVITY = -30;
 	private final int DISTANCE = 10;
 	private final int MAP_LENGTH = 200;
-	private final int BOSS_BEGIN_POSITION = 650;
+	private final int BOSS_BEGIN_POSITION = 40;
 	private float timeCount;
 	private float lastBoundPosX;
 	private boolean isBossAppeared;
@@ -209,6 +209,7 @@ public class FlappyMap extends PlayScreen{
 			resourceManager.addMonster(monster);
 		}
 	}
+	// create monster by type and posX
 	private Monster createMonster(int type,float posX) {
 		Monster monster;
 		switch (type) {
@@ -232,11 +233,14 @@ public class FlappyMap extends PlayScreen{
 		}
 		return monster;
 	}
+	// create boss in default pos
 	private Boss createBoss() {
 		Boss boss = new Boss2(world, this, BOSS_BEGIN_POSITION,CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM/2);
 		boss.b2body.setGravityScale(0);
 		return boss;
 	}
+	
+	// create fly engine
 	private void prepareFlyEngineAnimation() {
 		flyEngineAtlas = new TextureAtlas("asset/map2/packs/can-dau-van.atlas");
 		Array<AtlasRegion> flipXArray = new Array<AtlasRegion>();
@@ -249,10 +253,13 @@ public class FlappyMap extends PlayScreen{
 		flyEngineAnimation.setPlayMode(PlayMode.LOOP);
 		
 	}
+	//check bullet out of screen
 	public static boolean isBulletOutOfScreen(Bullet bl, float x1, float x2) {
 	    float bulletX = bl.b2body.getPosition().x;
 	    return bulletX < x1 || bulletX > x2;
 	}
+	
+	// check monster out of screen
 	public static boolean isMonstetOutOfScreen(Monster monster,float x1) {
 		return monster.getX()< x1;
 	}
@@ -260,6 +267,7 @@ public class FlappyMap extends PlayScreen{
 	// method that be called every 1/60s
 	public void update(float dt) {
 		if (isGameOver) {
+			// if dead, touch to restart
 			if(Gdx.input.justTouched()) {
 				restartGame();
 				isGameOver =false;
@@ -267,15 +275,19 @@ public class FlappyMap extends PlayScreen{
 			}
 			return;
 		}
+		// spawn items each 50px/16
 		if((int)(player.getX()*10)%500==0) {
 			spawnItems(player.getX()+30);
 		}
 		if (player.getX()>= BOSS_BEGIN_POSITION-gamePort.getWorldWidth()*0.7f) {
 			isBossAppeared=true;
 		}
+		// make boss move parallel with hero
 		if(isBossAppeared) {
 			boss.b2body.setLinearVelocity((speed), 0);
 		}
+		
+		//update boss
 		bossAura.update(boss.getX(), boss.getY(),dt);
 		boss.update(dt);
 		
@@ -304,11 +316,11 @@ public class FlappyMap extends PlayScreen{
 		player.currentState = State.STANDING;
 		
 		
-		
+	
 		handleInput(dt);
 		world.step(1/60f, 6, 2);
 		
-		camera.position.x = player.getX()+10;
+		camera.position.x = player.getX()+12;
 		renderer.setView(camera);
 		camera.update();
 		
@@ -361,17 +373,13 @@ public class FlappyMap extends PlayScreen{
         createBounds();
 
         // Recreate monsters
-        
+        prepareMonster();
 
         // Recreate boss
         boss = createBoss();
 
-//        // Reset boss aura
-//        bossAura.reset();
-//
-//        // Reset health bar
-//        healthbar.reset();
-        prepareMonster();
+
+        
     }
 	public void resetPlayerPosition() {
 		player.getBody().setTransform(0, 10, BOSS_BEGIN_POSITION);
@@ -411,10 +419,7 @@ public class FlappyMap extends PlayScreen{
 
 		}
 	
-	void updatePlayer(float dt) {
-		
-		
-	}
+
 	public float getSpeed() {
 		return speed;
 	}
