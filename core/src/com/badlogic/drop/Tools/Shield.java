@@ -29,7 +29,7 @@ public class Shield extends Item{
 		
 		screen.getPlayer().shieldBegin = System.currentTimeMillis();
 		if(screen instanceof FirstMap)
-		((FirstMap) screen).StageCreator.itemsRemove.add(this);
+		StageCreator.itemsRemove.add(this);
 		else if (screen instanceof FlappyMap) {
 			((FlappyMap)screen).getResourceManager().removeItem(this);
 		}

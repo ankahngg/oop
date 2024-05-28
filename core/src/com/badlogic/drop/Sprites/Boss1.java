@@ -1,9 +1,12 @@
 package com.badlogic.drop.Sprites;
 
+import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Monster.State;
+import com.badlogic.drop.Tools.StageCreator;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,7 +16,12 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Boss1 extends Boss{
 	
 	
+	private Texture BossHealthBar;
+	private Texture BossHealth;
+
 	public void prepareAnimation() {
+		BossHealthBar = new Texture("HealthBar/bg.png");
+		BossHealth =  new Texture("HealthBar/green.png");
 		atlasAttack1 = new TextureAtlas("Boss/packs/BossAttack1.pack");
 		atlasAttack2 = new TextureAtlas("Boss/packs/BossAttack2.pack");
 		atlasAttack3 = new TextureAtlas("Boss/packs/BossAttack3.pack");
@@ -37,13 +45,36 @@ public class Boss1 extends Boss{
 	
 	public Boss1(World world, PlayScreen screen, float x, float y) {		
 		super(world, screen,x,y,20,false);
+		
 		monsterDef.setUserData(this);
+		
+	}
+	@Override
+	public void update(float dt) {
+		// TODO Auto-generated method stub
+		super.update(dt);
+
+		batch.begin();
+		float x = screen.getCamera().position.x-screen.getGamePort().getWorldWidth()/2;
+		float y = screen.getCamera().position.y+screen.getGamePort().getWorldHeight()/2;
+		batch.draw(BossHealthBar, x+20,y-2,BossHealthBar.getWidth()/CuocChienSinhTon.PPM/2+5,BossHealthBar.getHeight()/CuocChienSinhTon.PPM/2, 0,0,BossHealthBar.getWidth(),BossHealthBar.getHeight(),false,false);
+		
+		float ratio = 1.0f*Health/HealthMax;
+		float HealthX = x+20+(BossHealthBar.getWidth()-BossHealth.getWidth())/2/CuocChienSinhTon.PPM;
+		float HealthY = y-2+(BossHealthBar.getHeight()-BossHealth.getHeight())/2/CuocChienSinhTon.PPM;
+		
+		batch.draw(BossHealth, HealthX,HealthY,
+				(BossHealth.getWidth()/CuocChienSinhTon.PPM/2+5)*ratio,BossHealth.getHeight()/CuocChienSinhTon.PPM/2, 
+				0,0,(int)(BossHealth.getWidth()*ratio),BossHealth.getHeight(),
+				false,false);
+		batch.end();
+		
 		
 	}
 	
 
 	public void removeMonster() {
-		((FirstMap) screen).StageCreator.bossesRemove.add(this);
+		StageCreator.monsters.add(this);
 	}
 	public void movement() {
 		
@@ -64,13 +95,13 @@ public class Boss1 extends Boss{
 	}
 	
 	
-	double t = 2000;
+	double attackCd = 2000;
 	boolean isAttacking = false;
 	boolean isHurting = false;
 	
 	public State getFrameState(float dt) {
 		
-		double currentTime = System.currentTimeMillis();
+		
 		
 		
 		
@@ -85,22 +116,22 @@ public class Boss1 extends Boss{
 			}
 		}
 		if(isAttacking) {
-			
 			isHurting = false;
 			if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
 			else {
-				int rnd = (rd.nextInt(5));
-				if(rnd == 4) {
+				int rnd = (rd.nextInt(6));
+				if(rnd == 5) {
 					BulletManage.addBullet("BossBullet1", b2body.getPosition().x, b2body.getPosition().y, -1);
-				}
-				BulletManage.addBullet("BossBullet2", b2body.getPosition().x, b2body.getPosition().y, -1);
-//				t = (rd.nextInt(5)+1)*1000;
+				}else if((rnd == 4 || rnd == 5) && StageCreator.monsters.size <= 5) {
+					StageCreator.addMonster("Skeleton", b2body.getPosition().x-5, 3);
+				}else BulletManage.addBullet("BossBullet2", b2body.getPosition().x, b2body.getPosition().y, -1);
+				
+					
 				lastAttackTime = System.currentTimeMillis();
 				isAttacking = false;
 			}
 		}
-		if(currentTime - lastAttackTime >= t) {
-			System.out.println("attack");
+		if(System.currentTimeMillis() - lastAttackTime >= attackCd) {
 			isAttacking = true;
 			return State.ATTACKING1;
 		}

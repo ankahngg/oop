@@ -159,7 +159,7 @@ public class Boss2 extends Boss{
 		    case ATTACKING1:
 		    	if (currentBulletCount < maxBulletsPerAttack) {
 		    		int angleDegree = MathUtils.random(90, 270);
-	                BulletManage.addBullet("FireBullet", getX(), getY(),(float)angleDegree);
+	                BulletManage.addBullet("FireBullet", getX(), getY(),-1,15,(float)angleDegree,-1);
 	                currentBulletCount++;
 	            }
 

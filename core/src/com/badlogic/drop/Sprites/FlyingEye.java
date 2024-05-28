@@ -8,6 +8,7 @@ import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Monster.State;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -64,8 +65,6 @@ public class FlyingEye extends Monster{
 		if(running.isAnimationFinished(stateTime)) {
 			if(screen instanceof FirstMap) {
 			BulletManage.addBullet("FlyingEye", b2body.getPosition().x, b2body.getPosition().y, -1);
-		}else {
-			BulletManage.addBullet("FlyingEye", b2body.getPosition().x, b2body.getPosition().y, -1,1);
 		}
 		}
 		
@@ -79,7 +78,7 @@ public class FlyingEye extends Monster{
 		b2body = null;
 		if (screen instanceof FirstMap)
 
-		((FirstMap) screen).StageCreator.monstersRemove.add(this);
+		StageCreator.monstersRemove.add(this);
 		isDied = true;
 	}
 	

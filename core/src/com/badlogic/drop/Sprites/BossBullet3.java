@@ -22,25 +22,4 @@ public class BossBullet3 extends Bullet{
 		setRegion(atlasBullet.getRegions().get(0));
 	}
 	
-	public void update(float dt) {
-//		tt += dt;
-//		if(tt >= lifeTime) this.getTexture().dispose();
-		stateTime += dt;
-		if(stateTime > bullet.getAnimationDuration()) remove();
-		if(!isDied) {
-			region = bullet.getKeyFrame(stateTime,true);
-			if(!region.isFlipX()) {
-				if(direction == -1) region.flip(true, true);
-			}
-			setRegion(region);
-			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
-					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
-					getRegionWidth()/CuocChienSinhTon.PPM*scaleX,
-					getRegionHeight()/CuocChienSinhTon.PPM*scaleY);
-			Movement();
-			screen.game.getBatch().begin();
-			this.draw(screen.game.getBatch());
-			screen.game.getBatch().end();									
-		}
-	}
 }

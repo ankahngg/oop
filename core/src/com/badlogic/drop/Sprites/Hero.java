@@ -73,7 +73,8 @@ public abstract class Hero extends Sprite{
 	protected int currentFire = 0;
 	
 	public double shieldBegin = -1;
-	protected float HeroHeight;
+	public float HeroHeight;
+	public float HeroWidth;
 	protected float stateTime;
 	protected boolean runningRight = true;
 	protected boolean currentDirection = false;
@@ -353,10 +354,8 @@ public abstract class Hero extends Sprite{
 			if(Gdx.input.isKeyPressed(Keys.K) && ((FirstMap) screen).stagePass >= stageSkill) {
 				if(System.currentTimeMillis() - lastFireTime >= FireCoolDown) {
 					isFiring = true;
-					int hurtDirection = 1;
-					if(this.isFlipX()) hurtDirection = -1;
-					else hurtDirection = 1;
-					BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, hurtDirection);
+					if(this.isFlipX()) BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, -1);
+					else BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, 1);
 					return State.FIRING;
 				}
 			}
@@ -418,7 +417,7 @@ public abstract class Hero extends Sprite{
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
 					
-					BulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,screen.getSpeed());
+					BulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,screen.getSpeed(),0f,-1f);
 					isAttacking = true;
 					return State.FIRING;
 				}

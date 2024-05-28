@@ -3,6 +3,7 @@ package com.badlogic.drop.Sprites;
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -41,7 +42,7 @@ public class Skeleton extends Monster{
 		MonsterWidth = getRegionWidth();
 	}
 	
-	public Skeleton(World world, PlayScreen screen,int x, int y) {		
+	public Skeleton(World world, PlayScreen screen,Float x, Float y) {		
 		super(world, screen,x,y,6,true);
 		
 		this.MonsterScaleX = this.MonsterScaleY = 1.5f;
@@ -71,7 +72,7 @@ public class Skeleton extends Monster{
 	
 	@Override
 	public void removeMonster() {
-		((FirstMap) screen).StageCreator.monstersRemove.add(this);
+		StageCreator.monstersRemove.add(this);
 		
 	}
 	

@@ -285,7 +285,7 @@ public class FlappyMap extends PlayScreen{
 		}
 		//update bullet
 		
-		BulletManage.update(dt,speed);
+		BulletManage.update(dt);
 		
 		//update player
 		if(getPlayer().getX()<=BOSS_BEGIN_POSITION) {

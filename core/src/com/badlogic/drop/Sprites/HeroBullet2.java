@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class HeroBullet2 extends Bullet{
 	public HeroBullet2(World world,PlayScreen screen, float x, float y, int direction) {
 		super(world,screen,x,y,direction);
-		SetSpeed(20);
+		speed = 20;
 
 	}
 	@Override

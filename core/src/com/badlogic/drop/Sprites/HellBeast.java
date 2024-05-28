@@ -3,6 +3,7 @@ package com.badlogic.drop.Sprites;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Monster.State;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -42,7 +43,7 @@ public class HellBeast extends Monster{
 		MonsterWidth = getRegionWidth();
 	}
 	
-	public HellBeast(World world, PlayScreen screen,int x, int y) {		
+	public HellBeast(World world, PlayScreen screen,Float x, Float y) {		
 		super(world, screen,x,y,5,false);
 		
 		
@@ -63,7 +64,7 @@ public class HellBeast extends Monster{
 		world.destroyBody(b2body);
 		b2body = null;
 		if (screen instanceof FirstMap)
-		((FirstMap) screen).StageCreator.monstersRemove.add(this);
+		StageCreator.monstersRemove.add(this);
 		isDied = true;
 	}
 	

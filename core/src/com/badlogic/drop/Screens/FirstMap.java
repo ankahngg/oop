@@ -49,9 +49,8 @@ public class FirstMap extends PlayScreen {
 	public boolean Hitting;
 	public int stageNum = 8;
 	public int stagePass = -1;
-	public int stageCr;
+	public int stageCr = 0;
 	public int crCheckpoint = 0;
-	public StageCreator StageCreator;
 	public Rectangle tmp;
 	public ArrayList<Boolean> firstEntry = new ArrayList<Boolean>();
 	public ArrayList<Boolean> stageComplete = new ArrayList<Boolean>();
@@ -81,12 +80,12 @@ public class FirstMap extends PlayScreen {
 		world = new World(new Vector2(0,-50),true);
 		b2dr = new Box2DDebugRenderer();
 		WorldCreator = new B2WorldCreator(world, map, this);
-		StageCreator = new StageCreator(world, map, this);
 		//create player
 		player = new AnKhangHero(world,this);
 		player.isHurtWhenCollide = true;
 		//setup collision 
 		Collision.setup(this);
+		StageCreator.setup(world, map, this);
 		BulletManage.setup(world,this);
 		b2dr.setDrawBodies(false);
 		
@@ -200,41 +199,6 @@ public class FirstMap extends PlayScreen {
 		if(stop) player.body.setLinearVelocity( new Vector2(0,vel.y));
 	}
 	
-	public void monsterUpdate(float dt) {
-
-		for(Boss x : StageCreator.bosses) {
-			if(x!=null) x.update(dt);
-		}
-		
-		for(Boss x : StageCreator.bossesRemove) {
-			StageCreator.bosses.remove(x);
-		}
-		StageCreator.bossesRemove.clear();
-		
-		for(Item x : StageCreator.items) {
-			if(x!=null)
-			x.update(dt);
-		}
-		
-		if(!StageCreator.itemsRemove.isEmpty()) {
-			for(Item x : StageCreator.itemsRemove) {
-				if(x!=null)
-				world.destroyBody(x.b2body);
-				StageCreator.items.remove(x);
-			}
-			StageCreator.itemsRemove.clear();
-		}
-		
-		for(Monster x : StageCreator.monsters) {
-			if(x!=null) x.update(dt);
-		}
-		for(Monster x : StageCreator.monstersRemove) {
-			StageCreator.monsters.remove(x);
-		}
-		StageCreator.monstersRemove.clear();
-		
-	}
-	
 	// method that be called every 1/60s
 	public void update(float dt) {
 		
@@ -243,16 +207,14 @@ public class FirstMap extends PlayScreen {
 		handleInput(dt);
 		player.update(dt);
 		
-		monsterUpdate(dt);
 		
+		StageCreator.update(dt);
 		Collision.update(dt);
-		healthbar.update(dt);
 
 		world.step(1/60f, 6, 2);
 		//handle camera out of bound
 		
-		stageCr = (int) ((player.body.getPosition().x-(player.getRegionWidth()/2-10)/CuocChienSinhTon.PPM)/stageLength);
-		
+		stageCr = (int) ((player.body.getPosition().x-(player.HeroWidth/2-10)/CuocChienSinhTon.PPM)/stageLength);
 		camera.position.x = stageCr * stageLength + (float) stageLength/2;
 		
 		//camera.position.x = player.body.getPosition().x;
@@ -266,6 +228,7 @@ public class FirstMap extends PlayScreen {
 		renderer.setView(camera);
 		camera.update();
 		
+		healthbar.update(dt);
 	}
 
 	@Override

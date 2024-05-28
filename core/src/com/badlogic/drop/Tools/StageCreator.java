@@ -20,32 +20,86 @@ import com.badlogic.gdx.utils.ObjectSet;
 
 public class StageCreator {
 
-	public ObjectSet<Item> items = new ObjectSet<Item>();
-	public ObjectSet<Item> itemsRemove = new ObjectSet<Item>();
+	static public ObjectSet<Item> items = new ObjectSet<Item>();
+	static public ObjectSet<Item> itemsRemove = new ObjectSet<Item>();
 
-	public ObjectSet<Monster> monsters = new ObjectSet<Monster>();
-	public ObjectSet<Monster> monstersRemove = new ObjectSet<Monster>();
-	public ObjectSet<Boss> bosses = new ObjectSet<Boss>();
-	public ObjectSet<Boss> bossesRemove = new ObjectSet<Boss>();
-	public World world;
-	public TiledMap map;
-	public PlayScreen screen;
-	public boolean isOnStage = false;
+	static public ObjectSet<Monster> monsters = new ObjectSet<Monster>();
+	static public ObjectSet<Monster> monstersRemove = new ObjectSet<Monster>();
+	static public World world;
+	static public TiledMap map;
+	static public PlayScreen screen;
+	static public boolean isOnStage = false;
 	
-	public StageCreator(World world,TiledMap map, PlayScreen screen) {
-		this.world = world;
-		this.map = map;
-		this.screen = screen;
+	static public void setup(World worldd,TiledMap mapp, PlayScreen screenn) {
+		world = worldd;
+		map = mapp;
+		screen = screenn;
 	}
 	
-	public boolean isStageClear() {
-		if(monsters.isEmpty() && isOnStage && bosses.isEmpty()) {
+	static public boolean isStageClear() {
+		if(monsters.isEmpty() && isOnStage) {
 			isOnStage = false;
 			return true;
 		}
 		return false;
 	}
-	public void clearMonster() {
+	
+	static public void update(float dt) {
+		for(Item x : StageCreator.items) {
+			if(x!=null)
+			x.update(dt);
+		}
+		
+		if(!StageCreator.itemsRemove.isEmpty()) {
+			for(Item x : StageCreator.itemsRemove) {
+				if(x!=null)
+				world.destroyBody(x.b2body);
+				StageCreator.items.remove(x);
+			}
+			StageCreator.itemsRemove.clear();
+		}
+		
+		for(Monster x : StageCreator.monsters) {
+			if(x!=null) x.update(dt);
+		}
+		for(Monster x : StageCreator.monstersRemove) {
+			StageCreator.monsters.remove(x);
+		}
+		StageCreator.monstersRemove.clear();
+	}
+	
+	
+	static public void addMonster(String type, float x, float y) {
+		if(type == "Skeleton") {
+			Skeleton xx = new Skeleton(world, screen, x,y);
+			monsters.add(xx);
+		}
+		else if(type == "FlyingEye") {
+				FlyingEye xx = new FlyingEye(world, screen, x,y);
+				monsters.add(xx);
+			}
+		else if(type == "HellBeast") {
+			HellBeast xx = new HellBeast(world, screen, x,y);
+			monsters.add(xx);
+		}
+		else if(type == "Boss") {
+			Boss1 xx = new Boss1(world, screen, x,y);
+			monsters.add(xx);
+		}
+		else if(type == "Heart") {
+			Heart xx = new Heart(world, screen, x,y);
+			items.add(xx);
+		}
+		else if(type == "Shield") {
+			Shield xx = new Shield(world, screen, x,y);
+			items.add(xx);
+		}
+		else if(type == "Strength") {
+			Strength xx = new Strength(world, screen, x,y);
+			items.add(xx);
+		}
+	}
+	static public void clearMonster() {
 		
 		for(Monster x : monsters) {
 			world.destroyBody(x.b2body);
@@ -55,12 +109,6 @@ public class StageCreator {
 			world.destroyBody(x.b2body);
 		}
 		
-		for(Boss x : bosses) {
-			world.destroyBody(x.b2body);
-		}
-		
-		bosses.clear();
-		bossesRemove.clear();
 		monstersRemove.clear();
 		monsters.clear();
 		itemsRemove.clear();
@@ -69,12 +117,11 @@ public class StageCreator {
 	}
 	
 	
-	public void Creator(int y) {
+	static public void Creator(int y) {
 		if(y == 8) {
 			float posX = (y+1)*35-2;
 			float posY = 3;
-			Boss1 x = new Boss1(world, screen, posX, posY);
-			bosses.add(x);
+			addMonster("Boss", posX, posY);
 		}
 		
 		int o = 11;
@@ -85,48 +132,35 @@ public class StageCreator {
 		if(xx.getLayers().get("Skeleton") != null)
 		for(MapObject object : xx.getLayers().get("Skeleton").getObjects()) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			Skeleton x = new Skeleton(world, screen, (int)((rect.x+rect.width/2)/CuocChienSinhTon.PPM),(int)((rect.y+rect.height/2)/CuocChienSinhTon.PPM));
-			monsters.add(x);
+			addMonster("Skeleton", ((rect.x+rect.width/2)/CuocChienSinhTon.PPM), ((rect.y+rect.height/2)/CuocChienSinhTon.PPM));
 		}
 		if(xx.getLayers().get("FlyingEye") != null)
 		for(MapObject object : xx.getLayers().get("FlyingEye").getObjects()) {
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			FlyingEye x = new FlyingEye(world, screen, (Float)((rect.x+rect.width/2)/CuocChienSinhTon.PPM),(Float)((rect.y+rect.height/2)/CuocChienSinhTon.PPM));
-			
-			monsters.add(x);
+			addMonster("FlyingEye", ((rect.x+rect.width/2)/CuocChienSinhTon.PPM), ((rect.y+rect.height/2)/CuocChienSinhTon.PPM));
 		}
 		if(xx.getLayers().get("HellBeast") != null)
 		for(MapObject object : xx.getLayers().get("HellBeast").getObjects()) {
 			
 			Rectangle rect = ((RectangleMapObject) object).getRectangle();
-			HellBeast x = new HellBeast(world, screen, (int)((rect.x+rect.width/2)/CuocChienSinhTon.PPM),(int)((rect.y+rect.height/2)/CuocChienSinhTon.PPM));
+			addMonster("HellBeast", ((rect.x+rect.width/2)/CuocChienSinhTon.PPM), ((rect.y+rect.height/2)/CuocChienSinhTon.PPM));			
 			
-			monsters.add(x);
 		}
 		if(xx.getLayers().get("Heart") != null)
 			for(MapObject object : xx.getLayers().get("Heart").getObjects()) {
-				
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
-				Heart x = new Heart(world, screen, (int)((rect.x+rect.width/2)/CuocChienSinhTon.PPM),(int)((rect.y+rect.height/2)/CuocChienSinhTon.PPM));
-				
-				items.add(x);
+				addMonster("Heart", ((rect.x+rect.width/2)/CuocChienSinhTon.PPM), ((rect.y+rect.height/2)/CuocChienSinhTon.PPM));							
 			}
 		
 		if(xx.getLayers().get("Shield") != null)
 			for(MapObject object : xx.getLayers().get("Shield").getObjects()) {
-				
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
-				Shield x = new Shield(world, screen, (int)((rect.x+rect.width/2)/CuocChienSinhTon.PPM),(int)((rect.y+rect.height/2)/CuocChienSinhTon.PPM));
-				
-				items.add(x);
+				addMonster("Shield", ((rect.x+rect.width/2)/CuocChienSinhTon.PPM), ((rect.y+rect.height/2)/CuocChienSinhTon.PPM));							
 			}
 		if(xx.getLayers().get("Strength") != null)
 			for(MapObject object : xx.getLayers().get("Strength").getObjects()) {
-				
 				Rectangle rect = ((RectangleMapObject) object).getRectangle();
-				Strength x = new Strength(world, screen, (int)((rect.x+rect.width/2)/CuocChienSinhTon.PPM),(int)((rect.y+rect.height/2)/CuocChienSinhTon.PPM));
-				
-				items.add(x);
+				addMonster("Strength", ((rect.x+rect.width/2)/CuocChienSinhTon.PPM), ((rect.y+rect.height/2)/CuocChienSinhTon.PPM));							
 			}
 		
 		
