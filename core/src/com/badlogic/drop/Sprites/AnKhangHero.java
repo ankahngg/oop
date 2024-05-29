@@ -16,8 +16,8 @@ public class AnKhangHero extends Hero{
 	
 
 	public AnKhangHero(World world, PlayScreen screen) {	
-		super(world, screen,10,"HeroBullet1");
-		
+		super(world, screen,5,5,10);
+		bulletType = "HeroBullet1";
 
 		
 	}

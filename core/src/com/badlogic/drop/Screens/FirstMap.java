@@ -40,7 +40,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class FirstMap extends PlayScreen {
 	public int stageLength = 35;
 	public boolean isBossSpawn = true;
-	public final int SPEED = 10;
+	public final int speed = 10;
 
 	public B2WorldCreator WorldCreator;
 	public double teleCd=1000;
@@ -58,15 +58,14 @@ public class FirstMap extends PlayScreen {
 	private boolean isOnStage = false;
 	
 	public FirstMap(CuocChienSinhTon game) {
+		super(game);
 		// load map
 		atlas = new TextureAtlas("Hero.pack");
-		this.game =  game;
 		// create camera
 		camera = new OrthographicCamera();
 		
 		// load background
 		backgroundTexture = new Texture("bg1.png");
-		
 		
 		// viewport => responsive 
 		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH/CuocChienSinhTon.PPM, CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM,camera);		
@@ -80,23 +79,28 @@ public class FirstMap extends PlayScreen {
 		world = new World(new Vector2(0,-50),true);
 		b2dr = new Box2DDebugRenderer();
 		WorldCreator = new B2WorldCreator(world, map, this);
+		
+		Collision.setup(this);
+		//set up bullet manage		
+		BulletManage.setup(world, this);
+		
+		StageCreator.setup(world, this);
+		
 		//create player
 		player = new AnKhangHero(world,this);
 		player.isHurtWhenCollide = true;
-		//setup collision 
-		Collision.setup(this);
-		StageCreator.setup(world, map, this);
-		BulletManage.setup(world,this);
+		
 		b2dr.setDrawBodies(false);
 		
 		//create healthBar
 		healthbar = new HealthBar(this);
 		
+		
+		
+		//intialize firstEntry
 		for(int i=0;i<=stageNum;i++) firstEntry.add(true);
 		firstEntry.set(0, false);
 		nextStage();
-		
-		speed =SPEED;
 	}
 
 	public TextureAtlas getAtlas() {
@@ -166,15 +170,18 @@ public class FirstMap extends PlayScreen {
 			stageCr = 8;
 			stagePass = 7;
 			player.body.setTransform(new Vector2(35*stageCr+2,3) , 0);
+			//player.damage = 10;
 			
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {
+			
 			player.body.setLinearVelocity( new Vector2(-speed,vel.y));
 			stop = false;
 		}
 		
 		
 		if(Gdx.input.isKeyPressed(Keys.D)) {
+		
 			stop = false;
 			player.body.setLinearVelocity( new Vector2(speed,vel.y));
 		}
@@ -220,7 +227,7 @@ public class FirstMap extends PlayScreen {
 		//camera.position.x = player.body.getPosition().x;
 		if(firstEntry.get(stageCr)) {
 			firstEntry.set(stageCr, false);
-			StageCreator.Creator(stageCr);
+			StageCreator.Creator(map,stageCr);
 			closeStage();
 		}
 		

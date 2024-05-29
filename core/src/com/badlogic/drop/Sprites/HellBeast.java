@@ -43,11 +43,11 @@ public class HellBeast extends Monster{
 		MonsterWidth = getRegionWidth();
 	}
 	
-	public HellBeast(World world, PlayScreen screen,Float x, Float y) {		
-		super(world, screen,x,y,5,false);
+	public HellBeast(World world, PlayScreen screen,float x, float y,int maxHealth,boolean isDynamic, boolean isSensor) {		
+		super(world, screen, x, y,maxHealth, isDynamic,isSensor);
 		
 		
-		isIntialLeft = false;
+		//isIntialLeft = true;
 		
 		monsterDef.setUserData(this);
 	}
@@ -68,17 +68,6 @@ public class HellBeast extends Monster{
 		isDied = true;
 	}
 	
-	public void update(float dt) {
-		// TODO Auto-generated method stub
-		super.update(dt);
-		
-		if(isDied) return;
-
-		
-//		if(running.isAnimationFinished(stateTime)) {
-//			BulletManage.addBullet("FlyingEye", posX, posY, -1);
-//		}
-	}
 	
 	public State getFrameState(float dt) {
 		if(isAttacking1) {

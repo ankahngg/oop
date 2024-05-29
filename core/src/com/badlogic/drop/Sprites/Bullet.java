@@ -38,7 +38,7 @@ abstract public class Bullet extends Sprite{
 	public float SpriteWidth;
 	public float scaleX=1;
 	public float scaleY=1;
-	public int direction;
+	public int direction=0;
 	public double preTime;
 	public float speed=10;
 	public double lifeTime = 1;
@@ -76,14 +76,16 @@ abstract public class Bullet extends Sprite{
 
 		stateTime += dt;
 		
-		if(lifeTime != -1) {
-			if(stateTime > lifeTime) remove();
-		}
-		else {
-			if((b2body.getPosition().x>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
-					||(b2body.getPosition().x<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
-				remove();
-			}			
+		if(!isRemoved) {
+			if(lifeTime != -1) {
+				if(stateTime > lifeTime) remove();
+			}
+			else {
+				if((b2body.getPosition().x>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
+						||(b2body.getPosition().x<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
+					remove();
+				}			
+			}
 		}
 		
 		if(!isRemoved) {
@@ -98,8 +100,8 @@ abstract public class Bullet extends Sprite{
 			setRegion(region);
 			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2*scaleX,
 					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2*scaleY,
-					getRegionWidth()/CuocChienSinhTon.PPM,
-					getRegionHeight()/CuocChienSinhTon.PPM);
+					getRegionWidth()/CuocChienSinhTon.PPM*scaleX,
+					getRegionHeight()/CuocChienSinhTon.PPM*scaleY);
 			
 			screen.game.getBatch().begin();
 			this.draw(screen.game.getBatch());
@@ -108,7 +110,7 @@ abstract public class Bullet extends Sprite{
 			if(bulletExternalCollison()) {
 				screen.getPlayer().handleHurt(null);
 			} 
-			Movement();									
+			movement();									
 		}
 	}
 	
@@ -122,12 +124,11 @@ abstract public class Bullet extends Sprite{
 		return (float) Math.asin(yWidth/xWidth);
 	}
 	
-	public void setUp(float speedd, int directionn, float anglee, float lifeTimee) {
-		speed = speedd;
+	public void setUp(int directionn, float speedd, float anglee, float lifeTimee) {
+		if(speedd != -1) speed = speedd;
 		direction = directionn;
-		angle = anglee;
+		if(anglee != -1) angle = anglee;
 		lifeTime = lifeTimee;
-		
 	}
 	
 	public void remove() {
@@ -135,11 +136,11 @@ abstract public class Bullet extends Sprite{
 		BulletManage.removeBullet(this);
 	}
 	
-	public void Movement() {
+	public void movement() {
 		double sin = Math.sin(Math.toRadians(angle));
 		double cos =  Math.cos(Math.toRadians(angle));
 		float vecX = (float) (speed*cos*direction);
-		float vecY = (float) (speed*sin*direction); 
+		float vecY = (float) (speed*sin); 
 		b2body.setLinearVelocity(new Vector2(vecX,vecY));
 	}
 	

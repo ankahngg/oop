@@ -3,12 +3,14 @@ package com.badlogic.drop.Sprites;
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -52,6 +54,7 @@ abstract public class Monster extends Sprite{
 		FixtureDef fdef = new FixtureDef();
 		public Fixture monsterDef;
 		public Fixture hitboxDef;
+		public boolean isGravityScale=false;
 		
 		double t = 1000;
 		public boolean isAttacking1 = false;
@@ -60,20 +63,26 @@ abstract public class Monster extends Sprite{
 		public boolean isDieing = false;
 		
 		public boolean isRuningR;
-		public boolean isDynamic;
+		public boolean isDynamic=true;
+		public boolean isSensor=false;
 		public boolean isHurt = false;
 		public boolean isDie = false;
 		public boolean isDied = false;
+		public boolean isRemoved = false;
 		public boolean isIntialLeft = false;
 		public float MonsterScaleX=1;
 		public float MonsterScaleY=1;
-		public int MonsterHeight;
-		public int MonsterWidth;
+		public float MonsterHeight;
+		public float MonsterWidth;
 		public boolean runningRight = true;
 		public PlayScreen screen;
 		public SpriteBatch batch;
 		public float posX;
 		public float posY;
+		public float speed;
+		public float angle;
+		public float lifeTime=-1;
+		public int direction=0;
 		public HealthBarMonster HealthBar;
 		public float radius;
 		
@@ -85,47 +94,88 @@ abstract public class Monster extends Sprite{
 		}
 		
 		abstract public void prepareAnimation() ;
-		public Monster(World world, PlayScreen screen, float x, float y,int maxHealth, boolean isDynamic) {		
+		public Monster(World world, PlayScreen screen, float x, float y,int maxHealth, boolean isDynamic, boolean isSensor) {		
 			this.world = world;
 			this.Health = maxHealth;
 			this.HealthMax = maxHealth;
 			this.screen = screen;
-			this.isDynamic = isDynamic;
 			this.posX = x;
 			this.posY = y;
+			this.isDynamic = isDynamic;
+			this.isSensor = isSensor;
 			this.batch = screen.game.getBatch();
 			HealthBar = new HealthBarMonster(screen);
 			prepareAnimation();
 			defineMonster(x,y);
 			setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
 			
-			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,(short) ((32767)-Collision.HERO_BITS));
+			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
 		}
 		
 		public void update(float dt) {
+			if(isRemoved) return;
 			setRegion(getFrame(dt));
 			if(b2body != null) {
 				posX = b2body.getPosition().x;
 				posY = b2body.getPosition().y;		
 			}
-			if(!isDied) {
-				setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
-				HealthBar.update(Health, HealthMax, posX, posY+radius);
-			}
+			// conditions to remove
 			if(isDied) {
 				removeMonster();
 			}
-			movement();
-			batch.begin();
-			this.draw(batch);
-			batch.end();
+			if(lifeTime != -1) {
+				if(stateTime > lifeTime) removeMonster();
+			}
+			else {
+				if((posX>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
+						||(posX<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
+					System.out.println("out range");
+					removeMonster();
+				}			
+			}
 			
-			if (isDie) return;
+			if(!isRemoved) {
+				
+				//set sprite bounds
+				setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
+				
+				//update healthbar
+				HealthBar.update(Health, HealthMax, posX, posY+radius);
+				
+				//handle movement
+				movement();
+				
+				//render
+				batch.begin();
+				this.draw(batch);
+				batch.end();
+			}
+			
 		}
 		
-		abstract public void removeMonster();
+		public void removeMonster() {
+			isRemoved = true;
+			StageCreator.removeMonster(this);
+			System.out.println("removeMonster");
+		}
+		
+		public void setUp(int directionn, Float speedd, float anglee, float lifeTimee) {
+			if(speedd != -1) speed = speedd;
+			direction = directionn;
+			if(anglee != -1) angle = anglee;
+			lifeTime = lifeTimee;
+		}
+		
 			
-		abstract public void movement();	
+		public void movement() {
+			if(direction != 0) {
+				double sin = Math.sin(Math.toRadians(angle));
+				double cos =  Math.cos(Math.toRadians(angle));
+				float vecX = (float) (speed*cos*direction);
+				float vecY = (float) (speed*sin); 
+				b2body.setLinearVelocity(new Vector2(vecX,vecY));				
+			}
+		}
 		
 		public TextureRegion getFrame(float dt) {
 			TextureRegion region;
@@ -158,8 +208,27 @@ abstract public class Monster extends Sprite{
 			}
 			
 			if(b2body != null) {
-				
 				float vel = b2body.getLinearVelocity().x;
+				
+				if(vel == 0) {
+					if(isIntialLeft) {
+						if(runningRight && region.isFlipX()) {
+							region.flip(true,false);
+							runningRight = false;
+						}
+					}
+					else {
+						if(runningRight && !region.isFlipX()) {
+							region.flip(true,false);
+							runningRight = false;
+						}
+					}
+					previousState = currentState;
+					return region;
+				}
+					
+				
+				
 				if(!isIntialLeft) {
 					if((vel < 0 || !runningRight) && !region.isFlipX()) {
 						region.flip(true,false);
@@ -204,20 +273,19 @@ abstract public class Monster extends Sprite{
 		}
 		
 		public void defineMonster(float x,float y) {
-			
 			CircleShape shape = new CircleShape();
 			 bdef.position.set(x,y);
 			 if(isDynamic) bdef.type = BodyDef.BodyType.DynamicBody;
 			 else  bdef.type = BodyDef.BodyType.StaticBody;
 			 
+			 if(!isGravityScale) bdef.gravityScale = 0;
 			 b2body = world.createBody(bdef);
-			 
 			 
 			 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
 			 radius = getRegionHeight()/CuocChienSinhTon.PPM/2;
 			 fdef.shape = shape;
-			 
-			 fdef.density = 0.8f;
+			 fdef.isSensor = isSensor;
+			
 			 monsterDef = b2body.createFixture(fdef);
 		}
 

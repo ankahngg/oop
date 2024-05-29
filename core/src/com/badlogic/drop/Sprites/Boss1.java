@@ -43,8 +43,8 @@ public class Boss1 extends Boss{
 		
 	}
 	
-	public Boss1(World world, PlayScreen screen, float x, float y) {		
-		super(world, screen,x,y,20,false);
+	public Boss1(World world, PlayScreen screen, float x, float y, int maxHealth ,boolean isDynamic, boolean isSensor) {		
+		super(world, screen,x,y,maxHealth,isDynamic,isSensor);
 		
 		monsterDef.setUserData(this);
 		
@@ -73,9 +73,6 @@ public class Boss1 extends Boss{
 	}
 	
 
-	public void removeMonster() {
-		StageCreator.monsters.add(this);
-	}
 	public void movement() {
 		
 		if(b2body != null) {
@@ -102,10 +99,6 @@ public class Boss1 extends Boss{
 	public State getFrameState(float dt) {
 		
 		
-		
-		
-		
-		//System.out.println(currentTime - lastAttackTime);
 		if(isDieing) {
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
 			else {
@@ -122,11 +115,15 @@ public class Boss1 extends Boss{
 				int rnd = (rd.nextInt(6));
 				if(rnd == 5) {
 					BulletManage.addBullet("BossBullet1", b2body.getPosition().x, b2body.getPosition().y, -1);
-				}else if((rnd == 4 || rnd == 5) && StageCreator.monsters.size <= 5) {
-					StageCreator.addMonster("Skeleton", b2body.getPosition().x-5, 3);
-				}else BulletManage.addBullet("BossBullet2", b2body.getPosition().x, b2body.getPosition().y, -1);
+				}else if((rnd == 4) && StageCreator.monsters.size <= 5) {
+					StageCreator.addMonster("Skeleton", b2body.getPosition().x-5, 3,6,true,false);
+				}
+				else if((rnd == 3) && StageCreator.monsters.size <= 5) {
+					System.out.println();
+					StageCreator.addMonster("FlyingEye", b2body.getPosition().x-3,b2body.getPosition().y ,6,false,false);
+				}
+				else BulletManage.addBullet("BossBullet2", b2body.getPosition().x, b2body.getPosition().y, -1,20,0,-1);
 				
-					
 				lastAttackTime = System.currentTimeMillis();
 				isAttacking = false;
 			}

@@ -38,15 +38,17 @@ public class Skeleton extends Monster{
 		hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
 		die = new Animation<TextureRegion>(0.1f, atlasDie.getRegions());
 		setRegion(atlasRunning.getRegions().get(1));
+		this.MonsterScaleX = this.MonsterScaleY = 1.5f;
+		isGravityScale = true;
 		MonsterHeight = getRegionHeight();
 		MonsterWidth = getRegionWidth();
 	}
 	
-	public Skeleton(World world, PlayScreen screen,Float x, Float y) {		
-		super(world, screen,x,y,6,true);
+	public Skeleton(World world, PlayScreen screen,float x, float y,int maxHealth,boolean isDynamic, boolean isSensor) {		
+		super(world, screen, x, y,maxHealth, isDynamic,isSensor);
 		
-		this.MonsterScaleX = this.MonsterScaleY = 1.5f;
 		isIntialLeft = false;
+		Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,(short) ((32767)-Collision.HERO_BITS));
 		monsterDef.setUserData(this);
 	}
 	
@@ -69,13 +71,6 @@ public class Skeleton extends Monster{
 	double t = 1000;
 	private boolean attacked;
 	
-	
-	@Override
-	public void removeMonster() {
-		StageCreator.monstersRemove.add(this);
-		
-	}
-	
 	public void HurtKnockBack() {
 		double crTime = System.currentTimeMillis();
 		
@@ -83,9 +78,9 @@ public class Skeleton extends Monster{
 		double t = 200;
 		if(System.currentTimeMillis()-crTime <t) {
 			if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
-				b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
+				b2body.applyLinearImpulse(new Vector2(15,0), b2body.getWorldCenter(),true);
 			else 
-				b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);		
+				b2body.applyLinearImpulse(new Vector2(-15,0), b2body.getWorldCenter(),true);		
 		}
 		
 	}
@@ -107,8 +102,10 @@ public class Skeleton extends Monster{
 			isDie = false;
 			isHurt = false;
 			isHurting = false;
-			world.destroyBody(this.b2body);
+			world.destroyBody(b2body);
 			b2body = null;
+			
+			
 			return State.DIE;
 		}
 		if(isHurt) {
@@ -121,12 +118,7 @@ public class Skeleton extends Monster{
 		}
 		
 		if(isHurting) {
-//			if(stateTime < hurt.getAnimationDuration()/50) {
-//				if(screen.getPlayer().getBody().getPosition().x < b2body.getPosition().x)
-//					b2body.applyLinearImpulse(new Vector2(25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);
-//				else 
-//					b2body.applyLinearImpulse(new Vector2(-25*screen.getPlayer().damage,0), b2body.getWorldCenter(),true);				
-//			}
+
 			if(!hurt.isAnimationFinished(stateTime)) return State.HURT;
 			else isHurting = false;
 		}

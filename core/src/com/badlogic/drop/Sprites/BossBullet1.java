@@ -26,11 +26,48 @@ public class BossBullet1 extends Bullet{
 
 	@Override
 	public void prepareAnimation() {
-		atlasBullet = new TextureAtlas("Boss/Bullet/BossBullet1_1.pack");
+		atlasBullet = new TextureAtlas("Boss/Bullet/BossBullet1.pack");
 		bullet = new Animation<TextureRegion>(0.3f, atlasBullet.getRegions());
 		setRegion(atlasBullet.getRegions().get(0));
 		scaleX = 12;
 		scaleY=8;
+	}
+	public void movement() {
+		
+	}
+	
+	public void update(float dt) {
+//		tt += dt;
+//		if(tt >= lifeTime) this.getTexture().dispose();
+		stateTime += dt;
+		 playerY = screen.getPlayer().body.getPosition().y;
+		 playerH = screen.getPlayer().getRegionHeight()/CuocChienSinhTon.PPM;
+		 bulletY = b2body.getPosition().y;
+		 bulletH = atlasBullet.getRegions().get(2).getRegionHeight()/CuocChienSinhTon.PPM*scaleY;
+		if(bullet.getKeyFrameIndex(stateTime) == 2 && 
+		(playerY+playerH/2>bulletY-bulletH/2 && playerY-playerH/2<bulletY+bulletH/2) && !isPlayerHurt) {
+			
+			screen.getPlayer().handleHurt(null);
+			isPlayerHurt  = true;
+		}
+
+		if(stateTime > bullet.getAnimationDuration()) remove();
+		if(!isRemoved) {
+			region = bullet.getKeyFrame(stateTime,true);
+			if(!region.isFlipX()) {
+				if(direction == -1) region.flip(true, true);
+			}
+			setRegion(region);
+			setBounds(b2body.getPosition().x-getRegionWidth()/CuocChienSinhTon.PPM*scaleX/2,
+					b2body.getPosition().y -getRegionHeight()/CuocChienSinhTon.PPM*scaleY/2,
+					getRegionWidth()/CuocChienSinhTon.PPM*scaleX,
+					getRegionHeight()/CuocChienSinhTon.PPM*scaleY);
+			
+			
+			screen.game.getBatch().begin();
+			this.draw(screen.game.getBatch());
+			screen.game.getBatch().end();									
+		}
 	}
 	
 	public boolean bulletExternalCollison() {
@@ -44,5 +81,15 @@ public class BossBullet1 extends Bullet{
 			return true;
 		}
 		return false; 
+	}
+	
+	public void defineBullet(float x,float y) {
+		 bdef.position.set(x-getRegionWidth()/CuocChienSinhTon.PPM*scaleX/2,
+				 y-getRegionHeight()/CuocChienSinhTon.PPM*scaleY/2);
+		
+		 bdef.type = BodyDef.BodyType.DynamicBody;
+		 bdef.gravityScale = 0;
+		 b2body = world.createBody(bdef);
+		 
 	}
 }

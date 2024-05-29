@@ -97,29 +97,21 @@ public abstract class Hero extends Sprite{
 	protected Bullet bullet;
 	private TextureRegion region;
 	private Shield shield;
-	public Hero(World world, PlayScreen screen,int maxHealth,String bulletType) {
+	public Hero(World world, PlayScreen screen,float x, float y, int maxHealth) {
 		this.world = world;
 		this.screen = screen;
 		isDie = false;
 		this.Health = maxHealth;
 		this.HealthMax = maxHealth;
 		this.currentRank = 0;
-		this.bulletType=bulletType;
 		prepareAnimation();
-		
-		if (screen instanceof FirstMap) {
-			defineHero(30,10);
-		}else {
-			defineHero(0,10);
-		}
-		
+		defineHero(x, y);
+
 		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
 		currentState = State.STANDING;
 		previousState = State.STANDING;
 		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS,null);
 		normalDef.setUserData(this);
-		
-		
 		
 		shield = new Shield(world, screen);
 		
@@ -291,8 +283,6 @@ public abstract class Hero extends Sprite{
 			}
 			
 			if(isDieing) {
-	//			if(hurtDirection == 0) body.setLinearVelocity( new Vector2((float) (-1.5*speed),0));
-	//			else body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
 				if(!die.isAnimationFinished(stateTime)) {
 					return State.DIE;
 				}
@@ -356,6 +346,8 @@ public abstract class Hero extends Sprite{
 					isFiring = true;
 					if(this.isFlipX()) BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, -1);
 					else BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, 1);
+//					if(this.isFlipX()) BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, -1,-1,45,-1);
+//					else BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, 1,-1,45,-1);
 					return State.FIRING;
 				}
 			}
@@ -379,8 +371,7 @@ public abstract class Hero extends Sprite{
 			}
 			
 			if(isDieing) {
-	//			if(hurtDirection == 0) body.setLinearVelocity( new Vector2((float) (-1.5*speed),0));
-	//			else body.setLinearVelocity( new Vector2((float) (1.5*speed),0));
+
 				if(!die.isAnimationFinished(stateTime)) {
 					return State.DIE;
 				}
@@ -405,8 +396,6 @@ public abstract class Hero extends Sprite{
 				return State.DIE;
 			}
 			
-			
-			
 			if(isAttacking) {
 				
 					if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
@@ -417,7 +406,7 @@ public abstract class Hero extends Sprite{
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
 					
-					BulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,screen.getSpeed(),0f,-1f);
+					BulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,20,0,-1);
 					isAttacking = true;
 					return State.FIRING;
 				}
@@ -431,7 +420,7 @@ public abstract class Hero extends Sprite{
 	public float getStateTime() {
 		return stateTime;
 	}
-	protected void defineHero(int x,int y) {
+	protected void defineHero(float x,float y) {
 		bdef.position.set(x,y);
 		bdef.type = BodyDef.BodyType.DynamicBody;
 		 body = world.createBody(bdef);

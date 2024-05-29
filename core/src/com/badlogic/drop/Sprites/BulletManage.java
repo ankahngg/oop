@@ -92,7 +92,7 @@ public class BulletManage {
 		else {
 			bl = new HeroBullet1(world, screen, x, y, direction);
 		}
-		bl.setUp(speed, direction, angleInDegrees, lifeTime);
+		bl.setUp(direction, speed, angleInDegrees, lifeTime);
 		
 	}
 	
@@ -112,17 +112,9 @@ public class BulletManage {
 
 		removeBullet.clear();
 	}
-//	public static void update(float dt) {
-//		for(Bullet bl : bullets) {
-//			bl.update(dt,speed);
-//			if(FlappyMap.isBulletOutOfScreen(bl, screen.getPlayer().getX()-10, screen.getPlayer().getX()+40))
-//				markRemoved(bl);
-//		}
-//		remove();
-//		System.out.println(bullets.size);
-//	}
 	
 	public static void removeBullet(Bullet bl) {
+		System.out.println("remove");
 		removeBullet.add(bl);
 	}
 	

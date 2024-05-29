@@ -22,5 +22,6 @@ public class BossBullet2 extends Bullet{
 		bullet = new Animation<TextureRegion>(0.1f, atlasBullet.getRegions());
 		setRegion(atlasBullet.getRegions().get(0));
 		scaleX = scaleY = 2;
+	
 	}
 }

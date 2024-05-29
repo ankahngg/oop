@@ -12,7 +12,8 @@ import com.badlogic.gdx.physics.box2d.World;
 public class HungKing extends Hero{
 	
 	public HungKing(World world, PlayScreen screen) {
-		super(world, screen, 20,"Thunder");
+		super(world, screen, 2,2,10);
+		bulletType = "HeroBullet1";
 	}
 
 	

@@ -45,12 +45,10 @@ public class FlyingEye extends Monster{
 		MonsterWidth = getRegionWidth();
 	}
 	
-	public FlyingEye(World world, PlayScreen screen,float x, float y) {		
-		super(world, screen,x,y,2,false);
-
+	public FlyingEye(World world, PlayScreen screen, float x, float y,int maxHealth, boolean isDynamic, boolean isSensor) {		
+		super(world, screen,x,y,maxHealth,isDynamic,isSensor);
 		posX = x;
 		posY = y;
-		isIntialLeft = true;
 		
 		monsterDef.setUserData(this);
 		Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
@@ -61,31 +59,14 @@ public class FlyingEye extends Monster{
 		// TODO Auto-generated method stub
 		super.update(dt);
 		
-		if(isDied) return;
+		if(isRemoved) return;
 		if(running.isAnimationFinished(stateTime)) {
-			if(screen instanceof FirstMap) {
-			BulletManage.addBullet("FlyingEye", b2body.getPosition().x, b2body.getPosition().y, -1);
+				if(screen instanceof FirstMap) {
+				BulletManage.addBullet("FlyingEye", b2body.getPosition().x, b2body.getPosition().y, -1,15,0,-1);
+			}
 		}
-		}
-		
-		
-		
-	}
-	
-	public void removeMonster() {
-		if(b2body != null)
-		world.destroyBody(b2body);
-		b2body = null;
-		if (screen instanceof FirstMap)
-
-		StageCreator.monstersRemove.add(this);
-		isDied = true;
-	}
-	
-	public void movement() {
 
 	}
-
 	
 	public State getFrameState(float dt) {
 		
@@ -130,19 +111,7 @@ public class FlyingEye extends Monster{
 		
 	}
 	
-	void onHit() {
-		this.Health --;
-		if(this.Health == 0) {
-			isDie = true;
-		}
-		else {
-			isHurt = true;
-		}
-	}
+	
 
-	public void defineMonster(int x,int y) {
-		
-		super.defineMonster(x,y);
-	}
 	
 }
