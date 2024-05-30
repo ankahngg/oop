@@ -40,7 +40,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class FirstMap extends PlayScreen {
 	public int stageLength = 35;
 	public boolean isBossSpawn = true;
-	public final int SPEED = 10;
+	public final int speed = 10;
 
 	public B2WorldCreator WorldCreator;
 	public double teleCd=1000;
@@ -49,9 +49,8 @@ public class FirstMap extends PlayScreen {
 	public boolean Hitting;
 	public int stageNum = 8;
 	public int stagePass = -1;
-	public int stageCr;
+	public int stageCr = 0;
 	public int crCheckpoint = 0;
-	public StageCreator StageCreator;
 	public Rectangle tmp;
 	public ArrayList<Boolean> firstEntry = new ArrayList<Boolean>();
 	public ArrayList<Boolean> stageComplete = new ArrayList<Boolean>();
@@ -59,9 +58,9 @@ public class FirstMap extends PlayScreen {
 	private boolean isOnStage = false;
 	
 	public FirstMap(CuocChienSinhTon game) {
+		super(game);
 		// load map
 		atlas = new TextureAtlas("Hero.pack");
-		this.game =  game;
 		// create camera
 		camera = new OrthographicCamera();
 		
@@ -80,22 +79,28 @@ public class FirstMap extends PlayScreen {
 		world = new World(new Vector2(0,-50),true);
 		b2dr = new Box2DDebugRenderer();
 		WorldCreator = new B2WorldCreator(world, map, this);
-		StageCreator = new StageCreator(world, map, this);
+		
+		Collision.setup(this);
+		//set up bullet manage		
+		BulletManage.setup(world, this);
+		
+		StageCreator.setup(world, this);
+		
 		//create player
 		player = new AnKhangHero(world,this);
 		player.isHurtWhenCollide = true;
-		//setup collision 
-		Collision.setup(this);
-		BulletManage.setup(world,this);
+		
+		b2dr.setDrawBodies(false);
 		
 		//create healthBar
 		healthbar = new HealthBar(this);
 		
+		
+		
+		//intialize firstEntry
 		for(int i=0;i<=stageNum;i++) firstEntry.add(true);
 		firstEntry.set(0, false);
 		nextStage();
-		
-		speed =SPEED;
 	}
 
 	public TextureAtlas getAtlas() {
@@ -165,15 +170,18 @@ public class FirstMap extends PlayScreen {
 			stageCr = 8;
 			stagePass = 7;
 			player.body.setTransform(new Vector2(35*stageCr+2,3) , 0);
+			//player.damage = 10;
 			
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {
+			
 			player.body.setLinearVelocity( new Vector2(-speed,vel.y));
 			stop = false;
 		}
 		
 		
 		if(Gdx.input.isKeyPressed(Keys.D)) {
+		
 			stop = false;
 			player.body.setLinearVelocity( new Vector2(speed,vel.y));
 		}
@@ -198,41 +206,6 @@ public class FirstMap extends PlayScreen {
 		if(stop) player.body.setLinearVelocity( new Vector2(0,vel.y));
 	}
 	
-	public void monsterUpdate(float dt) {
-
-		for(Boss x : StageCreator.bosses) {
-			if(x!=null) x.update(dt);
-		}
-		
-		for(Boss x : StageCreator.bossesRemove) {
-			StageCreator.bosses.remove(x);
-		}
-		StageCreator.bossesRemove.clear();
-		
-		for(Item x : StageCreator.items) {
-			if(x!=null)
-			x.update(dt);
-		}
-		
-		if(!StageCreator.itemsRemove.isEmpty()) {
-			for(Item x : StageCreator.itemsRemove) {
-				if(x!=null)
-				world.destroyBody(x.b2body);
-				StageCreator.items.remove(x);
-			}
-			StageCreator.itemsRemove.clear();
-		}
-		
-		for(Monster x : StageCreator.monsters) {
-			if(x!=null) x.update(dt);
-		}
-		for(Monster x : StageCreator.monstersRemove) {
-			StageCreator.monsters.remove(x);
-		}
-		StageCreator.monstersRemove.clear();
-		
-	}
-	
 	// method that be called every 1/60s
 	public void update(float dt) {
 		
@@ -241,22 +214,20 @@ public class FirstMap extends PlayScreen {
 		handleInput(dt);
 		player.update(dt);
 		
-		monsterUpdate(dt);
 		
+		StageCreator.update(dt);
 		Collision.update(dt);
-		healthbar.update(dt);
 
 		world.step(1/60f, 6, 2);
 		//handle camera out of bound
 		
-		stageCr = (int) ((player.body.getPosition().x-(player.getRegionWidth()/2-10)/CuocChienSinhTon.PPM)/stageLength);
-		
+		stageCr = (int) ((player.body.getPosition().x-(player.HeroWidth/2-10)/CuocChienSinhTon.PPM)/stageLength);
 		camera.position.x = stageCr * stageLength + (float) stageLength/2;
 		
 		//camera.position.x = player.body.getPosition().x;
 		if(firstEntry.get(stageCr)) {
 			firstEntry.set(stageCr, false);
-			StageCreator.Creator(stageCr);
+			StageCreator.Creator(map,stageCr);
 			closeStage();
 		}
 		
@@ -264,6 +235,7 @@ public class FirstMap extends PlayScreen {
 		renderer.setView(camera);
 		camera.update();
 		
+		healthbar.update(dt);
 	}
 
 	@Override

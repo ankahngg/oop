@@ -6,6 +6,7 @@ import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Hero.State;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -20,136 +21,136 @@ public class Boss2 extends Boss{
 	Animation<TextureRegion> disappear;
 	Animation<TextureRegion> appear;
 	
-	
-	private float disappearTime = 30.0f; // visble time (s)
-    private float reappearTime = 10.0f; // invisible time (s)
-    private float elapsedTime = 0.0f;
+	private double disapearCd = 20000;
+	private double disappearTime = 5000; // visble time (s)
     private boolean isVisible = true;
+   
+    private boolean isDisapear = false;
+    private boolean isDisapearing = false;
     float dt;
-	private float timeSinceLastAttack;
-	private float attackInterval=3f;
+	
 	
     private int maxBulletsPerAttack = 50; // Giới hạn số lượng đạn mỗi lần tấn công
     private int currentBulletCount = 0; // Đếm số lượng đạn đã bắn trong một lần tấn công
+	private double disappearTimeBegin;
+	private double appearTimeBegin = System.currentTimeMillis();
+	private double appearTime = 20000;
+	private boolean isAppearing;
+	private Aura bossAura;
     
-	public Boss2(World world, PlayScreen screen, float x, float y) {		
-		super(world, screen,x,y,200,true);
+	public Boss2(World world, PlayScreen screen,float x, float y,int maxHealth,boolean isDynamic, boolean isSensor) {		
+		super(world, screen, x, y,maxHealth, isDynamic,isSensor);
+		bossAura = new Aura(world, screen,this.getWidth());
 		monsterDef.setUserData(this);
-		this.dt = (1f/60);
-		timeSinceLastAttack = 0;
+		lastAttackTime = System.currentTimeMillis();
+		attackCd = 2000;
 	}
 
-	@Override
-	public void removeMonster() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void movement() {
-		// TODO Auto-generated method stub
-		 
-	}
 
 	@Override
 	public State getFrameState(float dt) {
 		// TODO Auto-generated method stub
-		elapsedTime += dt;
-        if (isVisible && elapsedTime >= disappearTime) {
-            // Boss biến mất
-        	((FlappyMap) screen).spawnMonsterWave(getX()+4);
-            isVisible = false;
-            elapsedTime = 0.0f;
-        } else if (!isVisible && elapsedTime >= reappearTime) {
-            // Boss xuất hiện lại
-            isVisible = true;
-            float newY = MathUtils.random(1,18); // Vị trí Y ngẫu nhiên trong màn hình
-            b2body.setTransform(screen.getPlayer().getX()+23, newY , 0); // PPM là Pixels Per Meter	
-            elapsedTime = 0.0f;
-        }
-
-		if(!isVisible) {
+		if(isDisapearing) {
 			if(!disappear.isAnimationFinished(stateTime)) return State.DISAPPEARED;
-			
 			else {
+				isDisapearing = false;
 				b2body.setTransform(this.getX(),-10f, 0);
+				disappearTimeBegin = System.currentTimeMillis();
 			}
 		}
-		if (isVisible) {
-			if(appear.isAnimationFinished(stateTime)||isVisible) {
-				isVisible = true;
-				if(isHurting) {
-					if(!hurt.isAnimationFinished(stateTime)) {
-						return State.HURT;
-					}
-					else isHurting = false;
-				}
-				if(isDieing) {
-					if(!die.isAnimationFinished(stateTime)) {
-						return State.DIE;
-					}
-					else {
-						isDieing = false;
-						screen.handleDie();
-					}
-				}if(isHurt) {
-					
-					isHurting = true;
-//					isAttacking = false;
-					isFiring = false;
-					isHurt = false;
-					return State.HURT;
-				}
-				if(isDie) {
-					isDieing = true;
-					isDie = false;
+		if(isAppearing) {
+			if(!appear.isAnimationFinished(stateTime)) return State.APPEARED;
+			else {
+				isAppearing = false;
+				appearTimeBegin = System.currentTimeMillis();
+				 float newY = MathUtils.random(1,18);
+				 b2body.setTransform(this.getX(), newY , 0);
+			}
+		}
+		
+		if(isVisible) {
+			if(isDieing) {
+				if(!die.isAnimationFinished(stateTime)) {
 					return State.DIE;
 				}
-
-				if(isAttacking) {
-					
-					if(!(attack1.isAnimationFinished(stateTime)&&attack2.isAnimationFinished(stateTime))) {
-						if (attack1.isAnimationFinished(dt))
-						isAttacking1=false;
-						else if (attack1.isAnimationFinished(dt))
-						isAttacking2=false;
-						return previousState;
-					}
-					else {
-						if (isAttacking1&!isAttacking2) {
-							previousState = currentState;
-							return State.ATTACKING1;
-						}else if (!isAttacking1 && isAttacking2){
-							previousState = currentState;
-							return State.ATTACKING2;
-						}
-							
-					
-					}
-					
-				}else {
-					isAttacking1=false;
-					isAttacking2=false;
+				else {
+					isDieing = false;
+					System.out.println("dcu you win");
+					StageCreator.removeMonster(this);
+				}
+			}
+			if(isAttacking1) {
+				
+				if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
+				else {
+					isAttacking1 = false;
+					lastAttackTime = System.currentTimeMillis();
+				}
+			}
+			
+			if(isAttacking2) {
+				if(!attack2.isAnimationFinished(stateTime)) return State.ATTACKING2;
+				else {
+					BulletManage.addBullet("BossBullet1", b2body.getPosition().x, b2body.getPosition().y, -1);
+					lastAttackTime = System.currentTimeMillis();
+					isAttacking2 = false;
+				}
+			}
+			if(isHurting) {
+				if(!hurt.isAnimationFinished(stateTime)) {
+					return State.HURT;
+				}
+				else isHurting = false;
+			}
+			
+			
+			if(isHurt) {
+				isHurting = true;
+				isHurt = false;
+				return State.HURT;
+			}
+			if(isDie) {
+				isDieing = true;
+				isDie = false;
+				return State.DIE;
+			}
+			
+			if(System.currentTimeMillis()-lastAttackTime > attackCd) {
+				int rnd = MathUtils.random(2);
+				int rnd2 = MathUtils.random(1);
+				
+				if(rnd==1) {
+					isAttacking1=true;
+					if(rnd2 == 1) ((FlappyMap)screen).spawnMonsters();
+					return State.ATTACKING1;
+				}
+				else if(rnd==2){
+					isAttacking2=true;
+					if(rnd2 == 1) ((FlappyMap)screen).spawnMonsters();
+					return State.ATTACKING2;
 				}
 				
-								
 			}
-			else if (elapsedTime<=appear.getAnimationDuration()) {
-				
-	           return State.APPEARED;
-			}
-			
-			
 		}
-		isAttacking1=false;
-		isAttacking2=false;
+		
+		if(System.currentTimeMillis() - appearTimeBegin > appearTime && isVisible) {
+			isDisapearing = true;isVisible = false;
+			return State.DISAPPEARED;
+		}
+		
+		if(System.currentTimeMillis() - disappearTimeBegin > disappearTime && !isVisible) {
+			isAppearing = true;isVisible = true;
+			return State.APPEARED;
+		}
+		
+		
+		
 		return State.STANDING;
 	}
 	@Override
 	public TextureRegion getFrame(float dt) {
 		TextureRegion region;
 		currentState = getFrameState(dt);
-//		System.out.println(currentState+"-"+isAttacking1+"-"+isAttacking2);
 		stateTime = (currentState == previousState ? stateTime + dt : 0);
 		switch (currentState) {
 		    case STANDING:
@@ -158,8 +159,9 @@ public class Boss2 extends Boss{
 		        break;
 		    case ATTACKING1:
 		    	if (currentBulletCount < maxBulletsPerAttack) {
-		    		int angleDegree = MathUtils.random(90, 270);
-	                BulletManage.addBullet("FireBullet", getX(), getY(),(float)angleDegree);
+		    		
+		    		int angleDegree = MathUtils.random(-45, 45);
+	                BulletManage.addBullet("FireBullet", getX(), getY(),-1,15,(float)angleDegree,-1);
 	                currentBulletCount++;
 	            }
 
@@ -167,6 +169,7 @@ public class Boss2 extends Boss{
 		    	break;
 		    case ATTACKING2:
 		    	region = attack2.getKeyFrame(stateTime, false);
+		    	
 		    	break;
 		    	
 		    case DIE:
@@ -198,18 +201,17 @@ public class Boss2 extends Boss{
 			posX = b2body.getPosition().x;
 			posY = b2body.getPosition().y;		
 		}
-		if(!isDied) {
-			setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
-			HealthBar.update(Health, HealthMax, posX, posY+radius);
-		}
 		if(isDied) {
 			removeMonster();
 		}
-		movement();
-		handleAttack(dt);
-		batch.begin();
-		this.draw(batch);
-		batch.end();
+		if(!isRemoved) {
+			setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
+			HealthBar.update(Health, HealthMax, posX, posY+radius);
+			movement();
+			batch.begin();
+			this.draw(batch);
+			batch.end();
+		}
 		
 	}
 	@Override
@@ -222,36 +224,40 @@ public class Boss2 extends Boss{
 		disappearAtlas = new TextureAtlas("Boss2/disappear/crystal-knight.atlas");
 		atlasHurt = new TextureAtlas("Boss2/hurt/crystal-knight.atlas");
 		atlasStanding = new TextureAtlas("Boss2/idle/crystal-knight.atlas");
+		atlasDie = new TextureAtlas("Monster/FlyingEye/Die.pack");
 		
 		attack1 = new Animation<TextureRegion>(0.1f, atlasAttack1.getRegions());
 		attack2 = new Animation<TextureRegion>(0.1f, atlasAttack2.getRegions());
 		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
 		hurt = new Animation<TextureRegion>(0.1f, atlasHurt.getRegions());
-		appear = new Animation<TextureRegion>(0.8f,appearAtlas.getRegions());
-		disappear = new Animation<TextureRegion>(0.8f,disappearAtlas.getRegions());
+		appear = new Animation<TextureRegion>(0.2f,appearAtlas.getRegions());
+		disappear = new Animation<TextureRegion>(0.2f,disappearAtlas.getRegions());
+		die = new Animation<TextureRegion>(0.1f, atlasDie.getRegions());
 		setRegion(atlasStanding.getRegions().get(1));
 		MonsterHeight = getRegionHeight();
 		MonsterWidth = getRegionWidth();
 	}
-	
-	//attack after 5s
-	private void handleAttack(float dt) {
-        if (isVisible) {
-            timeSinceLastAttack += dt;
-            if (timeSinceLastAttack >= attackInterval) {
-                isAttacking = true;
-				int type = MathUtils.random(1);
-				switch (type) {
-				case 0:
-					isAttacking1=true;
-					break;
 
-				default:
-					isAttacking2=true;
-					break;
-				}
-                timeSinceLastAttack = 0.0f;
-            }
-        }
-    }
+
+	
+
+
+	@Override
+	public void movement() {
+		// TODO Auto-generated method stub
+		
+	}
+	void onHit() {
+		if(!isVisible) return;
+		this.Health -= screen.getPlayer().damage;
+		if(this.Health <= 0) {
+			isDie = true;
+		}
+		else {
+			isHurt = true;
+		}
+	}
+	
+
 }
+ 

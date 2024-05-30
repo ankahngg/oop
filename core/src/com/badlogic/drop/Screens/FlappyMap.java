@@ -28,10 +28,10 @@ import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.drop.Tools.B2WorldCreator;
-import com.badlogic.drop.Tools.FlappyResourceManager;
 import com.badlogic.drop.Tools.Heart;
 import com.badlogic.drop.Tools.Item;
 import com.badlogic.drop.Tools.Shield;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -66,23 +66,32 @@ public class FlappyMap extends PlayScreen{
 	private final int DISTANCE = 10;
 	private final int MAP_LENGTH = 200;
 	private final int BOSS_BEGIN_POSITION = 40;
-	private float timeCount;
+	private double timeCount;
+	private double timeBegin;
+	private double stageTime=10000;
+	private double stageCr;
+	
 	private float lastBoundPosX;
-	private boolean isBossAppeared;
+	private boolean isBossAppeared = false;
 	private TextureAtlas flyEngineAtlas;
-	private FlappyResourceManager resourceManager;
 	private Animation<TextureRegion> flyEngineAnimation;
 	private Random random;
 	private Aura bossAura;
 	private boolean isGameOver;
+	public double monsterCd = 1000f; 
+	public double itemCd = 2000f; 
+	public double lastTimeSpawnMonster = 0;
+	public double lastTimeSpawnItem = 0;
+	public float[] posSpawns = {1,3,5,7,9,11,13,15,17,19};
+	
 	public FlappyMap (CuocChienSinhTon game) {
+		super(game);
 		//utils
 		random = new Random();
 		isGameOver = false;
 		//
 		game.setMap(MAP.MAP2);
 		atlas = new TextureAtlas("Hero.pack");
-		this.game = game;
 
 		// create camera
 		camera = new OrthographicCamera();
@@ -104,58 +113,120 @@ public class FlappyMap extends PlayScreen{
 		new B2WorldCreator(world, map, this);
 		
 		// resource
-		resourceManager = new FlappyResourceManager(world, this);
+		//resourceManager = new FlappyResourceManager(world, this);
 		
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
-		player.setHealth(player.getHealthMax());
-		player = new HungKing(world,this);
-		
-		speed =SPEED*(1+ timeCount/10);
-		player.body.setLinearVelocity(speed,0);
-		timeCount = 0;
-		
-		//set up collision
-		Collision.setup(this);
-		//set up bullet manage
-		BulletManage.setup(world, this);
+
+		player = new AnKhangHero(world,this);
+		timeBegin = System.currentTimeMillis();
 		
 		//create heath bar
 		healthbar = new HealthBar(this);
 
 		// Create bounds
 		createBounds();
-		// create monsters
-		prepareMonster();
-		//create boss
-		boss = createBoss();
+		
+
 		isBossAppeared=false;
+		//b2dr.setDrawBodies(false);
 		
-		bossAura = new Aura(world, this,boss.getWidth());
 		
+		Collision.setup(this);
+		//set up bullet manage		
+		BulletManage.setup(world, this);
+		
+		StageCreator.setup(world, this);
 		
 	}
 
 	private void loadMusic() {
 		
 	}
-	private void spawnItems(float posX) {
+	private void spawnItems() {
 		int type = MathUtils.random(1);
 		float posY = MathUtils.random(17)+1;
-		switch (type) {
-		case 0:
-			Item shieldItems = new Shield(world, this, posX, posY);
-			resourceManager.addItems(shieldItems);
-
-			break;
-
-		default:
-			Item heartItems = new Heart(world, this, posX, posY);
-			resourceManager.addItems(heartItems);
-			break;
+		if(System.currentTimeMillis() - lastTimeSpawnItem > itemCd) {
+			switch (type) {
+			case 0:
+				StageCreator.addItems("Shield", 30, posY,-1,10,0,-1);
+				
+				break;
+				
+			default:
+				StageCreator.addItems("Heart", 30, posY,-1,10,0,-1);
+				
+				break;
+			}
+			lastTimeSpawnItem = System.currentTimeMillis();
+			
 		}
 	}
+	
+	public void suffle() {
+		for (int i = 0; i < posSpawns.length; i++) {
+			int randomIndexToSwap = MathUtils.random(posSpawns.length-1);
+			float temp = posSpawns[randomIndexToSwap];
+			posSpawns[randomIndexToSwap] = posSpawns[i];
+			posSpawns[i] = temp;
+		}
+	}
+	
+	public void spawnMonsters() {
+		speed = (float) (10 + 2 * stageCr);
+		float cnt = MathUtils.random(4);
+		monsterCd = 2000-stageCr*200;
+		if(stageCr > 10) {
+			speed = 20;
+			suffle();
+			for(int i=0;i<cnt;i++) {
+				int type = MathUtils.random(5);
+				switch (type) {
+				case 0:
+					StageCreator.addMonster("FlyingEye", 35, posSpawns[i], 8, true, true, -1, speed, 0, -1);
+					break;
+				case 1:
+					StageCreator.addMonster("DragonBallMonster1", 35, posSpawns[i], 8, true, true, -1, speed, 0, -1);
+					break;
+				case 2:
+					StageCreator.addMonster("DragonBallMonster2", 35, posSpawns[i], 8, true, true, -1, speed, 0, -1);
+					break;
+				default:
+					StageCreator.addMonster("FlyingEye", 35, posSpawns[i], 8, true, true, -1, speed, 0, -1);
+					break;
+				}
+			}
+			return;
+		}
+	
+		
+		if(System.currentTimeMillis() - lastTimeSpawnMonster > monsterCd) {
+			suffle();
+			for(int i=0;i<cnt;i++) {
+				int type = MathUtils.random(3);
+				switch (type) {
+				case 0:
+					StageCreator.addMonster("FlyingEye", 35, posSpawns[i], 4, true, true, -1, speed, 0, -1);
+					break;
+				case 1:
+					StageCreator.addMonster("DragonBallMonster1", 35, posSpawns[i], 4, true, true, -1, speed, 0, -1);
+					break;
+				case 2:
+					StageCreator.addMonster("DragonBallMonster2", 35, posSpawns[i], 4, true, true, -1, speed, 0, -1);
+					break;
+				default:
+					StageCreator.addMonster("FlyingEye", 35, posSpawns[i], 4, true, true, -1, speed, 0, -1);
+					break;
+				}
+			}
+			
+			lastTimeSpawnMonster = System.currentTimeMillis();
+		}
+		
+	}
+	
+	
 	private void createBounds() {
 
 		// Create bounds
@@ -176,68 +247,14 @@ public class FlappyMap extends PlayScreen{
 		fixtureDef.shape = bottomEdge;
 		fixtureDef.friction=0;
 		Fixture botFixture =  body.createFixture(fixtureDef);
-//		Collision.setCategoryFilter(botFixture,Collision.MONSTERBULLET_BITS,(short) ((32767)-Collision.HERO_BITS));
-//		botFixture.setUserData(botFixture);
+
 		botFixture.setSensor(false);
 	}
 	public TextureAtlas getAtlas() {
 		return atlas;
 	}
-	public FlappyResourceManager getResourceManager() {
-		return resourceManager;
-	}
-	private void prepareMonster() {
-		int initDistance = 0;
-		int monsterQuantity = 60;
-		int type;
-		for (int i =0 ; i<monsterQuantity;i++) {
-			type=random.nextInt(3);
-			Monster monster=createMonster(type, initDistance);
-			
-			initDistance+=DISTANCE;
-			
-			resourceManager.addMonster(monster);
-		}
-
-		
-	}
-	public void spawnMonsterWave(float posX) {
-		float spawnRange = 10;
-		
-		for (int i = 0; i<10;i++) {
-			float pos = random.nextFloat(spawnRange)-spawnRange/2+posX;
-			Monster monster = createMonster(random.nextInt(3), pos);
-			resourceManager.addMonster(monster);
-		}
-	}
-	private Monster createMonster(int type,float posX) {
-		Monster monster;
-		switch (type) {
-		case 0:
-			monster = new FlyingEye(world, this, 3+posX, (int) (Math.random()*20));
-			monster.monsterDef.setSensor(true);
-			monster.standing.setFrameDuration(0.1f);
-			break;
-		case 1:
-			monster = new DragonBallMonster1(world, this, 3+posX,1+ (int) (Math.random()*18));
-			monster.monsterDef.setSensor(true);
-			break;
-		case 2:
-			monster = new DragonBallMonster2(world, this, 3+posX, (int) (Math.random()*20));
-			monster.monsterDef.setSensor(true);
-			break;
-		default:
-			monster = new DragonBallMonster1(world, this, 3+posX, (int) (Math.random()*20));
-			monster.monsterDef.setSensor(true);
-			break;
-		}
-		return monster;
-	}
-	private Boss createBoss() {
-		Boss boss = new Boss2(world, this, BOSS_BEGIN_POSITION,CuocChienSinhTon.V_HEIGHT/CuocChienSinhTon.PPM/2);
-		boss.b2body.setGravityScale(0);
-		return boss;
-	}
+	
+	// create fly engine
 	private void prepareFlyEngineAnimation() {
 		flyEngineAtlas = new TextureAtlas("asset/map2/packs/can-dau-van.atlas");
 		Array<AtlasRegion> flipXArray = new Array<AtlasRegion>();
@@ -250,84 +267,69 @@ public class FlappyMap extends PlayScreen{
 		flyEngineAnimation.setPlayMode(PlayMode.LOOP);
 		
 	}
-	public static boolean isBulletOutOfScreen(Bullet bl, float x1, float x2) {
-	    float bulletX = bl.b2body.getPosition().x;
-	    return bulletX < x1 || bulletX > x2;
-	}
-	public static boolean isMonstetOutOfScreen(Monster monster,float x1) {
-		return monster.getX()< x1;
-	}
 	
 	// method that be called every 1/60s
 	public void update(float dt) {
-		if (isGameOver) {
-			if(Gdx.input.justTouched()) {
-				restartGame();
-				isGameOver =false;
+//		if (isGameOver) {
+//			// if dead, touch to restart
+//			if(Gdx.input.justTouched()) {
+//				restartGame();
+//				isGameOver =false;
+//				isBossAppeared=false;
+//			}
+//			return;
+//		}
+		timeCount = System.currentTimeMillis()-timeBegin;
+		stageCr = (int) (timeCount/stageTime);
+		camera.position.x = 17.5f;
+		
+		StageCreator.update(dt);
+		
+		if(stageCr < 3) spawnMonsters();
+		else {
+			if(!isBossAppeared) {
+				StageCreator.addMonster("Boss2", 33, 10, 20, true, true);
+				isBossAppeared = true;
 			}
-			return;
 		}
-		if((int)(player.getX()*10)%500==0) {
-			spawnItems(player.getX()+30);
-		}
-		if (player.getX()>= BOSS_BEGIN_POSITION-gamePort.getWorldWidth()*0.7f) {
-			isBossAppeared=true;
-		}
-		if(isBossAppeared) {
-			boss.b2body.setLinearVelocity((speed), 0);
-		}
-		bossAura.update(boss.getX(), boss.getY(),dt);
-		boss.update(dt);
+		spawnItems();
+
+
 		
-		//add bounds
-		if(player.getX()>lastBoundPosX) {
-			createBounds();
-		}
-		//update bullet
-		
-		BulletManage.update(dt,speed);
-		
-		//update player
-		if(getPlayer().getX()<=BOSS_BEGIN_POSITION) {
-			//time count for speed up
-			timeCount+=dt;
-			speed =SPEED*(1+ timeCount/10);
-		}
-		
-		player.body.setLinearVelocity(speed,player.body.getLinearVelocity().y);
+		BulletManage.update(dt);
 		
 		
 		//update healthbar
 		healthbar.update(dt);
 		
-		
 		player.currentState = State.STANDING;
-		
-		
-		
+	
 		handleInput(dt);
 		world.step(1/60f, 6, 2);
 		
-		camera.position.x = player.getX()+10;
 		renderer.setView(camera);
 		camera.update();
 		
-		//resource update
-		resourceManager.update(dt);
-		
 		player.update(dt);
+		
+		
+		
 
 	}
 	public Body getBody() {
 		return player.body;
 	}
 	private void heroJump() {
-		getBody().setLinearVelocity(speed, 17);
+		getBody().setLinearVelocity(0, 17);
 
 	}
 	protected void handleInput(float dt) {
 		if (Gdx.input.isTouched()||Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			heroJump();
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.P)) {
+			//System.out.println(player.body.getPosition().x);
+			StageCreator.addMonster("FlyingEye", 30, 5, 5, true, true, -1, 20, 0, -1);
 		}
 		
 	}
@@ -337,8 +339,7 @@ public class FlappyMap extends PlayScreen{
         timeCount = 0;
         isBossAppeared = false;
 
-        // Clear existing entities (monsters, items, etc.)
-        resourceManager.dispose();
+        
         
         // Reset player position and velocity
         resetPlayerPosition();
@@ -350,25 +351,24 @@ public class FlappyMap extends PlayScreen{
         // Dispose resources if needed (e.g., music)
         // Call any other cleanup methods
 
-        // Reload initial map
-//        map = mapLoader.load("map1.tmx");
-        renderer.setMap(map);
-        resourceManager.removeAll();
-        resourceManager.removeMonster(boss);
+//        resourceManager.removeAll();
+
+
+//        resourceManager.removeMonster(boss);
+//        resourceManager.dispose();
+     // Clear existing entities (monsters, items, etc.)
+//        resourceManager=new FlappyResourceManager(world, this);
         // Recreate bounds
         createBounds();
 
         // Recreate monsters
-        prepareMonster();
+        //prepareMonster();
 
         // Recreate boss
-        boss = createBoss();
+        //boss = createBoss();
 
-//        // Reset boss aura
-//        bossAura.reset();
-//
-//        // Reset health bar
-//        healthbar.reset();
+
+        
     }
 	public void resetPlayerPosition() {
 		player.getBody().setTransform(0, 10, BOSS_BEGIN_POSITION);
@@ -378,7 +378,6 @@ public class FlappyMap extends PlayScreen{
 		
 		
 		ScreenUtils.clear(0, 0, 0.2f, 1);
-		
 		
         game.batch.setProjectionMatrix(camera.combined);
 
@@ -409,28 +408,17 @@ public class FlappyMap extends PlayScreen{
 
 		}
 	
-	void updatePlayer(float dt) {
-		
-		
-	}
+
 	public float getSpeed() {
 		return speed;
 	}
 
 	@Override
 	public void handleDie() {
-		// TODO Auto-generated method stub
-		isGameOver = true;
-//		game.setScreen(new FlappyMap(game));
-		
-		try {
-//			resourceManager.dispose(this);
-//			resourceManager = null;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		timeBegin = System.currentTimeMillis();
+		isBossAppeared = false;
+		StageCreator.clearMonster();
+		player.Health = player.HealthMax;
 		
 	}
 

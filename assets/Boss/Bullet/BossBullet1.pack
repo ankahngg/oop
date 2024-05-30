@@ -5,10 +5,10 @@ filter: Nearest,Nearest
 repeat: none
 kame1
   rotate: false
-  xy: 1, 13
-  size: 44, 14
+  xy: 1, 1
+  size: 44, 2
   orig: 640, 400
-  offset: 260, 111
+  offset: 356, 119
   index: -1
 kame2
   rotate: false
@@ -19,8 +19,8 @@ kame2
   index: -1
 kame3
   rotate: false
-  xy: 1, 1
-  size: 44, 2
-  orig: 640, 400
-  offset: 356, 119
+  xy: 1, 13
+  size: 44, 10
+  orig: 507, 285
+  offset: 127, 0
   index: -1

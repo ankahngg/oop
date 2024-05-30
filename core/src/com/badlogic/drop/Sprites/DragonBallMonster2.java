@@ -3,17 +3,18 @@ package com.badlogic.drop.Sprites;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Monster.State;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class DragonBallMonster2 extends Monster{
-	public DragonBallMonster2(World world, PlayScreen screen,float x, float y) {
-		super(world, screen, x, y,3, false);
+	public DragonBallMonster2(World world, PlayScreen screen,float x, float y,int maxHealth,boolean isDynamic, boolean isSensor) {
+		super(world, screen, x, y,maxHealth, isDynamic,isSensor);
 		posX = x;
 		posY = y;
-		isIntialLeft = true;
+		
 		
 		monsterDef.setUserData(this);
 		Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
@@ -38,21 +39,6 @@ public class DragonBallMonster2 extends Monster{
 		MonsterWidth = getRegionWidth();
 	}
 	
-	@Override
-	public void removeMonster() {
-		// TODO Auto-generated method stub
-		if(b2body != null)
-			world.destroyBody(b2body);
-			b2body = null;
-		isDied = true;
-	}
-
-	@Override
-	public void movement() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public State getFrameState(float dt) {
 		// TODO Auto-generated method stub

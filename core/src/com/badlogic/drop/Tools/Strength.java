@@ -26,7 +26,7 @@ public class Strength extends Item{
 	public void effect() {
 		
 		screen.getPlayer().damage += 1;
-		((FirstMap) screen).StageCreator.itemsRemove.add(this);
+		StageCreator.itemsRemove.add(this);
 		
 	}
 }

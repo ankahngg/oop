@@ -36,42 +36,21 @@ abstract public class Bullet extends Sprite{
 	public Fixture bulletDef;
 	public float SpriteHeight;
 	public float SpriteWidth;
-	public int scaleX;
-	public int scaleY;
-	public int direction;
+	public float scaleX=1;
+	public float scaleY=1;
+	public int direction=0;
 	public double preTime;
-	public int speed=10;
-	public double lifeTime = 1000;
+	public float speed=10;
+	public double lifeTime = 1;
 	public double tt = 0;
 	public float posX;
 	public float posY;
-	public boolean isLaunch=false;
-	public boolean isInfinited=false;
+	public float angle = 0f;
 	
-	public boolean isDied = false;
 	public TextureRegion region;
 	public boolean tracing = false;
+	public boolean isRemoved = false;
 	
-	public Bullet() {
-			
-		}
-	public Bullet(World world,PlayScreen screen,float x,float y) {
-		this.world = world;
-		this.screen = screen;
-		this.posX = x;
-		this.posY = y;
-		
-		prepareAnimation();
-		SpriteHeight = getRegionHeight();
-		SpriteWidth = getRegionWidth();
-		if(this instanceof HeroBullet2) defineBullet(x, y, 1);
-		else defineBullet(x,y);
-		
-		if(bulletDef != null) {
-			bulletDef.setUserData(this);
-			Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
-		}
-	}
 	public Bullet(World world,PlayScreen screen,float x, float y,int direction) {
 		this.world = world;
 		this.screen = screen;
@@ -82,112 +61,89 @@ abstract public class Bullet extends Sprite{
 		prepareAnimation();
 		SpriteHeight = getRegionHeight();
 		SpriteWidth = getRegionWidth();
-		if(this instanceof HeroBullet2) defineBullet(x, y, -1);
-		else defineBullet(x,y);
+		
+		defineBullet(x,y);
 		
 		if(bulletDef != null) {
 			bulletDef.setUserData(this);
 			Collision.setCategoryFilter(bulletDef, Collision.HEROBULLET_BITS,null);
 		}
-		
-		
 	}
-	
-	public void SetSpeed(int x) {
-		
-		speed = x;
-	}
-	public void SetSpeed(float dx, float dy) {
-		Movement(dx,dy,false);
-	}
-	public void Movement(float dx, float dy,boolean nothing) {
-	    b2body.setLinearVelocity(dx, dy);
-	}
-
 	
 	abstract public void prepareAnimation() ;
 	
 	public void update(float dt) {
-//		tt += dt;
-//		if(tt >= lifeTime) this.getTexture().dispose();
+
 		stateTime += dt;
-		if(!isInfinited) {
-			if(bullet.isAnimationFinished(stateTime)) remove();
-			
+		
+		if(!isRemoved) {
+			if(lifeTime != -1) {
+				if(stateTime > lifeTime) remove();
+			}
+			else {
+				if((b2body.getPosition().x>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
+						||(b2body.getPosition().x<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
+					remove();
+				}			
+			}
 		}
-		if((this.getX()>screen.getGamePort().getScreenX()+screen.getGamePort().getScreenWidth()/2)
-				||(this.getX()<screen.getGamePort().getScreenX()-screen.getGamePort().getScreenWidth()/2)) {
-			remove();
-		}
-		if(!isDied) {
-			if(!isInfinited)
-			region = bullet.getKeyFrame(stateTime,false);
+		
+		if(!isRemoved) {
 			
+			if(stateTime > bullet.getAnimationDuration()) 
+				region = bullet.getKeyFrame( bullet.getAnimationDuration());
+			else 
+				region = bullet.getKeyFrame(stateTime,true);
 			if(!region.isFlipX()) {
 				if(direction == -1) region.flip(true, false);
 			}
 			setRegion(region);
-			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
-					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
-					getRegionWidth()/CuocChienSinhTon.PPM,
-					getRegionHeight()/CuocChienSinhTon.PPM);
+			setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2*scaleX,
+					b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2*scaleY,
+					getRegionWidth()/CuocChienSinhTon.PPM*scaleX,
+					getRegionHeight()/CuocChienSinhTon.PPM*scaleY);
 			
 			screen.game.getBatch().begin();
 			this.draw(screen.game.getBatch());
 			screen.game.getBatch().end();
 			
-			Movement();									
+			if(bulletExternalCollison()) {
+				screen.getPlayer().handleHurt(null);
+			} 
+			movement();									
 		}
 	}
-	public void update(float dt,float speed) {
-		
-		stateTime += dt;
-		if(!isInfinited) {
-			region = bullet.getKeyFrame(stateTime,false);
-			if(bullet.isAnimationFinished(stateTime)) remove();
-			else setRegion(region);
-		}
-		else {
-			if (stateTime>bullet.getAnimationDuration())
-				region = bullet.getKeyFrame(bullet.getAnimationDuration()-bullet.getFrameDuration());
-			else region = bullet.getKeyFrame(stateTime, isInfinited);
-			setRegion(region);
-		}
-		
-				
-				setBounds(b2body.getPosition().x-SpriteWidth/CuocChienSinhTon.PPM/2,
-						b2body.getPosition().y-SpriteHeight/CuocChienSinhTon.PPM/2,
-						getRegionWidth()/CuocChienSinhTon.PPM,
-						getRegionHeight()/CuocChienSinhTon.PPM);
-				
-				screen.game.getBatch().begin();
-				this.draw(screen.game.getBatch());
-				screen.game.getBatch().end();
-				
-				if(this instanceof HeroBullet1) Movement(speed,1);	
-								
-			
-		
-		
+	
+	public boolean bulletExternalCollison() {
+		return false;
 	}
 	
+	public float getAngle(float x1,float y1, float x2, float y2) {
+		float yWidth = Math.abs(y1-y2);
+		float xWidth = Math.abs(x1-x2);
+		return (float) Math.asin(yWidth/xWidth);
+	}
 	
+	public void setUp(int directionn, float speedd, float anglee, float lifeTimee) {
+		if(speedd != -1) speed = speedd;
+		direction = directionn;
+		if(anglee != -1) angle = anglee;
+		lifeTime = lifeTimee;
+	}
 	
 	public void remove() {
-		isDied = true;
-		BulletManage.markRemoved(this);
+		isRemoved = true;
+		BulletManage.removeBullet(this);
 	}
 	
-	public void Movement() {
-		
-		
-		 b2body.setLinearVelocity(new Vector2(speed*direction,0));
+	public void movement() {
+		double sin = Math.sin(Math.toRadians(angle));
+		double cos =  Math.cos(Math.toRadians(angle));
+		float vecX = (float) (speed*cos*direction);
+		float vecY = (float) (speed*sin); 
+		b2body.setLinearVelocity(new Vector2(vecX,vecY));
 	}
-
-
-	public void Movement(float speed,float direction1) {
-		b2body.setLinearVelocity(SPEED*this.direction+speed*direction1,0);
-	}
+	
 	public void onHit() {
 		remove();
 	}
@@ -198,27 +154,11 @@ abstract public class Bullet extends Sprite{
 		 bdef.type = BodyDef.BodyType.DynamicBody;
 		 bdef.gravityScale = 0;
 		 b2body = world.createBody(bdef);
-		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2);
+		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM/2*scaleX);
 		 fdef.shape = shape;
 		 fdef.isSensor = true;
 		 bulletDef = b2body.createFixture(fdef);
 	}
-	public void defineBullet(float x,float y,float scale) {
-		CircleShape shape = new CircleShape();
-		 bdef.position.set(x,y);
-		 bdef.type = BodyDef.BodyType.DynamicBody;
-		 bdef.gravityScale = 0;
-		 b2body = world.createBody(bdef);
-		 shape.setRadius(getRegionHeight()/CuocChienSinhTon.PPM);
-		 fdef.shape = shape;
-		 fdef.isSensor = true;
-		 bulletDef = b2body.createFixture(fdef);
-	}
-	public void setInfinited(boolean x) {
-		this.isInfinited=x;
-		bullet.setPlayMode(PlayMode.LOOP);
-	}
-
 	
 	
 }

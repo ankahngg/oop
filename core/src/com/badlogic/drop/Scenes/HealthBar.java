@@ -6,6 +6,7 @@ import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Boss1;
 import com.badlogic.drop.Sprites.Hero;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,10 +37,6 @@ public class HealthBar {
 		currentRank = atlasRanks.getRegions().get(1);
 		HeroHealthBar = new Texture("HealthBar/bg.png");
 		HeroHealth =  new Texture("HealthBar/red.png");
-		
-		BossHealthBar = new Texture("HealthBar/bg.png");
-		BossHealth =  new Texture("HealthBar/green.png");
-		
 		
 		//get batch and player
 		this.screen = x;
@@ -84,35 +81,7 @@ public class HealthBar {
 			false,false);
 		batch.end();
 		
-		// draw Boss HeroHeroHealthBar
-		if((screen instanceof FirstMap)&& !((FirstMap)screen).StageCreator.bosses.isEmpty()) {
-			
-			boss =	((FirstMap)(screen)).StageCreator.bosses.first();
-			batch.begin();
-			x = screen.getCamera().position.x-screen.getGamePort().getWorldWidth()/2;
-			y = screen.getCamera().position.y+screen.getGamePort().getWorldHeight()/2;
-			batch.draw(BossHealthBar, x+20,y-2,BossHealthBar.getWidth()/CuocChienSinhTon.PPM/2+5,BossHealthBar.getHeight()/CuocChienSinhTon.PPM/2, 0,0,BossHealthBar.getWidth(),BossHealthBar.getHeight(),false,false);
-			
-			ratio = 1.0f*boss.getHealth()/boss.getHealthMax();
-			HealthX = x+20+(BossHealthBar.getWidth()-BossHealth.getWidth())/2/CuocChienSinhTon.PPM;
-			HealthY = y-2+(BossHealthBar.getHeight()-BossHealth.getHeight())/2/CuocChienSinhTon.PPM;
-			
-			batch.draw(BossHealth, HealthX,HealthY,
-					(BossHealth.getWidth()/CuocChienSinhTon.PPM/2+5)*ratio,BossHealth.getHeight()/CuocChienSinhTon.PPM/2, 
-					0,0,(int)(BossHealth.getWidth()*ratio),BossHealth.getHeight(),
-					false,false);
-			batch.end();
-		}
-		if(player.currentRank > 0) {
-			batch.begin();
-			batch.draw(currentRank, x, y-2, currentRank.getRegionWidth()/CuocChienSinhTon.PPM/2,currentRank.getRegionHeight()/CuocChienSinhTon.PPM/2);	
-			batch.end();
-		}
-		// Draw hud
-//		HeroHealthLabel.setText(String.format("%d/%d",player.getHealth(),player.getHealthMax()));
-//		BossHealthLabel.setText(String.format("%d/%d",boss.getHealth(),boss.getHealthMax()));
-//		screen.game.getBatch().setProjectionMatrix(stage.getCamera().combined);
-//		stage.draw();
+
 	}
 	
 }

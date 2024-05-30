@@ -10,15 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class FireBullet extends Bullet {
 	public FireBullet(World world, PlayScreen screen, float x, float y, int direction) {
 		super(world, screen, x, y, direction);
-		SetSpeed(20);
-		bulletDef.setUserData(this);
-		Collision.setCategoryFilter(bulletDef, Collision.MONSTERBULLET_BITS,null);
-	}
-public FireBullet(World world, PlayScreen screen, float x, float y, float dx,float dy) {
 		
-		super(world, screen, x, y);
-	    SetSpeed(dx, dy);
-		speed = 15;
 		bulletDef.setUserData(this);
 		Collision.setCategoryFilter(bulletDef, Collision.MONSTERBULLET_BITS,null);
 	}
@@ -29,16 +21,10 @@ public FireBullet(World world, PlayScreen screen, float x, float y, float dx,flo
 		atlasBullet = new TextureAtlas("Monster/HellBeast/FireBullet.pack");
 		bullet = new Animation<TextureRegion>(0.15f, atlasBullet.getRegions());
 		setRegion(atlasBullet.getRegions().get(0));
-	}
-	
-	public void Movement() {
+		speed = 20;
 		Vector2 hero = screen.getPlayer().body.getPosition();
-		if(!tracing) b2body.setLinearVelocity(new Vector2(speed*direction,0));
-		else {
-			float vecx = speed*direction; 
-			float vecy = vecx/((hero.x-posX)/(hero.y-posY));
-			b2body.setLinearVelocity(new Vector2(vecx,vecy));
-		}
+		
+		angle = getAngle(posX, posY, hero.x, hero.y);
 	}
 }
 

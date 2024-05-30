@@ -26,15 +26,16 @@ public class BossBullet1 extends Bullet{
 
 	@Override
 	public void prepareAnimation() {
-		atlasBullet = new TextureAtlas("Boss/Bullet/BossBullet1_1.pack");
+		atlasBullet = new TextureAtlas("Boss/Bullet/BossBullet1.pack");
 		bullet = new Animation<TextureRegion>(0.3f, atlasBullet.getRegions());
 		setRegion(atlasBullet.getRegions().get(0));
 		scaleX = 12;
 		scaleY=8;
 	}
-	public void Movement() {
+	public void movement() {
 		
 	}
+	
 	public void update(float dt) {
 //		tt += dt;
 //		if(tt >= lifeTime) this.getTexture().dispose();
@@ -49,12 +50,9 @@ public class BossBullet1 extends Bullet{
 			screen.getPlayer().handleHurt(null);
 			isPlayerHurt  = true;
 		}
-//		if(bullet.getKeyFrameIndex(stateTime) == 2 && bulletDef == null) {
-//			
-//			addFixture();
-//		}
+
 		if(stateTime > bullet.getAnimationDuration()) remove();
-		if(!isDied) {
+		if(!isRemoved) {
 			region = bullet.getKeyFrame(stateTime,true);
 			if(!region.isFlipX()) {
 				if(direction == -1) region.flip(true, true);
@@ -65,13 +63,25 @@ public class BossBullet1 extends Bullet{
 					getRegionWidth()/CuocChienSinhTon.PPM*scaleX,
 					getRegionHeight()/CuocChienSinhTon.PPM*scaleY);
 			
-			Movement();
+			
 			screen.game.getBatch().begin();
 			this.draw(screen.game.getBatch());
 			screen.game.getBatch().end();									
 		}
 	}
 	
+	public boolean bulletExternalCollison() {
+		 playerY = screen.getPlayer().body.getPosition().y;
+		 playerH = screen.getPlayer().getRegionHeight()/CuocChienSinhTon.PPM;
+		 bulletY = b2body.getPosition().y;
+		 bulletH = atlasBullet.getRegions().get(2).getRegionHeight()/CuocChienSinhTon.PPM*scaleY;
+		if(bullet.getKeyFrameIndex(stateTime) == 2 && 
+		(playerY+playerH/2>bulletY-bulletH/2 && playerY-playerH/2<bulletY+bulletH/2) && !isPlayerHurt) {			
+			isPlayerHurt = true;
+			return true;
+		}
+		return false; 
+	}
 	
 	public void defineBullet(float x,float y) {
 		 bdef.position.set(x-getRegionWidth()/CuocChienSinhTon.PPM*scaleX/2,
@@ -82,6 +92,4 @@ public class BossBullet1 extends Bullet{
 		 b2body = world.createBody(bdef);
 		 
 	}
-	
-	
 }

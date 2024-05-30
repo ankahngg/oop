@@ -111,7 +111,8 @@ public class Collision {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		Hero hero = ((Hero) x.getUserData());
-		if(hero.isHurtWhenCollide) hero.handleHurt(y);
+		System.out.println(hero);
+		hero.handleHurt(y);
 	}
 	
 	

@@ -4,7 +4,10 @@ import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Boss1;
+import com.badlogic.drop.Sprites.BulletManage;
+import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.Hero;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -39,7 +42,7 @@ public abstract class PlayScreen implements Screen {
 	
 	//Box2d
 	public World world;
-	protected Box2DDebugRenderer b2dr;
+	public Box2DDebugRenderer b2dr;
 	// speed
 	protected float speed;
 	//Hero
@@ -62,7 +65,14 @@ public abstract class PlayScreen implements Screen {
 	private Music backgroundMusic;
 	private Sound heroHurtSound;
 
-	public PlayScreen() {
+	public PlayScreen(CuocChienSinhTon game) {
+		this.game = game;
+		//set up collision
+//		Collision.setup(this);
+//		//set up bullet manage		
+//		BulletManage.setup(world, this);
+//		
+//		StageCreator.setup(world, this);
 		loadSound();
 	}
 	public OrthographicCamera getCamera() {
@@ -115,6 +125,7 @@ public abstract class PlayScreen implements Screen {
 	}
 	@Override
 	public void dispose() {
+		
 		// TODO Auto-generated method stub
 		map.dispose();
 		renderer.dispose();

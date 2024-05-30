@@ -13,9 +13,11 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class AnKhangHero extends Hero{
 	
+	
+
 	public AnKhangHero(World world, PlayScreen screen) {	
-		super(world, screen,10,"HeroBullet1");
-		
+		super(world, screen,5,5,10);
+		bulletType = "HeroBullet1";
 
 		
 	}
@@ -40,6 +42,7 @@ public class AnKhangHero extends Hero{
 		die = new Animation<TextureRegion>(0.1f, atlasDieing.getRegions());
 		setRegion(atlasStanding.getRegions().get(1));
 		HeroHeight = getRegionHeight();
+		HeroWidth = getRegionHeight();
 	}
 	
 	

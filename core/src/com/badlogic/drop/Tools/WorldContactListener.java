@@ -38,10 +38,10 @@ public class WorldContactListener implements ContactListener {
 	        if(isContact(Collision.HEROBULLET_BITS,Collision.MONSTER_BITS,contact)) {
 	        	Collision.monsterBulletHurt(contact);
 	        }
-	        if(isContact(Collision.HERO_BITS,Collision.MONSTER_BITS,contact)) {
-	        	Collision.heroCollideMonster(contact);
-	        	
-	        }
+//	        if(isContact(Collision.HERO_BITS,Collision.MONSTER_BITS,contact)) {
+//	        	Collision.heroCollideMonster(contact);
+//	        	
+//	        }
 	        
 	        if(isContact(Collision.HERO_BITS,Collision.STAGEBOUND_BITS,contact)) Collision.heroCollideBound(contact);
 	  
