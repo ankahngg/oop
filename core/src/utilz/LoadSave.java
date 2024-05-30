@@ -14,6 +14,7 @@ public class LoadSave implements Disposable {
     public static final String LEVEL_ONE_DATA = "level_one_data.png";
     public static final String MENU_BUTTONS = "asset/button_atlas.png";
     public static final String MENU_BACKGROUND = "asset/menu_background.png";
+    public static final String MENU_BUTTONS_HOVER="asset/";
 
     private static TextureAtlas textureAtlas;
 
@@ -27,7 +28,7 @@ public class LoadSave implements Disposable {
 
         for (int j = 0; j < pixmap.getHeight(); j++) {
             for (int i = 0; i < pixmap.getWidth(); i++) {
-                int value = (pixmap.getPixel(i, j) >> 24) & 0xff; // Lấy giá trị Red từ ARGB
+                int value = (pixmap.getPixel(i, j) >> 24) & 0xff; 
                 if (value >= 48)
                     value = 0;
                 lvlData[j][i] = value;

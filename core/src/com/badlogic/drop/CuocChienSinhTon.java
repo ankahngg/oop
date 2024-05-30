@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 	
 	public class CuocChienSinhTon extends Game {
+		
 			
 		public static final int V_WIDTH=560;
 		public static final int V_HEIGHT=320;
