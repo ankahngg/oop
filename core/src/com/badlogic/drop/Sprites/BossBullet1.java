@@ -51,7 +51,7 @@ public class BossBullet1 extends Bullet{
 			isPlayerHurt  = true;
 		}
 
-		if(stateTime > bullet.getAnimationDuration()) remove();
+		if(stateTime > bullet.getAnimationDuration()) removeBullet();
 		if(!isRemoved) {
 			region = bullet.getKeyFrame(stateTime,true);
 			if(!region.isFlipX()) {

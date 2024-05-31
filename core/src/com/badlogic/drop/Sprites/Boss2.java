@@ -23,7 +23,6 @@ public class Boss2 extends Boss{
 	
 	private double disapearCd = 20000;
 	private double disappearTime = 5000; // visble time (s)
-    private boolean isVisible = true;
    
     private boolean isDisapear = false;
     private boolean isDisapearing = false;
@@ -46,7 +45,6 @@ public class Boss2 extends Boss{
 		attackCd = 2000;
 	}
 
-
 	@Override
 	public State getFrameState(float dt) {
 		// TODO Auto-generated method stub
@@ -54,7 +52,7 @@ public class Boss2 extends Boss{
 			if(!disappear.isAnimationFinished(stateTime)) return State.DISAPPEARED;
 			else {
 				isDisapearing = false;
-				b2body.setTransform(this.getX(),-10f, 0);
+				b2body.setTransform(33,-10f, 0);
 				disappearTimeBegin = System.currentTimeMillis();
 			}
 		}
@@ -64,8 +62,11 @@ public class Boss2 extends Boss{
 				isAppearing = false;
 				appearTimeBegin = System.currentTimeMillis();
 				 float newY = MathUtils.random(1,18);
-				 b2body.setTransform(this.getX(), newY , 0);
+				 b2body.setTransform(33, newY , 0);
 			}
+		}
+		if(!isVisible) {
+			((FlappyMap)screen).spawnMonsters();
 		}
 		
 		if(isVisible) {
@@ -75,8 +76,7 @@ public class Boss2 extends Boss{
 				}
 				else {
 					isDieing = false;
-					System.out.println("dcu you win");
-					StageCreator.removeMonster(this);
+					stageCreator.removeMonster(this);
 				}
 			}
 			if(isAttacking1) {
@@ -91,7 +91,7 @@ public class Boss2 extends Boss{
 			if(isAttacking2) {
 				if(!attack2.isAnimationFinished(stateTime)) return State.ATTACKING2;
 				else {
-					BulletManage.addBullet("BossBullet1", b2body.getPosition().x, b2body.getPosition().y, -1);
+					bulletManage.addBullet("BossBullet1", b2body.getPosition().x, b2body.getPosition().y, -1);
 					lastAttackTime = System.currentTimeMillis();
 					isAttacking2 = false;
 				}
@@ -143,8 +143,6 @@ public class Boss2 extends Boss{
 			return State.APPEARED;
 		}
 		
-		
-		
 		return State.STANDING;
 	}
 	@Override
@@ -159,9 +157,8 @@ public class Boss2 extends Boss{
 		        break;
 		    case ATTACKING1:
 		    	if (currentBulletCount < maxBulletsPerAttack) {
-		    		
 		    		int angleDegree = MathUtils.random(-45, 45);
-	                BulletManage.addBullet("FireBullet", getX(), getY(),-1,15,(float)angleDegree,-1);
+		    		bulletManage.addBullet("FireBullet", getX(), getY(),-1,15,(float)angleDegree,-1);
 	                currentBulletCount++;
 	            }
 
@@ -205,10 +202,12 @@ public class Boss2 extends Boss{
 			removeMonster();
 		}
 		if(!isRemoved) {
+			bossAura.update(posX, posY, dt);
 			setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
 			HealthBar.update(Health, HealthMax, posX, posY+radius);
 			movement();
 			batch.begin();
+			
 			this.draw(batch);
 			batch.end();
 		}
@@ -246,16 +245,6 @@ public class Boss2 extends Boss{
 	public void movement() {
 		// TODO Auto-generated method stub
 		
-	}
-	void onHit() {
-		if(!isVisible) return;
-		this.Health -= screen.getPlayer().damage;
-		if(this.Health <= 0) {
-			isDie = true;
-		}
-		else {
-			isHurt = true;
-		}
 	}
 	
 

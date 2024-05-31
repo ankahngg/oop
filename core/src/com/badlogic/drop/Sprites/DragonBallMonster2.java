@@ -50,10 +50,11 @@ public class DragonBallMonster2 extends Monster{
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
 			else {
 				isDieing = false;
-				
+				isDieFinish = true;
+				stageCreator.removeMonster(this);
 			}
 		}
-		if(isDie) {removeMonster();
+		if(isDie) {
 			isDieing = true;
 			isDie = false;
 			return State.HURT;

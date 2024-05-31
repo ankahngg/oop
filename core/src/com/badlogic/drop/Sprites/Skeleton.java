@@ -96,18 +96,15 @@ public class Skeleton extends Monster{
 		}
 		
 		
-		if(isDie) {
-			isAttacking1 = false;
-			isDieing = true;
-			isDie = false;
-			isHurt = false;
-			isHurting = false;
-			world.destroyBody(b2body);
-			b2body = null;
-			
-			
-			return State.DIE;
+		if(isDieing) {
+			if(!die.isAnimationFinished(stateTime)) return State.DIE;
+			else {
+				isDieing = false;
+				isDieFinish = true;
+				stageCreator.removeMonster(this);
+			}
 		}
+		
 		if(isHurt) {
 			isAttacking1 = false;
 			isHurting = true;
@@ -116,22 +113,18 @@ public class Skeleton extends Monster{
 			HurtKnockBack();
 			return State.HURT;
 		}
-		
 		if(isHurting) {
 
 			if(!hurt.isAnimationFinished(stateTime)) return State.HURT;
 			else isHurting = false;
 		}
 		
-		if(isDieing) {
-			if(!die.isAnimationFinished(stateTime)) return State.DIE;
-			else {
-				isDieing = false;
-				removeMonster();
-				isDied = true;
-			}
-		}
 		
+		if(isDie) {
+			isDieing = true;
+			isDie = false;
+			return State.DIE;
+		}
 		
 		
 		if(isAttacking1) {
@@ -153,8 +146,6 @@ public class Skeleton extends Monster{
 				lastAttackTime = System.currentTimeMillis();
 			}
 		}
-		
-			
 		
 		if(posXHero >= posXMonster-widthMonster/2-widthHero 
 			&& posXHero <= posXMonster+widthMonster/2+widthHero

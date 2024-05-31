@@ -58,14 +58,11 @@ public class FlyingEye extends Monster{
 	public void update(float dt) {
 		// TODO Auto-generated method stub
 		super.update(dt);
-		
 		if(isRemoved) return;
 		if(running.isAnimationFinished(stateTime)) {
-				if(screen instanceof FirstMap) {
-				BulletManage.addBullet("FlyingEye", b2body.getPosition().x, b2body.getPosition().y, -1,15,0,-1);
+				
+				bulletManage.addBullet("FlyingEye", b2body.getPosition().x, b2body.getPosition().y, -1,15+speed,0,-1);
 			}
-		}
-
 	}
 	
 	public State getFrameState(float dt) {
@@ -78,7 +75,8 @@ public class FlyingEye extends Monster{
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
 			else {
 				isDieing = false;
-				removeMonster();
+				isDieFinish = true;
+				stageCreator.removeMonster(this);
 			}
 		}
 		if(isDie) {

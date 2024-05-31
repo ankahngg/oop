@@ -26,9 +26,8 @@ public class Heart extends Item{
 
 	@Override
 	public void effect() {
+		isDied = true;
 		screen.getPlayer().Health = Math.min(screen.getPlayer().getHealthMax(), screen.getPlayer().getHealth()+2);
-		
-		StageCreator.removeItems(this);
 		
 	}
 }

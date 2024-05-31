@@ -26,10 +26,8 @@ public class Shield extends Item{
 
 	@Override
 	public void effect() {
-		
+		isDied = true;
 		screen.getPlayer().shieldBegin = System.currentTimeMillis();
-		
-		StageCreator.removeItems(this);
 		
 	}
 }

@@ -24,9 +24,11 @@ public class Strength extends Item{
 
 	@Override
 	public void effect() {
+	
+		screen.getPlayer().strengthBegin = System.currentTimeMillis();
+		screen.getPlayer().damage += 1;			
 		
-		screen.getPlayer().damage += 1;
-		StageCreator.itemsRemove.add(this);
+		isDied = true;
 		
 	}
 }

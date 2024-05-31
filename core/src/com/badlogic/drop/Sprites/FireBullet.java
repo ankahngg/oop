@@ -24,7 +24,6 @@ public class FireBullet extends Bullet {
 		speed = 20;
 		Vector2 hero = screen.getPlayer().body.getPosition();
 		
-		angle = getAngle(posX, posY, hero.x, hero.y);
 	}
 }
 

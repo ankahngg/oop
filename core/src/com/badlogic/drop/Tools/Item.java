@@ -30,6 +30,7 @@ public abstract class Item extends Sprite{
 	public float angle;
 	public float lifeTime=-1;
 	public float direction=0;
+	public boolean isDied=false;
 	BodyDef bdef = new BodyDef();
 	FixtureDef fdef = new FixtureDef();
 	public Body b2body;
@@ -41,13 +42,14 @@ public abstract class Item extends Sprite{
 
 	private Fixture itemDef;
 	private int stateTime;
+	private StageCreator stageCreator;
 	public Item(World worldd, PlayScreen screenn,float x, float y) {
 		this.world = worldd;
 		this.screen = screenn;
 		batch =  screenn.game.getBatch();
 		this.posX = x;
 		this.posY = y;
-		
+		stageCreator = screen.stageCreator;
 		prepairTexture();
 		setRegion(texture);
 		defineBody();
@@ -65,40 +67,34 @@ public abstract class Item extends Sprite{
 	}
 	
 	public abstract void prepairTexture();
-	
-	public abstract void effect();
 		
+	public abstract void effect();
 	
 
 
 	public void update(float dt) {
-		
 		if(texture != null) {
-			stateTime ++;
-			if(lifeTime != -1) {
-				if(stateTime > lifeTime) removeItem();
-			}
-			else {
-				if((posX>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
-						||(posX<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
-					removeItem();
-				}			
-			}
-			
-			setRegion(texture);
-			
-			if((posX>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
-					||(posX<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
-				removeItem();
-			}	
+			stateTime += dt;
 			if(!isRemoved) {
-				movement();
-				setBounds(b2body.getPosition().x-regionW/2,b2body.getPosition().y-regionH/2, regionW,regionH);
-				batch.begin();
-				this.draw(batch);
-				batch.end();
-				
+				if(isDied) removeItem();
+				else {
+					if(lifeTime != -1) {
+						if(stateTime > lifeTime) removeItem();
+					}
+					else {
+						if((posX>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
+								||(posX<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) 
+							removeItem();		
+					}									
+				}
 			}
+			if(isRemoved) return;
+			setRegion(texture);
+			movement();
+			setBounds(b2body.getPosition().x-regionW/2,b2body.getPosition().y-regionH/2, regionW,regionH);
+			batch.begin();
+			this.draw(batch);
+			batch.end();
 			
 		}
 		
@@ -117,10 +113,11 @@ public abstract class Item extends Sprite{
 		}
 	}
 
-	private void removeItem() {
-		StageCreator.removeItems(this);
+	public void removeItem() {
+		world.destroyBody(b2body);
+		b2body = null;
+		stageCreator.removeItems(this);
 		isRemoved = true;
-		
 	}
 	
 	
@@ -134,8 +131,6 @@ public abstract class Item extends Sprite{
 		b2body = world.createBody(bdef);
 		
 		shape.setRadius(regionW/2);
-		
-		//radius = getRegionHeight()/CuocChienSinhTon.PPM/2;
 		
 		fdef.shape = shape;
 		fdef.isSensor = true;

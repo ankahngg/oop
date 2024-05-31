@@ -1,6 +1,7 @@
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Boss extends Monster {

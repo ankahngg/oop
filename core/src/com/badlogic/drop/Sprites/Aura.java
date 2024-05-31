@@ -47,7 +47,7 @@ public class Aura extends Sprite{
 		setRegion(aura.getKeyFrame(stateTime,true));
 		height = getRegionHeight()/CuocChienSinhTon.PPM;
 		width = getRegionHeight()/CuocChienSinhTon.PPM;
-		setBounds(x-width/4, y, width,height);
+		setBounds(x-width/2, y-height/4, width,height);
 		batch.begin();
 		this.draw(batch);
 		batch.end();

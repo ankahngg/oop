@@ -47,7 +47,7 @@ public class HellBeast extends Monster{
 		super(world, screen, x, y,maxHealth, isDynamic,isSensor);
 		
 		
-		//isIntialLeft = true;
+		isIntialLeft = true;
 		
 		monsterDef.setUserData(this);
 	}
@@ -59,23 +59,16 @@ public class HellBeast extends Monster{
 	double t = 1000;
 	
 	@Override
-	public void removeMonster() {
-		if (b2body!=null)
-		world.destroyBody(b2body);
-		b2body = null;
-		if (screen instanceof FirstMap)
-		StageCreator.monstersRemove.add(this);
-		isDied = true;
-	}
-	
 	
 	public State getFrameState(float dt) {
 		if(isAttacking1) {
 			if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
 			else {
 				isAttacking1 = false;
+				float angle = bulletManage.getAngle(posX, posY, screen.getPlayer().body.getPosition().x, screen.getPlayer().body.getPosition().y);
+				System.out.println(angle);
+				bulletManage.addBullet("FireBullet", posX, posY, -1,20,angle,-1);
 				lastFire = System.currentTimeMillis();
-				BulletManage.addBullet("FireBullet", b2body.getPosition().x, b2body.getPosition().y, -1);
 			}
 		}
 		if(isHurting) {
@@ -86,7 +79,8 @@ public class HellBeast extends Monster{
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
 			else {
 				isDieing = false;
-				removeMonster();
+				isDieFinish = true;
+				stageCreator.removeMonster(this);
 			}
 		}
 		if(isDie) {
@@ -108,17 +102,4 @@ public class HellBeast extends Monster{
 		return State.RUNNING;
 	}
 	
-	void onHit() {
-		this.Health --;
-		if(this.Health == 0) {
-			isDie = true;
-		}
-		else {
-			isHurt = true;
-		}
-		
-		
-	
-	
-}
 }

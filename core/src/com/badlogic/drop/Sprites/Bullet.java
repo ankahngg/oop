@@ -50,6 +50,8 @@ abstract public class Bullet extends Sprite{
 	public TextureRegion region;
 	public boolean tracing = false;
 	public boolean isRemoved = false;
+	public BulletManage bulletManage;
+	public boolean isDied = false;
 	
 	public Bullet(World world,PlayScreen screen,float x, float y,int direction) {
 		this.world = world;
@@ -59,9 +61,9 @@ abstract public class Bullet extends Sprite{
 		
 		this.direction = direction;
 		prepareAnimation();
+		bulletManage = screen.bulletManage;
 		SpriteHeight = getRegionHeight();
 		SpriteWidth = getRegionWidth();
-		
 		defineBullet(x,y);
 		
 		if(bulletDef != null) {
@@ -77,14 +79,17 @@ abstract public class Bullet extends Sprite{
 		stateTime += dt;
 		
 		if(!isRemoved) {
-			if(lifeTime != -1) {
-				if(stateTime > lifeTime) remove();
-			}
+			if(isDied) removeBullet();
 			else {
-				if((b2body.getPosition().x>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
-						||(b2body.getPosition().x<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
-					remove();
-				}			
+				if(lifeTime != -1) {
+					if(stateTime > lifeTime) removeBullet();
+				}
+				else {
+					if((b2body.getPosition().x>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
+							||(b2body.getPosition().x<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
+						removeBullet();
+					}			
+				}				
 			}
 		}
 		
@@ -118,11 +123,6 @@ abstract public class Bullet extends Sprite{
 		return false;
 	}
 	
-	public float getAngle(float x1,float y1, float x2, float y2) {
-		float yWidth = Math.abs(y1-y2);
-		float xWidth = Math.abs(x1-x2);
-		return (float) Math.asin(yWidth/xWidth);
-	}
 	
 	public void setUp(int directionn, float speedd, float anglee, float lifeTimee) {
 		if(speedd != -1) speed = speedd;
@@ -131,9 +131,10 @@ abstract public class Bullet extends Sprite{
 		lifeTime = lifeTimee;
 	}
 	
-	public void remove() {
+	public void removeBullet() {
 		isRemoved = true;
-		BulletManage.removeBullet(this);
+		world.destroyBody(b2body);
+		bulletManage.removeBullet(this);
 	}
 	
 	public void movement() {
@@ -145,7 +146,7 @@ abstract public class Bullet extends Sprite{
 	}
 	
 	public void onHit() {
-		remove();
+		isDied = true;
 	}
 
 	public void defineBullet(float x,float y) {

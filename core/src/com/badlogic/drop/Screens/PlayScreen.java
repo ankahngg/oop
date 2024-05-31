@@ -10,6 +10,7 @@ import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetLoaderParameters.LoadedCallback;
 import com.badlogic.gdx.audio.Music;
@@ -25,6 +26,13 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public abstract class PlayScreen implements Screen {
@@ -62,19 +70,141 @@ public abstract class PlayScreen implements Screen {
 	public WorldContactListener worldContactListener;
 
 	// music
-	private Music backgroundMusic;
-	private Sound heroHurtSound;
+	public Music backgroundMusic;
+	public Sound heroHurtSound;
+	public Stage stage;
+	public Texture homeButton;
+	public Texture homeButtonHover;
+	public ImageButton HomeButton;
+	public boolean pause=false;
+	public StageCreator stageCreator;
+	public BulletManage bulletManage;
+	private Texture resumeButton;
+	private Texture resumeButtonHover;
+	private Texture quitButton;
+	private Texture quitButtonHover;
+	private Texture optionButton;
+	private Texture optionButtonHover;
+	public Stage pauseStage;
+	private ImageButton OptionButton;
+	private ImageButton ExitButton;
+	private Texture exitButton;
+	private ImageButton QuitButton;
+	private ImageButton ResumeButton;
+	public DieScreen dieScreen;
+	public boolean isPlayerDie = false;
 
 	public PlayScreen(CuocChienSinhTon game) {
 		this.game = game;
-		//set up collision
-//		Collision.setup(this);
-//		//set up bullet manage		
-//		BulletManage.setup(world, this);
-//		
-//		StageCreator.setup(world, this);
+		camera = new OrthographicCamera();
+		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH, CuocChienSinhTon.V_HEIGHT,camera);
+		
+		setUpPauseButton();
+		setUpPauseStage();
+		
+		dieScreen = new DieScreen(game,this);
+		//Gdx.input.setInputProcessor(stage);
+		
+		 
 		loadSound();
 	}
+	
+
+	public void setUpPauseButton() {
+		stage = new Stage(gamePort);
+		
+		/// Home button
+		homeButton = new Texture("Menu/Home.png");
+		homeButtonHover = new Texture("Menu/HomeHover.png");
+		
+		ImageButton.ImageButtonStyle homebuttonstyle = new ImageButton.ImageButtonStyle();
+		homebuttonstyle.up = new TextureRegionDrawable(homeButton);
+		 //style.down = new TextureRegionDrawable(playButtonHover);
+		homebuttonstyle.over = new TextureRegionDrawable(homeButtonHover);
+		 HomeButton = new ImageButton(homebuttonstyle);
+		
+		 HomeButton.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	                pause = true;
+	              
+	            }
+	        });
+		 
+		 HomeButton.setPosition(10, gamePort.getWorldHeight()-homeButton.getHeight()-10);
+		 stage.addActor(HomeButton);
+		 
+	}
+	
+	public void setUpPauseStage() {
+		pauseStage = new Stage(gamePort);
+		resumeButton = new Texture("Menu/Resume.png");
+		 resumeButtonHover = new Texture("Menu/ResumeHover.png");
+		 
+		 quitButton = new Texture("Menu/Quit.png");
+		 quitButtonHover = new Texture("Menu/QuitHover.png");
+		 
+		 optionButton = new Texture("Menu/Option.png");
+		 optionButtonHover = new Texture("Menu/OptionHover.png");
+		 
+		//ResumeButton
+		 ImageButton.ImageButtonStyle resumeButtonStyle = new ImageButton.ImageButtonStyle();
+		 resumeButtonStyle.up = new TextureRegionDrawable(resumeButton);
+		 //style.down = new TextureRegionDrawable(playButtonHover);
+		 resumeButtonStyle.over = new TextureRegionDrawable(resumeButtonHover);
+		 ResumeButton = new ImageButton(resumeButtonStyle);
+		
+		 ResumeButton.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	                // Handle button click
+	            	pause = false;
+	            	
+	            }
+	        });
+		 
+		 //Option Button
+		 ImageButton.ImageButtonStyle optionButtonStyle = new ImageButton.ImageButtonStyle();
+		 optionButtonStyle.up = new TextureRegionDrawable(optionButton);
+		 //style.down = new TextureRegionDrawable(playButtonHover);
+		 optionButtonStyle.over = new TextureRegionDrawable(optionButtonHover);
+		 OptionButton = new ImageButton(optionButtonStyle);
+		
+		 OptionButton.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	                // Handle button click
+	                System.out.println("Option Button clicked!");
+	            }
+	        });
+		 
+		 //Quit Button
+		 ImageButton.ImageButtonStyle quitButtonStyle = new ImageButton.ImageButtonStyle();
+		 quitButtonStyle.up = new TextureRegionDrawable(quitButton);
+		//style.down = new TextureRegionDrawable(playButtonHover);
+		 quitButtonStyle.over = new TextureRegionDrawable(quitButtonHover);
+		 QuitButton = new ImageButton(quitButtonStyle);
+		
+		 QuitButton.addListener(new ClickListener() {
+	            @Override
+	            public void clicked(InputEvent event, float x, float y) {
+	                // Handle button click
+	                game.setScreen(new Menu2(game));
+	                dispose();
+	            }
+	        });
+		 Table table = new Table();
+		 table.setFillParent(true);
+		 table.center();
+		 table.add(ResumeButton).padTop(10);
+		 table.row();
+		 table.add(OptionButton).padTop(10);
+		 table.row();
+		 table.add(QuitButton).padTop(10);
+		 pauseStage.addActor(table);
+//		 Gdx.input.setInputProcessor(pauseStage);
+	}
+	
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
@@ -100,7 +230,6 @@ public abstract class PlayScreen implements Screen {
 	}
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
 		
 	}
 	@Override
@@ -127,10 +256,7 @@ public abstract class PlayScreen implements Screen {
 	public void dispose() {
 		
 		// TODO Auto-generated method stub
-		map.dispose();
-		renderer.dispose();
-		world.dispose();
-		b2dr.dispose();
+	
 	}
 	public float getSpeed() {
 		return speed;

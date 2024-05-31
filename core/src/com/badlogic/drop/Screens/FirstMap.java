@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.badlogic.drop.CuocChienSinhTon;
+import com.badlogic.drop.MapUserData;
 import com.badlogic.drop.Scenes.HealthBar;
 import com.badlogic.drop.Sprites.AnKhangHero;
 import com.badlogic.drop.Sprites.Boss;
@@ -45,7 +46,7 @@ public class FirstMap extends PlayScreen {
 	public B2WorldCreator WorldCreator;
 	public double teleCd=1000;
 	public double lastTele=0;
-	public boolean canJump = false;
+	public boolean canJump = true;
 	public boolean Hitting;
 	public int stageNum = 8;
 	public int stagePass = -1;
@@ -82,9 +83,9 @@ public class FirstMap extends PlayScreen {
 		
 		Collision.setup(this);
 		//set up bullet manage		
-		BulletManage.setup(world, this);
+		bulletManage = new BulletManage(world,this);
 		
-		StageCreator.setup(world, this);
+		stageCreator = new StageCreator(world,this);
 		
 		//create player
 		player = new AnKhangHero(world,this);
@@ -94,13 +95,25 @@ public class FirstMap extends PlayScreen {
 		
 		//create healthBar
 		healthbar = new HealthBar(this);
+		//
+		for(int i=0;i<=8;i++) firstEntry.add(true);
+		setUpProgress();
 		
-		
-		
-		//intialize firstEntry
-		for(int i=0;i<=stageNum;i++) firstEntry.add(true);
-		firstEntry.set(0, false);
+	}
+	
+	public void setUpProgress() {
+		stageCr = MapUserData.CrStage;
+		stagePass = MapUserData.CrStagePass;
+		Vector2 pos = WorldCreator.checkpoints.get(0);
+		for(Vector2 p : WorldCreator.checkpoints) {
+			if((int) (p.x/35/CuocChienSinhTon.PPM) <= stagePass) pos = p;
+		}
+		stagePass = (int) (pos.x/CuocChienSinhTon.PPM/35)-1;
 		nextStage();
+		
+		for(int i = 0;i<=stagePass;i++) firstEntry.set(i,false);
+		for(int i = stagePass+1;i<=stageNum;i++) firstEntry.set(i,true);
+		player.body.setTransform(new Vector2(pos.x/CuocChienSinhTon.PPM,pos.y/CuocChienSinhTon.PPM), 0);
 	}
 
 	public TextureAtlas getAtlas() {
@@ -112,23 +125,28 @@ public class FirstMap extends PlayScreen {
 		// TODO Auto-generated method stub
 
 	}
-	public void handleDie() {
-		Vector2 pos = WorldCreator.checkpoints.get(0);
-		for(Vector2 p : WorldCreator.checkpoints) {
-			if((int) (p.x/35/CuocChienSinhTon.PPM) <= stagePass) pos = p;
-		}
-		
-		StageCreator.clearMonster();
-		
-		stagePass = (int) (pos.x/CuocChienSinhTon.PPM/35)-1;
-		nextStage();
-		
-		
-		for(int i = stagePass+1;i<=stageNum;i++) firstEntry.set(i,true);
 	
-		player.setHealth(player.getHealthMax());
-		player.body.setTransform(new Vector2(pos.x/CuocChienSinhTon.PPM,pos.y/CuocChienSinhTon.PPM), 0);
-		
+	public void setDieScreen() {
+		isPlayerDie = true;
+
+	}
+	public void handleDie() {
+//		Vector2 pos = WorldCreator.checkpoints.get(0);
+//		for(Vector2 p : WorldCreator.checkpoints) {
+//			if((int) (p.x/35/CuocChienSinhTon.PPM) <= stagePass) pos = p;
+//		}
+//		
+//		stageCreator.clearMonster();
+//		
+//		
+//		stagePass = (int) (pos.x/CuocChienSinhTon.PPM/35)-1;
+//		nextStage();
+//		
+//		
+//		for(int i = stagePass+1;i<=stageNum;i++) firstEntry.set(i,true);
+//	
+//		player.setHealth(player.getHealthMax());
+//		player.body.setTransform(new Vector2(pos.x/CuocChienSinhTon.PPM,pos.y/CuocChienSinhTon.PPM), 0);
 	}
 	public void closeStage() {
 		isOnStage = true;
@@ -156,19 +174,10 @@ public class FirstMap extends PlayScreen {
 			return ;
 		}
 		
-//		if(Gdx.input.isKeyJustPressed(Keys.J)) {
-//			System.out.println("lol");
-//			player.body.applyLinearImpulse(new Vector2(30,0), player.getBody().getWorldCenter(),true);
-//		}
-//		if(player.isAttacking) {
-//			if(player.isFlipX()) player.body.setLinearVelocity( new Vector2(-2,vel.y));
-//			else player.body.setLinearVelocity( new Vector2(2,vel.y));
-//			return;
-//		}
 		if(Gdx.input.isKeyJustPressed(Keys.P) && Gdx.input.isKeyPressed(Keys.ALT_LEFT)) {
 			// +1 vào health
-			stageCr = 8;
-			stagePass = 7;
+			stageCr = 6;
+			stagePass = 5;
 			player.body.setTransform(new Vector2(35*stageCr+2,3) , 0);
 			//player.damage = 10;
 			
@@ -209,16 +218,15 @@ public class FirstMap extends PlayScreen {
 	// method that be called every 1/60s
 	public void update(float dt) {
 		
-		BulletManage.update(dt);
+		world.step(1/60f, 6, 2);
+		
+		bulletManage.update(dt);
 		
 		handleInput(dt);
 		player.update(dt);
 		
-		
-		StageCreator.update(dt);
+		stageCreator.update(dt);
 		Collision.update(dt);
-
-		world.step(1/60f, 6, 2);
 		//handle camera out of bound
 		
 		stageCr = (int) ((player.body.getPosition().x-(player.HeroWidth/2-10)/CuocChienSinhTon.PPM)/stageLength);
@@ -227,19 +235,29 @@ public class FirstMap extends PlayScreen {
 		//camera.position.x = player.body.getPosition().x;
 		if(firstEntry.get(stageCr)) {
 			firstEntry.set(stageCr, false);
-			StageCreator.Creator(map,stageCr);
+			stageCreator.Creator(map,stageCr);
 			closeStage();
 		}
 		
-		if(StageCreator.isStageClear()) nextStage();
+		if(stageCreator.isStageClear()) nextStage();
 		renderer.setView(camera);
 		camera.update();
 		
 		healthbar.update(dt);
+		MapUserData.saveData(stageCr, stagePass);
 	}
 
 	@Override
 	public void render(float delta) {
+		if(pause) {
+			pauseStage.draw();
+			Gdx.input.setInputProcessor(pauseStage);
+			 return;
+		}
+		if(isPlayerDie) {
+			dieScreen.render(delta);
+			return;
+		}
 		
 		ScreenUtils.clear(0, 0, 0.2f, 1);
 		
@@ -269,10 +287,19 @@ public class FirstMap extends PlayScreen {
 		worldContactListener = new WorldContactListener();
 		world.setContactListener(worldContactListener);
 		
-		
+		//pauseStage.draw();
+		Gdx.input.setInputProcessor(stage);
+		stage.draw();
 		
 
 	}
+	public void dispose() {
+			// TODO Auto-generated method stub
+			map.dispose();
+			renderer.dispose();
+			world.dispose();
+			b2dr.dispose();
+		}
 
 	
 

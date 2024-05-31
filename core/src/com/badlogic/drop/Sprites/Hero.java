@@ -73,6 +73,7 @@ public abstract class Hero extends Sprite{
 	protected int currentFire = 0;
 	
 	public double shieldBegin = -1;
+	public double strengthBegin = -1;
 	public float HeroHeight;
 	public float HeroWidth;
 	protected float stateTime;
@@ -97,6 +98,7 @@ public abstract class Hero extends Sprite{
 	protected Bullet bullet;
 	private TextureRegion region;
 	private Shield shield;
+	private BulletManage bulletManage;
 	public Hero(World world, PlayScreen screen,float x, float y, int maxHealth) {
 		this.world = world;
 		this.screen = screen;
@@ -105,6 +107,7 @@ public abstract class Hero extends Sprite{
 		this.HealthMax = maxHealth;
 		this.currentRank = 0;
 		prepareAnimation();
+		bulletManage = screen.bulletManage;
 		defineHero(x, y);
 
 		setBounds(0, 0, getRegionWidth()/CuocChienSinhTon.PPM, getRegionHeight()/CuocChienSinhTon.PPM);
@@ -117,7 +120,7 @@ public abstract class Hero extends Sprite{
 		
 	}
 	public void setBullet(World world,PlayScreen screen,float x, float y,int direction) {
-		BulletManage.addBullet("EnergyBall", x, y, direction);
+		bulletManage.addBullet("EnergyBall", x, y, direction);
 	}
 	public Body getBody() {
 		return body;
@@ -141,6 +144,13 @@ public abstract class Hero extends Sprite{
 		if(shieldBegin != -1) {
 			if(System.currentTimeMillis()-shieldBegin >= 5000) shieldBegin = -1;
 			else shield.update(body.getPosition().x, body.getPosition().y, dt);
+		}
+		if(strengthBegin != -1) {
+			if(System.currentTimeMillis()-strengthBegin >= 10000) {
+				strengthBegin = -1;
+				damage=1;
+			}
+		
 		}
 		setRegion(getFrame(dt));
 		setBounds(body.getPosition().x-getRegionWidth()/CuocChienSinhTon.PPM/2,
@@ -288,7 +298,7 @@ public abstract class Hero extends Sprite{
 				}
 				else {
 					isDieing = false;
-					screen.handleDie();
+					((FirstMap) screen).setDieScreen();
 				}
 			}
 			if(isHurt) {
@@ -340,12 +350,13 @@ public abstract class Hero extends Sprite{
 					if(currentAttack == 3) return State.ATTACKING3;
 				}	
 			}
-			
+			if(strengthBegin != -1) FireCoolDown = 50;
+			else FireCoolDown = 1000;
 			if(Gdx.input.isKeyPressed(Keys.K) && ((FirstMap) screen).stagePass >= stageSkill) {
 				if(System.currentTimeMillis() - lastFireTime >= FireCoolDown) {
 					isFiring = true;
-					if(this.isFlipX()) BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, -1);
-					else BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, 1);
+					if(this.isFlipX()) bulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, -1);
+					else bulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, 1);
 //					if(this.isFlipX()) BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, -1,-1,45,-1);
 //					else BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, 1,-1,45,-1);
 					return State.FIRING;
@@ -397,16 +408,22 @@ public abstract class Hero extends Sprite{
 			}
 			
 			if(isAttacking) {
-				
 					if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
 					else {isAttacking = false; lastAttackTime = System.currentTimeMillis();}				
-				
 			}
 			if(Gdx.input.isKeyPressed(Keys.J)) {
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
 					
-					BulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,20,0,-1);
+					if(strengthBegin != -1) {
+						bulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,20,0,-1);
+						bulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,20,15,-1);
+						bulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,20,-15,-1);
+					}
+					else {
+						bulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,20,0,-1);
+					}
+					
 					isAttacking = true;
 					return State.FIRING;
 				}

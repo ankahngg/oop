@@ -23,22 +23,23 @@ import com.badlogic.gdx.utils.ObjectSet;
 
 public class StageCreator {
 
-	static public ObjectSet<Item> items = new ObjectSet<Item>();
-	static public ObjectSet<Item> itemsRemove = new ObjectSet<Item>();
+	 public ObjectSet<Item> items = new ObjectSet<Item>();
+	 public ObjectSet<Item> itemsRemove = new ObjectSet<Item>();
 
-	static public ObjectSet<Monster> monsters = new ObjectSet<Monster>();
-	static public ObjectSet<Monster> monstersRemove = new ObjectSet<Monster>();
-	static public World world;
-	static public TiledMap map;
-	static public PlayScreen screen;
-	static public boolean isOnStage = false;
+	 public ObjectSet<Monster> monsters = new ObjectSet<Monster>();
+	 public ObjectSet<Monster> monstersRemove = new ObjectSet<Monster>();
+	 public World world;
+	 public TiledMap map;
+	 public PlayScreen screen;
+	 public boolean isOnStage = false;
 	
-	static public void setup(World worldd, PlayScreen screenn) {
+	 public StageCreator(World worldd, PlayScreen screenn) {
 		world = worldd;
 		screen = screenn;
+
 	}
 	
-	static public boolean isStageClear() {
+	 public boolean isStageClear() {
 		if(monsters.isEmpty() && isOnStage) {
 			isOnStage = false;
 			return true;
@@ -46,33 +47,32 @@ public class StageCreator {
 		return false;
 	}
 	
-	static public void update(float dt) {
-		for(Item x : StageCreator.items) {
+	 public void update(float dt) {
+		for(Item x : items) {
 			if(x!=null)
 			x.update(dt);
 		}
 		
-		if(!StageCreator.itemsRemove.isEmpty()) {
-			for(Item x : StageCreator.itemsRemove) {
-				if(x!=null)
-				world.destroyBody(x.b2body);
-				StageCreator.items.remove(x);
-			}
-			StageCreator.itemsRemove.clear();
-		}
 		
-		for(Monster x : StageCreator.monsters) {
+		for(Monster x : monsters) {
 			if(x!=null) x.update(dt);
 		}
-		for(Monster x : StageCreator.monstersRemove) {
-			if(x!=null && x.b2body!=null) world.destroyBody(x.b2body);
-			StageCreator.monsters.remove(x);
+		
+		if(!itemsRemove.isEmpty()) {
+			for(Item x : itemsRemove) 
+				if(x!=null) items.remove(x);
+			itemsRemove.clear();
 		}
-		StageCreator.monstersRemove.clear();
+		
+		if(!monstersRemove.isEmpty()) {
+			for(Monster x : monstersRemove) 
+				if(x!=null) monsters.remove(x);
+			monstersRemove.clear();
+		}
 	}
 	
 	// add default monster
-	static public void addMonster(String type, float x, float y, int maxHealth, boolean isDynamic, boolean isSensor ) {
+	 public void addMonster(String type, float x, float y, int maxHealth, boolean isDynamic, boolean isSensor ) {
 		if(type == "Skeleton") {
 			Skeleton xx = new Skeleton(world, screen, x,y,maxHealth,isDynamic,isSensor);
 			monsters.add(xx);
@@ -99,14 +99,14 @@ public class StageCreator {
 			monsters.add(xx);
 		}
 		else if(type == "Boss2") {
-			System.out.println("boss");
+			
 			Boss2 xx = new Boss2(world, screen, x,y,maxHealth,isDynamic,isSensor);
 			monsters.add(xx);
 		}
 	}
 	
 	//add movement monster
-	static public void addMonster(String type, float x, float y, int maxHealth, boolean isDynamic, boolean isSensor,
+	 public void addMonster(String type, float x, float y, int maxHealth, boolean isDynamic, boolean isSensor,
 			int direction, float speed, float angle,float lifeTime) {
 		if(type == "Skeleton") {
 			Skeleton xx = new Skeleton(world, screen, x,y,maxHealth,isDynamic,isSensor);
@@ -114,7 +114,7 @@ public class StageCreator {
 			xx.setUp(direction, speed, angle, lifeTime);
 		}
 		else if(type == "FlyingEye") {
-			System.out.println("add");
+			
 				FlyingEye xx = new FlyingEye(world, screen, x,y,maxHealth,isDynamic,isSensor);
 				xx.setUp(direction, speed, angle, lifeTime);
 				monsters.add(xx);
@@ -147,7 +147,7 @@ public class StageCreator {
 	}
 	
 	//add default item
-	static public void addItems(String type, float x, float y) {
+	 public void addItems(String type, float x, float y) {
 		
 		if(type == "Heart") {
 			Heart xx = new Heart(world, screen, x,y);
@@ -165,7 +165,7 @@ public class StageCreator {
 	}
 	
 	//add movement item
-	static public void addItems(String type, float x, float y,int direction, float speed, float angle, float lifeTime) {
+	 public void addItems(String type, float x, float y,int direction, float speed, float angle, float lifeTime) {
 		if(type == "Heart") {
 			Heart xx = new Heart(world, screen, x,y);
 			xx.setUp(direction, speed, angle, lifeTime);
@@ -186,39 +186,37 @@ public class StageCreator {
 	
 	
 	
-	static public void removeItems(Item x) {
+	 public void removeItems(Item x) {
 		itemsRemove.add(x);
 	}
 	
-	static public void removeMonster(Monster x) {
+	 public void removeMonster(Monster x) {
 		monstersRemove.add(x);
 	}
-	static public void clearMonster() {
+	 public void clearMonster() {
 		
 		for(Monster x : monsters) {
-			world.destroyBody(x.b2body);
+			removeMonster(x);
 		}
 		
 		for(Item x : items) {
-			world.destroyBody(x.b2body);
+			removeItems(x);
 		}
 		
-		monstersRemove.clear();
-		monsters.clear();
-		itemsRemove.clear();
-		items.clear();
 		isOnStage = false;
 	}
 	
 	
-	static public void Creator(TiledMap map, int y) {
+	
+	 public void Creator(TiledMap map, int y) {
+		
 		if(y == 8) {
 			float posX = (y+1)*35-2;
 			float posY = 3;
-			addMonster("Boss", posX, posY,30,true,true);
+			addMonster("Boss", posX, posY,50,true,true);
 		}
-		
 		int o = 11;
+		System.out.println(o+y-1);
 		isOnStage = true;
 		if(o+y-1 >= map.getLayers().getCount()) return;
 		MapGroupLayer xx = (MapGroupLayer) map.getLayers().get(o+y-1);

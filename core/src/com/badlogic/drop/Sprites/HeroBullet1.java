@@ -23,4 +23,8 @@ public class HeroBullet1 extends Bullet {
 		
 		setRegion(atlasBullet.getRegions().get(0));
 	}
+	
+	public void onHit() {
+		if(screen.getPlayer().strengthBegin == -1) isDied = true;
+	}
 }

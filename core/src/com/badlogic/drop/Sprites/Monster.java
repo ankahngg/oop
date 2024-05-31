@@ -3,6 +3,7 @@ package com.badlogic.drop.Sprites;
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Sprites.Monster.State;
 import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -62,18 +64,22 @@ abstract public class Monster extends Sprite{
 		public boolean isHurting = false;
 		public boolean isDieing = false;
 		
+		public boolean isVisible = true;
 		public boolean isRuningR;
 		public boolean isDynamic=true;
 		public boolean isSensor=false;
 		public boolean isHurt = false;
 		public boolean isDie = false;
 		public boolean isDied = false;
+		public boolean isDieFinish = false;
 		public boolean isRemoved = false;
 		public boolean isIntialLeft = false;
 		public float MonsterScaleX=1;
 		public float MonsterScaleY=1;
 		public float MonsterHeight;
 		public float MonsterWidth;
+		public StageCreator stageCreator;
+		public BulletManage bulletManage;
 		public boolean runningRight = true;
 		public PlayScreen screen;
 		public SpriteBatch batch;
@@ -104,6 +110,8 @@ abstract public class Monster extends Sprite{
 			this.isDynamic = isDynamic;
 			this.isSensor = isSensor;
 			this.batch = screen.game.getBatch();
+			stageCreator = screen.stageCreator;
+			bulletManage = screen.bulletManage;
 			HealthBar = new HealthBarMonster(screen);
 			prepareAnimation();
 			defineMonster(x,y);
@@ -112,51 +120,51 @@ abstract public class Monster extends Sprite{
 			Collision.setCategoryFilter(monsterDef,Collision.MONSTER_BITS,null);
 		}
 		
+		
+		
 		public void update(float dt) {
-			if(isRemoved) return;
-			setRegion(getFrame(dt));
+			
 			if(b2body != null) {
 				posX = b2body.getPosition().x;
 				posY = b2body.getPosition().y;		
 			}
-			// conditions to remove
-			if(isDied) {
-				removeMonster();
-			}
-			if(lifeTime != -1) {
-				if(stateTime > lifeTime) removeMonster();
-			}
-			else {
-				if((posX>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
-						||(posX<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
-					System.out.println("out range");
-					removeMonster();
-				}			
+			if(!isRemoved) {
+				if(isDied) removeMonster();
+				else {
+					if(lifeTime != -1) {
+						if(stateTime > lifeTime) removeMonster();
+					}
+					else {
+						if((posX>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
+								||(posX<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) 
+							 removeMonster();
+					}					
+				}
 			}
 			
-			if(!isRemoved) {
-				
-				//set sprite bounds
-				setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
-				
-				//update healthbar
-				HealthBar.update(Health, HealthMax, posX, posY+radius);
-				
-				//handle movement
-				movement();
-				
-				//render
-				batch.begin();
-				this.draw(batch);
-				batch.end();
-			}
+			setRegion(getFrame(dt));
+			if(isRemoved && isDieFinish) return;
+			//set sprite bounds
+			setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
+			
+			//update healthbar
+			HealthBar.update(Health, HealthMax, posX, posY+radius);
+			
+			//handle movement
+			movement();
+			
+			//render
+			batch.begin();
+			this.draw(batch);
+			batch.end();
 			
 		}
 		
 		public void removeMonster() {
 			isRemoved = true;
-			StageCreator.removeMonster(this);
-			System.out.println("removeMonster");
+			world.destroyBody(b2body);
+			b2body = null;
+			//stageCreator.removeMonster(this);
 		}
 		
 		public void setUp(int directionn, Float speedd, float anglee, float lifeTimee) {
@@ -211,18 +219,8 @@ abstract public class Monster extends Sprite{
 				float vel = b2body.getLinearVelocity().x;
 				
 				if(vel == 0) {
-					if(isIntialLeft) {
-						if(runningRight && region.isFlipX()) {
-							region.flip(true,false);
-							runningRight = false;
-						}
-					}
-					else {
-						if(runningRight && !region.isFlipX()) {
-							region.flip(true,false);
-							runningRight = false;
-						}
-					}
+					if(!isIntialLeft && !region.isFlipX()) region.flip(true, false);
+					else if(isIntialLeft && region.isFlipX()) region.flip(true, false);
 					previousState = currentState;
 					return region;
 				}
@@ -262,10 +260,34 @@ abstract public class Monster extends Sprite{
 		
 		abstract public State getFrameState(float dt) ;
 		
+		
+		
 		void onHit() {
+			if(!isVisible) return;
 			this.Health -= screen.getPlayer().damage;
 			if(this.Health <= 0) {
+//				if(screen instanceof FirstMap) {
+//					int rnd1 = MathUtils.random(3);
+//					if(rnd1 == 0) {
+//						int rnd2 = MathUtils.random(3);
+//						switch (rnd2) {
+//						case 0:
+//							StageCreator.addItems("Shield", b2body.getPosition().x, b2body.getPosition().y);
+//							break;
+//						case 1:
+//							StageCreator.addItems("Strength", b2body.getPosition().x, b2body.getPosition().y);
+//							break;
+//							
+//						default:
+//							StageCreator.addItems("Heart", b2body.getPosition().x, b2body.getPosition().y);
+//							
+//							break;
+//						}
+//					}
+//					
+//				}
 				isDie = true;
+				isDied = true;
 			}
 			else {
 				isHurt = true;

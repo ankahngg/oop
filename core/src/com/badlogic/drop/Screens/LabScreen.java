@@ -56,12 +56,6 @@ public class LabScreen implements Screen {
 		
 		runningAnimation = new Animation<TextureRegion>(0.05f, frames);
 		
-		//atlas = new TextureAtlas("Hero.pack");
-		//region = atlas.findRegion("HeroIdle");
-		
-		//splitter(region,1,3);
-		
-		// TODO Auto-generated constructor stub
 	}
 	@Override
 	public void render(float delta) {

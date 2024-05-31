@@ -5,7 +5,8 @@
 	import com.badlogic.drop.Screens.FirstMap;
 	import com.badlogic.drop.Screens.FlappyMap;
 	import com.badlogic.drop.Screens.Menu;
-	import com.badlogic.gdx.Game;
+import com.badlogic.drop.Screens.Menu2;
+import com.badlogic.gdx.Game;
 	import com.badlogic.gdx.Screen;
 	import com.badlogic.gdx.graphics.OrthographicCamera;
 	import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,7 +15,7 @@
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
-
+import com.badlogic.drop.Screens.ScreenManagement;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,6 +29,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 		public  enum MAP {MAP1, MAP2,MAP3};
 		public  HashMap<MAP, Screen> screenMap = new HashMap<CuocChienSinhTon.MAP, Screen>();
 		private MAP map;
+		public FirstMap map1;
+		public FlappyMap map2;
 		OrthographicCamera camera;
 		public SpriteBatch batch;
 		
@@ -36,10 +39,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 		}
 
 		public void create() {
-			map = MAP.MAP1;
-			
 			batch = new SpriteBatch();
-			this.setScreen(new FlappyMap(this));
+			
+			setScreen(new Menu2(this));
+			
+			
 		}
 		@Override
 		public void render() {
@@ -53,9 +57,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 			
 		}
 		
-		public void setNewScreen(Screen screen) {
-			this.setScreen(screen);
-		}
+//		public void setNewScreen(Screen screen) {
+//			this.setScreen(screen);
+//			if(screen instanceof FirstMap) map = MAP.MAP1;
+//			else map = MAP.MAP1;
+//		}
 		@Override
 		public void dispose() {
 			// TODO Auto-generated method stub
@@ -69,21 +75,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 		}
 		public void setMap(MAP map) {
 			
-			if (this.map != map) {
-				this.map = map;
-				switch (map) {
-					case MAP1:
-						this.setScreen(new FirstMap(this));
-						break;
-		
-					case MAP2:
-						this.setScreen(new FlappyMap(this));
-					default:
-						break;
-					}
+			this.map = map;
+			switch (map) {
+				case MAP1:
+					setScreen(map1);
+					break;
+	
+				case MAP2:
+					setScreen(map2);
+				default:
+					break;
+				}
 			}
 			
-		}
+		
 
 	}
 	
