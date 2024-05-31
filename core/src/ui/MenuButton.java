@@ -1,7 +1,4 @@
 package ui;
-
-import java.nio.file.spi.FileSystemProvider;
-
 import com.badlogic.drop.Screens.Menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,8 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import gamestates.Gamestate;
 import utilz.LoadSave;
-import com.badlogic.drop.CuocChienSinhTon;
-import com.badlogic.drop.Screens.FirstMap;
 public class MenuButton {
     public static final int B_WIDTH_DEFAULT = 140;
     public static final int B_HEIGHT_DEFAULT = 56;
@@ -19,12 +14,11 @@ public class MenuButton {
     public static final int B_HEIGHT = (int)(B_HEIGHT_DEFAULT * Menu.SCALE);
     private int xPos, yPos, rowIndex,index;
     private int xOffsetCenter = B_WIDTH / 2;
-    private int yOffsetCenter = B_HEIGHT / 2;
     private boolean mouseOver, mousePressed;
     private Rectangle bounds;
     private Gamestate state;
     private TextureRegion[] imgs;
-    private CuocChienSinhTon game;
+
 
     public MenuButton(int xPos, int yPos, int rowIndex, Gamestate state) {
         this.xPos = xPos;
@@ -100,7 +94,7 @@ public class MenuButton {
             case OPTIONS:
                 break;
             case QUIT:
-                // Quit the game
+               Gdx.app.exit();
                 break;
             default:
                 break;
