@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class DieScreen implements Screen {
+public class WinScreen implements Screen {
 	public CuocChienSinhTon game;
 	private OrthographicCamera camera;
 	private Texture backgroundTexture;
@@ -46,14 +46,12 @@ public class DieScreen implements Screen {
 	private ImageButton AgainButton;
 	
 	
-	public DieScreen(CuocChienSinhTon game, PlayScreen screen) {
+	public WinScreen(CuocChienSinhTon game, PlayScreen screen) {
 		this.game = game;
 		camera = new OrthographicCamera();
-		backgroundTexture = new Texture("Menu/DieScreen.png");
+		backgroundTexture = new Texture("Menu/WinScreen.png");
 		exitButton = new Texture("Menu/Exit.png");
 		exitButtonHover = new Texture("Menu/ExitHover.png");
-		againButton = new Texture("Menu/Again.png");
-		againButtonHover = new Texture("Menu/AgainHover.png");
 		
 		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH, CuocChienSinhTon.V_HEIGHT,camera);	
 		batch = game.getBatch();	
@@ -78,23 +76,7 @@ public class DieScreen implements Screen {
 	              
 	            }
 	        });
-		 
-		 ImageButton.ImageButtonStyle againButtonStyle = new ImageButton.ImageButtonStyle();
-		 againButtonStyle.up = new TextureRegionDrawable(againButton);
-		//style.down = new TextureRegionDrawable(playButtonHover);
-		 againButtonStyle.over = new TextureRegionDrawable(againButtonHover);
-		 AgainButton = new ImageButton(againButtonStyle);
-		
-		 AgainButton.addListener(new ClickListener() {
-	            @Override
-	            public void clicked(InputEvent event, float x, float y) {
-	            	if(screen instanceof FirstMap) game.setScreen(new FirstMap(game));
-	            	else game.setScreen(new FlappyMap(game));
-	            }
-	        });
-		 tabel.add(AgainButton).padTop(10);
-		 tabel.row();
-		 tabel.add(ExitButton).padTop(10);
+		 tabel.add(ExitButton).padTop(100);
 		 
 		 stage.addActor(tabel);
 		 
@@ -106,8 +88,6 @@ public class DieScreen implements Screen {
 		// TODO Auto-generated method stub
 		
 	}
-
-	
 	
 	@Override
 	public void render(float delta) {

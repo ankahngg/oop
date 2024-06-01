@@ -132,12 +132,20 @@ abstract public class Monster extends Sprite{
 				if(isDied) removeMonster();
 				else {
 					if(lifeTime != -1) {
-						if(stateTime > lifeTime) removeMonster();
+						if(stateTime > lifeTime) {
+							removeMonster();
+							isDieFinish = true;
+							stageCreator.removeMonster(this);
+							
+						}
 					}
 					else {
 						if((posX>screen.getCamera().position.x+screen.getCamera().viewportWidth/2)
-								||(posX<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) 
-							 removeMonster();
+								||(posX<screen.getCamera().position.x-screen.getCamera().viewportWidth/2)) {
+							removeMonster();
+							isDieFinish = true;
+							stageCreator.removeMonster(this);
+						}
 					}					
 				}
 			}
@@ -176,7 +184,7 @@ abstract public class Monster extends Sprite{
 		
 			
 		public void movement() {
-			if(direction != 0) {
+			if(direction != 0 && b2body != null) {
 				double sin = Math.sin(Math.toRadians(angle));
 				double cos =  Math.cos(Math.toRadians(angle));
 				float vecX = (float) (speed*cos*direction);
@@ -287,6 +295,7 @@ abstract public class Monster extends Sprite{
 //					
 //				}
 				isDie = true;
+				
 				isDied = true;
 			}
 			else {

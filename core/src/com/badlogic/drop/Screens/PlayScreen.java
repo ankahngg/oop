@@ -102,7 +102,7 @@ public abstract class PlayScreen implements Screen {
 		setUpPauseButton();
 		setUpPauseStage();
 		
-		dieScreen = new DieScreen(game,this);
+		
 		//Gdx.input.setInputProcessor(stage);
 		
 		 

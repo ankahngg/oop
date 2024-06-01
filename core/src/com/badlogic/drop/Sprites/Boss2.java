@@ -5,6 +5,7 @@ import java.util.Currency;
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.drop.Screens.WinScreen;
 import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.Gdx;
@@ -48,6 +49,18 @@ public class Boss2 extends Boss{
 	@Override
 	public State getFrameState(float dt) {
 		// TODO Auto-generated method stub
+		if(isDieing) {
+			if(!die.isAnimationFinished(stateTime)) {
+				return State.DIE;
+			}
+			else {
+				isDieing = false;
+				
+				System.out.println("die");
+				((FlappyMap)screen).setWinScreen();
+				stageCreator.removeMonster(this);
+			}
+		}
 		if(isDisapearing) {
 			if(!disappear.isAnimationFinished(stateTime)) return State.DISAPPEARED;
 			else {
@@ -70,15 +83,6 @@ public class Boss2 extends Boss{
 		}
 		
 		if(isVisible) {
-			if(isDieing) {
-				if(!die.isAnimationFinished(stateTime)) {
-					return State.DIE;
-				}
-				else {
-					isDieing = false;
-					stageCreator.removeMonster(this);
-				}
-			}
 			if(isAttacking1) {
 				
 				if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
@@ -91,7 +95,7 @@ public class Boss2 extends Boss{
 			if(isAttacking2) {
 				if(!attack2.isAnimationFinished(stateTime)) return State.ATTACKING2;
 				else {
-					bulletManage.addBullet("BossBullet1", b2body.getPosition().x, b2body.getPosition().y, -1);
+					bulletManage.addBullet("BossBullet1", posX, posY, -1);
 					lastAttackTime = System.currentTimeMillis();
 					isAttacking2 = false;
 				}
@@ -102,17 +106,19 @@ public class Boss2 extends Boss{
 				}
 				else isHurting = false;
 			}
+			System.out.println(isDie + " "+isDied);
+			if(isDie) {
+				System.out.println("chet");
+				isDieing = true;
+				isDie = false;
+				return State.DIE;
+			}
 			
 			
 			if(isHurt) {
 				isHurting = true;
 				isHurt = false;
 				return State.HURT;
-			}
-			if(isDie) {
-				isDieing = true;
-				isDie = false;
-				return State.DIE;
 			}
 			
 			if(System.currentTimeMillis()-lastAttackTime > attackCd) {
@@ -191,28 +197,8 @@ public class Boss2 extends Boss{
 		previousState = currentState;
 		return region;
 	}
-	@Override
-	public void update(float dt) {
-		setRegion(getFrame(dt));
-		if(b2body != null) {
-			posX = b2body.getPosition().x;
-			posY = b2body.getPosition().y;		
-		}
-		if(isDied) {
-			removeMonster();
-		}
-		if(!isRemoved) {
-			bossAura.update(posX, posY, dt);
-			setBounds(posX-MonsterWidth/CuocChienSinhTon.PPM/2,posY-MonsterHeight/CuocChienSinhTon.PPM/2,getRegionWidth()/CuocChienSinhTon.PPM*MonsterScaleX,getRegionHeight()/CuocChienSinhTon.PPM*MonsterScaleY);
-			HealthBar.update(Health, HealthMax, posX, posY+radius);
-			movement();
-			batch.begin();
-			
-			this.draw(batch);
-			batch.end();
-		}
-		
-	}
+	
+	
 	@Override
 	public void prepareAnimation() {
 		// TODO Auto-generated method stub

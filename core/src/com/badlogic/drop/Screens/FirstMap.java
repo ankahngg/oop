@@ -86,7 +86,8 @@ public class FirstMap extends PlayScreen {
 		bulletManage = new BulletManage(world,this);
 		
 		stageCreator = new StageCreator(world,this);
-		
+		//setup die screen
+		dieScreen = new DieScreen(game,this);
 		//create player
 		player = new AnKhangHero(world,this);
 		player.isHurtWhenCollide = true;

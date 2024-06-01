@@ -84,6 +84,7 @@ public class FlappyMap extends PlayScreen{
 	public double lastTimeSpawnMonster = 0;
 	public double lastTimeSpawnItem = 0;
 	public float[] posSpawns = {1,3,5,7,9,11,13,15,17,19};
+	private WinScreen winScreen;
 	
 	public FlappyMap (CuocChienSinhTon game) {
 		super(game);
@@ -113,6 +114,12 @@ public class FlappyMap extends PlayScreen{
 		b2dr = new Box2DDebugRenderer();
 		new B2WorldCreator(world, map, this);
 		
+		Collision.setup(this);
+		//set up bullet manage		
+		bulletManage = new BulletManage(world, this);
+		
+		stageCreator = new StageCreator(world,this);
+		
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
@@ -122,6 +129,10 @@ public class FlappyMap extends PlayScreen{
 		
 		//create heath bar
 		healthbar = new HealthBar(this);
+		
+		//setup diescreen
+		dieScreen = new DieScreen(game,this);
+		winScreen = new WinScreen(game, this);
 
 		// Create bounds
 		createBounds();
@@ -129,12 +140,11 @@ public class FlappyMap extends PlayScreen{
 		isBossAppeared=false;
 		//b2dr.setDrawBodies(false);
 		
-		Collision.setup(this);
-		//set up bullet manage		
-		bulletManage = new BulletManage(world, this);
 		
-		stageCreator = new StageCreator(world,this);
-		
+	}
+	
+	public void setDieScreen() {
+		isPlayerDie = true;
 	}
 
 	private void loadMusic() {
@@ -244,15 +254,6 @@ public class FlappyMap extends PlayScreen{
 	// method that be called every 1/60s
 	public void update(float dt) {
 		
-		if(pause) {
-			pauseStage.draw();
-			 Gdx.input.setInputProcessor(pauseStage);
-			 return;
-		}
-		else {
-			Gdx.input.setInputProcessor(stage);
-		}
-		
 		timeCount = System.currentTimeMillis()-timeBegin;
 		stageCr = (int) (timeCount/stageTime);
 	
@@ -260,10 +261,10 @@ public class FlappyMap extends PlayScreen{
 		
 		stageCreator.update(dt);
 		
-		if(stageCr < 7) spawnMonsters();
+		if(stageCr < 0) spawnMonsters();
 		else {
 			if(!isBossAppeared) {
-				stageCreator.addMonster("Boss2", 33, 10, 50, true, true);
+				stageCreator.addMonster("Boss2", 33, 10, 10, true, true);
 				isBossAppeared = true;
 			}
 		}
@@ -284,8 +285,8 @@ public class FlappyMap extends PlayScreen{
 		camera.update();
 		
 		player.update(dt);
+		Gdx.input.setInputProcessor(stage);
 		
-		//stage.draw();
 		
 	}
 	public Body getBody() {
@@ -304,16 +305,15 @@ public class FlappyMap extends PlayScreen{
 	}
 	@Override
 	public void render(float delta) {
-		if(isPlayerDie) {
-			
-			dieScreen.render(delta);
-			return;
-		}
-		
 		if(pause) {
 			Gdx.input.setInputProcessor(pauseStage);
 			pauseStage.draw();
 			 return;
+		}
+		
+		if(isPlayerDie) {
+			dieScreen.render(delta);
+			return;
 		}
 		
 		
@@ -366,8 +366,11 @@ public class FlappyMap extends PlayScreen{
 		renderer.dispose();
 		world.dispose();
 		b2dr.dispose();
-		
-		
+	}
+
+	public void setWinScreen() {
+		game.setScreen(winScreen);
+		System.out.println("?");
 	}
 	}
 

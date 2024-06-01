@@ -389,10 +389,12 @@ public abstract class Hero extends Sprite{
 				else {
 					isDieing = false;
 					
-					
+					System.out.println("wtf");
 					if (screen instanceof FlappyMap) {
-						((FlappyMap)screen).handleDie();
+						
+						((FlappyMap) screen).setDieScreen();
 					}
+					
 				}
 			}
 			if(isHurt) {
