@@ -74,6 +74,7 @@ public class DieScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	                // Handle button click
+	            	dispose();
 	                game.setScreen(new Menu2(game));
 	              
 	            }

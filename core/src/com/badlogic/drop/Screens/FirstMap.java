@@ -19,6 +19,7 @@ import com.badlogic.drop.Sprites.HungKing;
 import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.StageBound;
+import com.badlogic.drop.Tools.AudioManagement;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.drop.Tools.Heart;
 import com.badlogic.drop.Tools.Item;
@@ -26,6 +27,7 @@ import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -99,6 +101,9 @@ public class FirstMap extends PlayScreen {
 		//
 		for(int i=0;i<=8;i++) firstEntry.add(true);
 		setUpProgress();
+		AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).setLooping(true);
+		AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).setVolume(0.1f);
+		AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).play();
 		
 	}
 	
@@ -128,7 +133,8 @@ public class FirstMap extends PlayScreen {
 	}
 	
 	public void setDieScreen() {
-		isPlayerDie = true;
+		dispose();
+		game.setScreen(new DieScreen(game, this));
 
 	}
 	public void handleDie() {
@@ -177,8 +183,8 @@ public class FirstMap extends PlayScreen {
 		
 		if(Gdx.input.isKeyJustPressed(Keys.P) && Gdx.input.isKeyPressed(Keys.ALT_LEFT)) {
 			// +1 vào health
-			stageCr = 6;
-			stagePass = 5;
+			stageCr = 8;
+			stagePass = 7;
 			player.body.setTransform(new Vector2(35*stageCr+2,3) , 0);
 			//player.damage = 10;
 			
@@ -255,10 +261,6 @@ public class FirstMap extends PlayScreen {
 			Gdx.input.setInputProcessor(pauseStage);
 			 return;
 		}
-		if(isPlayerDie) {
-			dieScreen.render(delta);
-			return;
-		}
 		
 		ScreenUtils.clear(0, 0, 0.2f, 1);
 		
@@ -296,10 +298,8 @@ public class FirstMap extends PlayScreen {
 	}
 	public void dispose() {
 			// TODO Auto-generated method stub
-			map.dispose();
-			renderer.dispose();
-			world.dispose();
-			b2dr.dispose();
+			
+			AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).dispose();
 		}
 
 	

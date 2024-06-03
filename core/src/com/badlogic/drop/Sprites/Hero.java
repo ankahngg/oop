@@ -8,8 +8,11 @@ import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Hero.State;
+import com.badlogic.drop.Tools.AudioManagement;
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -181,6 +184,19 @@ public abstract class Hero extends Sprite{
 		region=null;
 		currentState = getFrameState();
 		stateTime = (currentState == previousState ? stateTime + dt : 0);
+		
+		
+		if(currentState != previousState && currentState == State.JUMPING) {
+			AudioManagement.manager.get("Music/Jump.wav",Sound.class).play();
+		}
+		if(currentState != previousState && currentState == State.RUNNING) {
+			//AudioManagement.manager.get("Music/footstep.mp3",Sound.class).setLooping(Health, true);
+			AudioManagement.manager.get("Music/footstep.mp3",Sound.class).play();
+			
+		}
+		if(currentState  != previousState && previousState == State.RUNNING ) 
+			AudioManagement.manager.get("Music/footstep.mp3",Sound.class).stop();
+		
 		if (screen instanceof FirstMap) {
 			switch (currentState) {
 		    case JUMPING:
@@ -188,6 +204,7 @@ public abstract class Hero extends Sprite{
 		        break;
 		    case RUNNING:
 		        region = running.getKeyFrame(stateTime, true);
+		        
 		        break;
 		    case ATTACKING1:
 		    	
@@ -388,8 +405,6 @@ public abstract class Hero extends Sprite{
 				}
 				else {
 					isDieing = false;
-					
-					System.out.println("wtf");
 					if (screen instanceof FlappyMap) {
 						
 						((FlappyMap) screen).setDieScreen();

@@ -189,8 +189,8 @@ public abstract class PlayScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	                // Handle button click
+	            	dispose();
 	                game.setScreen(new Menu2(game));
-	                dispose();
 	            }
 	        });
 		 Table table = new Table();

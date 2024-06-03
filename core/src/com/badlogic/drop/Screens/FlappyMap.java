@@ -261,10 +261,10 @@ public class FlappyMap extends PlayScreen{
 		
 		stageCreator.update(dt);
 		
-		if(stageCr < 0) spawnMonsters();
+		if(stageCr < 8) spawnMonsters();
 		else {
 			if(!isBossAppeared) {
-				stageCreator.addMonster("Boss2", 33, 10, 10, true, true);
+				stageCreator.addMonster("Boss2", 33, 10, 50, true, true);
 				isBossAppeared = true;
 			}
 		}

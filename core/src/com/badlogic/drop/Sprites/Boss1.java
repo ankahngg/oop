@@ -98,14 +98,17 @@ public class Boss1 extends Boss{
 	public State getFrameState(float dt) {
 		
 		
+		System.out.println(isDieing);
 		if(isDieing) {
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
 			else {
 				isDieing = false;
-				removeMonster();
+				stageCreator.removeMonster(this);
+				isDieFinish = true;
 				screen.game.setScreen(new FlappyMap(screen.game));
 			}
 		}
+		
 		if(isAttacking) {
 			isHurting = false;
 			if(!attack1.isAnimationFinished(stateTime)) return State.ATTACKING1;
@@ -143,6 +146,7 @@ public class Boss1 extends Boss{
 		}
 		
 		if(isDie) {
+			isAttacking1 = false;
 			isDieing = true;
 			isDie = false;
 			return State.DIE;

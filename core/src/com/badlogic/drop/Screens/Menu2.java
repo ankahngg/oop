@@ -3,9 +3,12 @@ package com.badlogic.drop.Screens;
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
 import com.badlogic.drop.MapUserData;
+import com.badlogic.drop.Tools.AudioManagement;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -76,7 +79,7 @@ public class Menu2 implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	                // Handle button click
-	        
+	            	dispose();
 	            	game.setScreen(new FirstMap(game));
 	            	
 	            }
@@ -124,6 +127,8 @@ public class Menu2 implements Screen {
 
         // Make the stage handle input
         Gdx.input.setInputProcessor(stage);
+      AudioManagement.manager.get("Music/NhacMenu.mp3",Music.class).play();
+      AudioManagement.manager.get("Music/NhacMenu.mp3",Music.class).isLooping();
       
 	}
 
@@ -174,6 +179,6 @@ public class Menu2 implements Screen {
 
 	@Override
 	public void dispose() {
-		
+		AudioManagement.manager.get("Music/NhacMenu.mp3",Music.class).dispose();
 	}
 }

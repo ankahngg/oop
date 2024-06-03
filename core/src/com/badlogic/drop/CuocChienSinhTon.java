@@ -16,6 +16,7 @@ import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Screens.ScreenManagement;
+import com.badlogic.drop.Tools.AudioManagement;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -40,6 +41,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 		}
 
 		public void create() {
+			AudioManagement.setUp();
 			batch = new SpriteBatch();
 			
 			setScreen(new Menu2(this));
