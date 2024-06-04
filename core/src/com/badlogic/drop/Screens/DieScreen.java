@@ -2,9 +2,11 @@ package com.badlogic.drop.Screens;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.CuocChienSinhTon.MAP;
+import com.badlogic.drop.Tools.AudioManagement;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -46,6 +48,7 @@ public class DieScreen implements Screen {
 	private ImageButton AgainButton;
 	
 	
+	private Music dieMusic;
 	public DieScreen(CuocChienSinhTon game, PlayScreen screen) {
 		this.game = game;
 		camera = new OrthographicCamera();
@@ -61,6 +64,10 @@ public class DieScreen implements Screen {
 		
 		Table tabel = new Table();  
 	
+		//music
+		dieMusic = AudioManagement.manager.get(AudioManagement.gameOverMusic,Music.class);
+		dieMusic.setVolume(0.1f);
+		dieMusic.play();
 		tabel.center();
 		tabel.setFillParent(true);
 		
@@ -76,6 +83,7 @@ public class DieScreen implements Screen {
 	                // Handle button click
 	            	dispose();
 	                game.setScreen(new Menu2(game));
+	                
 	              
 	            }
 	        });
@@ -150,5 +158,7 @@ public class DieScreen implements Screen {
 	public void dispose() {
 	
 		stage.dispose();
+    	dieMusic.dispose();
+
 	}
 }

@@ -60,6 +60,8 @@ public class FirstMap extends PlayScreen {
 	
 	private boolean isOnStage = false;
 	
+	public Music map1Music;
+	
 	public FirstMap(CuocChienSinhTon game) {
 		super(game);
 		// load map
@@ -101,10 +103,11 @@ public class FirstMap extends PlayScreen {
 		//
 		for(int i=0;i<=8;i++) firstEntry.add(true);
 		setUpProgress();
-		AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).setLooping(true);
-		AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).setVolume(0.1f);
-		AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).play();
-		
+		map1Music = AudioManagement.manager.get(AudioManagement.map1Music,Music.class);
+		map1Music.setLooping(true);
+		map1Music.setVolume(0.1f);
+		map1Music.play();
+		AudioManagement.setLastMusic(map1Music);
 	}
 	
 	public void setUpProgress() {
@@ -257,6 +260,7 @@ public class FirstMap extends PlayScreen {
 	@Override
 	public void render(float delta) {
 		if(pause) {
+			map1Music.pause();
 			pauseStage.draw();
 			Gdx.input.setInputProcessor(pauseStage);
 			 return;
@@ -298,8 +302,7 @@ public class FirstMap extends PlayScreen {
 	}
 	public void dispose() {
 			// TODO Auto-generated method stub
-			
-			AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).dispose();
+			map1Music.dispose();
 		}
 
 	

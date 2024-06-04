@@ -4,6 +4,7 @@ import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -26,6 +27,8 @@ public class Shield extends Item{
 
 	@Override
 	public void effect() {
+		AudioManagement.manager.get(AudioManagement.collectItemSound,Sound.class).play();
+
 		isDied = true;
 		screen.getPlayer().shieldBegin = System.currentTimeMillis();
 		

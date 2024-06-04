@@ -105,6 +105,7 @@ public class Boss1 extends Boss{
 				isDieing = false;
 				stageCreator.removeMonster(this);
 				isDieFinish = true;
+				((FirstMap)screen).map1Music.stop();
 				screen.game.setScreen(new FlappyMap(screen.game));
 			}
 		}
