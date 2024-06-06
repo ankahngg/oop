@@ -126,7 +126,10 @@ public class FlappyMap extends PlayScreen{
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
 
+		if(type==0)
 		player = new AnKhangHero(world,this);
+		else 
+			player = new HungKing(world,this);
 		timeBegin = System.currentTimeMillis();
 		
 		//create heath bar

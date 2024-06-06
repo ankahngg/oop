@@ -93,7 +93,15 @@ public class FirstMap extends PlayScreen {
 		//setup die screen
 		dieScreen = new DieScreen(game,this);
 		//create player
-		player = new AnKhangHero(world,this);
+		if ( Math.random()*10>5) {
+					player = new AnKhangHero(world,this);
+					type=0;
+
+		}
+		else {
+			type=1;
+			player = new HungKing(world, this);
+		}
 		player.isHurtWhenCollide = true;
 		
 		b2dr.setDrawBodies(false);
@@ -105,7 +113,7 @@ public class FirstMap extends PlayScreen {
 		setUpProgress();
 		map1Music = AudioManagement.manager.get(AudioManagement.map1Music,Music.class);
 		map1Music.setLooping(true);
-		map1Music.setVolume(0.1f);
+		map1Music.setVolume(0.5f);
 		map1Music.play();
 		AudioManagement.setLastMusic(map1Music);
 	}

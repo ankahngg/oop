@@ -1,6 +1,7 @@
 package com.badlogic.drop.Sprites;
 
 import java.util.Currency;
+import java.util.IllegalFormatFlagsException;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FlappyMap;
@@ -44,8 +45,17 @@ public class Boss2 extends Boss{
 		monsterDef.setUserData(this);
 		lastAttackTime = System.currentTimeMillis();
 		attackCd = 2000;
+		bossAura= new Aura(world, screen);
 	}
-
+	@Override
+	
+	public void update(float dt) {
+		// TODO Auto-generated method stub
+		if(this.b2body!=null)
+		bossAura.update(this.getX()+1.5f, this.getY()+1.5f, dt);
+		super.update(dt);
+		
+	}
 	@Override
 	public State getFrameState(float dt) {
 		// TODO Auto-generated method stub
@@ -64,6 +74,7 @@ public class Boss2 extends Boss{
 		if(isDisapearing) {
 			if(!disappear.isAnimationFinished(stateTime)) return State.DISAPPEARED;
 			else {
+				Health = HealthMax;
 				isDisapearing = false;
 				b2body.setTransform(33,-10f, 0);
 				disappearTimeBegin = System.currentTimeMillis();

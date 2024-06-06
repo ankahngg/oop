@@ -96,8 +96,13 @@ public class Boss1 extends Boss{
 	boolean isHurting = false;
 	
 	public State getFrameState(float dt) {
-		
-		
+		if(b2body==null) {
+			isDieing = false;
+			stageCreator.removeMonster(this);
+			isDieFinish = true;
+			((FirstMap)screen).map1Music.stop();
+			screen.game.setScreen(new FlappyMap(screen.game));
+		}
 		System.out.println(isDieing);
 		if(isDieing) {
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;

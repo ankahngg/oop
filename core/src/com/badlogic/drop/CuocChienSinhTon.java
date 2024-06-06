@@ -4,7 +4,6 @@
 
 	import com.badlogic.drop.Screens.FirstMap;
 	import com.badlogic.drop.Screens.FlappyMap;
-	import com.badlogic.drop.Screens.Menu;
 import com.badlogic.drop.Screens.Menu2;
 import com.badlogic.gdx.Game;
 	import com.badlogic.gdx.Screen;

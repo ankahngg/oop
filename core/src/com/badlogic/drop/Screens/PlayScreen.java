@@ -93,7 +93,7 @@ public abstract class PlayScreen implements Screen {
 	private ImageButton ResumeButton;
 	public DieScreen dieScreen;
 	public boolean isPlayerDie = false;
-	
+	public static int type;
 	public Music pauseMusic;
 	public PlayScreen(CuocChienSinhTon game) {
 		this.game = game;
@@ -194,6 +194,8 @@ public abstract class PlayScreen implements Screen {
 	            public void clicked(InputEvent event, float x, float y) {
 	                // Handle button click
 	            	dispose();
+	        		pauseMusic.stop();
+
 	                game.setScreen(new Menu2(game));
 	            }
 	        });
@@ -256,7 +258,6 @@ public abstract class PlayScreen implements Screen {
 	}
 	@Override
 	public void dispose() {
-		
 		// TODO Auto-generated method stub
 	
 	}

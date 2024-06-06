@@ -35,7 +35,7 @@ public abstract class Hero extends Sprite{
 	public Input currentInput;
 	public int currentRank;
 	public int stageSkill = 0;
-	public int damage = 10;
+	public int damage = 1;
 	public World world;
 	public Body body;
 	public Body hitbox;
@@ -159,7 +159,7 @@ public abstract class Hero extends Sprite{
 		if(strengthBegin != -1) {
 			if(System.currentTimeMillis()-strengthBegin >= 10000) {
 				strengthBegin = -1;
-				damage=10;
+				damage=1;
 			}
 		
 		}
