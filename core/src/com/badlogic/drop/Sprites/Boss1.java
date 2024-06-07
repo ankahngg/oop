@@ -16,8 +16,6 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Boss1 extends Boss{
 	
 	
-	private Texture BossHealthBar;
-	private Texture BossHealth;
 
 	public void prepareAnimation() {
 		BossHealthBar = new Texture("HealthBar/bg.png");
