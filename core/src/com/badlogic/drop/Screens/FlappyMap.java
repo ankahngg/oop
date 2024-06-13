@@ -21,6 +21,7 @@ import com.badlogic.drop.Sprites.DragonBallMonster1;
 import com.badlogic.drop.Sprites.DragonBallMonster2;
 import com.badlogic.drop.Sprites.EnergyBall;
 import com.badlogic.drop.Sprites.EyeBullet;
+import com.badlogic.drop.Sprites.FireManage;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.drop.Sprites.HungKing;
@@ -119,7 +120,8 @@ public class FlappyMap extends PlayScreen{
 		Collision.setup(this);
 		//set up bullet manage		
 		bulletManage = new BulletManage(world, this);
-		
+		fireManage = new FireManage(world, this);
+
 		stageCreator = new StageCreator(world,this);
 		
 		// create hero
@@ -280,9 +282,8 @@ public class FlappyMap extends PlayScreen{
 		}
 		
 		spawnItems();
-
 		bulletManage.update(dt);
-		
+		fireManage.update( dt);
 		//update healthbar
 		healthbar.update(dt);
 		

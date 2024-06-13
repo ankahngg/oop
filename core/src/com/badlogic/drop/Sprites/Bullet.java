@@ -72,7 +72,7 @@ abstract public class Bullet extends Sprite{
 		}
 	}
 	
-	abstract public void prepareAnimation() ;
+	public abstract void prepareAnimation();
 	
 	public void update(float dt) {
 

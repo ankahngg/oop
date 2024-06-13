@@ -13,6 +13,7 @@ import com.badlogic.drop.Sprites.Bullet;
 import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EyeBullet;
+import com.badlogic.drop.Sprites.FireManage;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.HellBeast;
 import com.badlogic.drop.Sprites.HungKing;
@@ -88,7 +89,8 @@ public class FirstMap extends PlayScreen {
 		Collision.setup(this);
 		//set up bullet manage		
 		bulletManage = new BulletManage(world,this);
-		
+		fireManage = new FireManage(world, this);
+
 		stageCreator = new StageCreator(world,this);
 		//setup die screen
 		dieScreen = new DieScreen(game,this);
@@ -239,7 +241,7 @@ public class FirstMap extends PlayScreen {
 		world.step(1/60f, 6, 2);
 		
 		bulletManage.update(dt);
-		
+		fireManage.update(dt);
 		handleInput(dt);
 		player.update(dt);
 		

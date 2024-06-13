@@ -6,6 +6,7 @@ import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Boss1;
 import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
+import com.badlogic.drop.Sprites.FireManage;
 import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.drop.Tools.AudioManagement;
 import com.badlogic.drop.Tools.StageCreator;
@@ -70,6 +71,8 @@ public abstract class PlayScreen implements Screen {
 	
 	public WorldContactListener worldContactListener;
 
+	// Fire Manage
+	public FireManage fireManage;
 	// music
 	public Music backgroundMusic;
 	public Stage stage;
@@ -99,7 +102,6 @@ public abstract class PlayScreen implements Screen {
 		this.game = game;
 		camera = new OrthographicCamera();
 		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH, CuocChienSinhTon.V_HEIGHT,camera);
-		
 		setUpPauseButton();
 		setUpPauseStage();
 		

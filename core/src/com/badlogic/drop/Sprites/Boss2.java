@@ -80,7 +80,6 @@ public class Boss2 extends Boss{
 			else {
 				isDieing = false;
 				
-				System.out.println("die");
 				((FlappyMap)screen).setWinScreen();
 				stageCreator.removeMonster(this);
 			}
@@ -88,7 +87,7 @@ public class Boss2 extends Boss{
 		if(isDisapearing) {
 			if(!disappear.isAnimationFinished(stateTime)) return State.DISAPPEARED;
 			else {
-				Health = Math.min(Health, Health+50);
+				Health = Math.min(HealthMax, Health+50);
 				isDisapearing = false;
 				b2body.setTransform(33,-10f, 0);
 				disappearTimeBegin = System.currentTimeMillis();
@@ -131,9 +130,7 @@ public class Boss2 extends Boss{
 				}
 				else isHurting = false;
 			}
-			System.out.println(isDie + " "+isDied);
 			if(isDie) {
-				System.out.println("chet");
 				isDieing = true;
 				isDie = false;
 				return State.DIE;
