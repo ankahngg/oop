@@ -96,7 +96,7 @@ public abstract class PlayScreen implements Screen {
 	private ImageButton ResumeButton;
 	public DieScreen dieScreen;
 	public boolean isPlayerDie = false;
-	public static int type;
+	public static int type =0;
 	public Music pauseMusic;
 	public PlayScreen(CuocChienSinhTon game) {
 		this.game = game;

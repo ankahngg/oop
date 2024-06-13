@@ -45,7 +45,7 @@ public class FirstMap extends PlayScreen {
 	public int stageLength = 35;
 	public boolean isBossSpawn = true;
 	public final int speed = 10;
-
+	
 	public B2WorldCreator WorldCreator;
 	public double teleCd=1000;
 	public double lastTele=0;
@@ -95,15 +95,21 @@ public class FirstMap extends PlayScreen {
 		//setup die screen
 		dieScreen = new DieScreen(game,this);
 		//create player
-		if ( Math.random()*10>5) {
-					player = new AnKhangHero(world,this);
+		if (type==-1) {
+			if ( Math.random()*10>5) {
+					
 					type=0;
 
 		}
 		else {
 			type=1;
-			player = new HungKing(world, this);
 		}
+		}else {
+			if(type==1) player = new AnKhangHero(world,this);
+			else player = new HungKing(world, this);
+
+		}
+		
 		player.isHurtWhenCollide = true;
 		
 		b2dr.setDrawBodies(false);
@@ -215,15 +221,15 @@ public class FirstMap extends PlayScreen {
 			player.body.setLinearVelocity( new Vector2(speed,vel.y));
 		}
 		
-		if(Gdx.input.isKeyJustPressed(Keys.L) && System.currentTimeMillis()-lastTele > teleCd) {
-			if(!Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.D)) {
-				if(!player.isFlipX()) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
-				else player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
-			}
-			else if(Gdx.input.isKeyPressed(Keys.D)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
-			else if(Gdx.input.isKeyPressed(Keys.A)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
-			lastTele = System.currentTimeMillis();
-		}
+//		if(Gdx.input.isKeyJustPressed(Keys.L) && System.currentTimeMillis()-lastTele > teleCd) {
+//			if(!Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.D)) {
+//				if(!player.isFlipX()) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
+//				else player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
+//			}
+//			else if(Gdx.input.isKeyPressed(Keys.D)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
+//			else if(Gdx.input.isKeyPressed(Keys.A)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
+//			lastTele = System.currentTimeMillis();
+//		}
 		
 		
 		if(Gdx.input.isKeyJustPressed(Keys.W) && canJump && vel.y == 0) {

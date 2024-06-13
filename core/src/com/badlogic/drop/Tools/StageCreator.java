@@ -216,7 +216,6 @@ public class StageCreator {
 			addMonster("Boss", posX, posY,50,true,true);
 		}
 		int o = 11;
-		System.out.println(o+y-1);
 		isOnStage = true;
 		if(o+y-1 >= map.getLayers().getCount()) return;
 		MapGroupLayer xx = (MapGroupLayer) map.getLayers().get(o+y-1);
