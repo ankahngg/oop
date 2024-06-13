@@ -66,7 +66,6 @@ public class HellBeast extends Monster{
 			else {
 				isAttacking1 = false;
 				float angle = bulletManage.getAngle(posX, posY, screen.getPlayer().body.getPosition().x, screen.getPlayer().body.getPosition().y);
-				System.out.println(angle);
 				bulletManage.addBullet("FireBullet", posX, posY, -1,20,angle,-1);
 				lastFire = System.currentTimeMillis();
 			}

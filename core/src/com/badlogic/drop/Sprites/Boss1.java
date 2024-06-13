@@ -1,3 +1,4 @@
+
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.CuocChienSinhTon;
@@ -101,7 +102,6 @@ public class Boss1 extends Boss{
 			((FirstMap)screen).map1Music.stop();
 			screen.game.setScreen(new FlappyMap(screen.game));
 		}
-		System.out.println(isDieing);
 		if(isDieing) {
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
 			else {

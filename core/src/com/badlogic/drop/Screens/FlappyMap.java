@@ -382,7 +382,6 @@ public class FlappyMap extends PlayScreen{
 
 	public void setWinScreen() {
 		game.setScreen(winScreen);
-		System.out.println("?");
 	}
 	}
 
