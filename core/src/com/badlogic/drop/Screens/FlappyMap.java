@@ -22,15 +22,15 @@ import com.badlogic.drop.Sprites.DragonBallMonster2;
 import com.badlogic.drop.Sprites.EnergyBall;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
+import com.badlogic.drop.Sprites.Heart;
 import com.badlogic.drop.Sprites.Hero;
 import com.badlogic.drop.Sprites.HungKing;
+import com.badlogic.drop.Sprites.Item;
 import com.badlogic.drop.Sprites.Monster;
+import com.badlogic.drop.Sprites.Shield;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.Hero.State;
 import com.badlogic.drop.Tools.B2WorldCreator;
-import com.badlogic.drop.Tools.Heart;
-import com.badlogic.drop.Tools.Item;
-import com.badlogic.drop.Tools.Shield;
 import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
@@ -138,7 +138,7 @@ public class FlappyMap extends PlayScreen{
 		createBounds();
 		
 		isBossAppeared=false;
-		//b2dr.setDrawBodies(false);
+		b2dr.setDrawBodies(false);
 		
 		
 	}
@@ -261,7 +261,7 @@ public class FlappyMap extends PlayScreen{
 		
 		stageCreator.update(dt);
 		
-		if(stageCr < 8) spawnMonsters();
+		if(stageCr < 0) spawnMonsters();
 		else {
 			if(!isBossAppeared) {
 				stageCreator.addMonster("Boss2", 33, 10, 50, true, true);

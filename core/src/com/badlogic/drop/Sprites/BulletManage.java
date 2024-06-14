@@ -2,7 +2,6 @@ package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
-import com.badlogic.drop.Tools.Item;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.World;

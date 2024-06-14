@@ -37,5 +37,6 @@ public class HungKing extends Hero{
 		die = new Animation<TextureRegion>(0.1f, atlasDieing.getRegions());
 		setRegion(atlasStanding.getRegions().get(1));
 		HeroHeight = getRegionHeight();
+		HeroWidth = getRegionHeight();
 	}
 }

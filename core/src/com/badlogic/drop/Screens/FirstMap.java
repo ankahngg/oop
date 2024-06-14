@@ -14,15 +14,15 @@ import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EyeBullet;
 import com.badlogic.drop.Sprites.FlyingEye;
+import com.badlogic.drop.Sprites.Heart;
 import com.badlogic.drop.Sprites.HellBeast;
 import com.badlogic.drop.Sprites.HungKing;
+import com.badlogic.drop.Sprites.Item;
 import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.StageBound;
 import com.badlogic.drop.Tools.AudioManagement;
 import com.badlogic.drop.Tools.B2WorldCreator;
-import com.badlogic.drop.Tools.Heart;
-import com.badlogic.drop.Tools.Item;
 import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
@@ -91,10 +91,10 @@ public class FirstMap extends PlayScreen {
 		//setup die screen
 		dieScreen = new DieScreen(game,this);
 		//create player
-		player = new AnKhangHero(world,this);
+		player = new HungKing(world,this);
 		player.isHurtWhenCollide = true;
 		
-		b2dr.setDrawBodies(false);
+		//b2dr.setDrawBodies(false);
 		
 		//create healthBar
 		healthbar = new HealthBar(this);

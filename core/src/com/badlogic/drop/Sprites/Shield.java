@@ -1,41 +1,33 @@
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.CuocChienSinhTon;
+import com.badlogic.drop.Screens.FirstMap;
+import com.badlogic.drop.Screens.FlappyMap;
 import com.badlogic.drop.Screens.PlayScreen;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Shield extends Sprite{
-	
-	public TextureAtlas atlasSheild;
-	public Animation<TextureRegion> shield;
-	
-	SpriteBatch batch;
-	
-	public World world;
-	public PlayScreen screen;
-	public float stateTime;
-	private float regionH;
-	private float regionW;
-	public Shield(World worldd, PlayScreen screenn) {
-		this.world = worldd;
-		this.screen = screenn;
-		batch = screenn.game.getBatch();
-		atlasSheild = new TextureAtlas("Shield/shield.pack");
-		shield = new Animation<TextureRegion>(0.2f, atlasSheild.getRegions());
+public class Shield extends Item{
+	public Shield(World worldd, PlayScreen screenn,float x, float y) {
+		
+		super(worldd, screenn, x, y);
+		
 	}
-	public void update(float x, float y,float dt) {
-		stateTime += dt;
-		setRegion(shield.getKeyFrame(stateTime,true));
-		regionH = getRegionHeight()/CuocChienSinhTon.PPM;
-		regionW = getRegionHeight()/CuocChienSinhTon.PPM;
-		setBounds(x-regionW/2, y-regionH/2, regionW,regionH);
-		batch.begin();
-		this.draw(batch);
-		batch.end();
+
+	@Override
+	public void prepairTexture() {
+		this.ItemScaleX = this.ItemScaleY = 0.5f;
+		this.texture = new Texture("Items/Shield.png");
+		setRegion(texture);
+		regionH = getRegionHeight()/CuocChienSinhTon.PPM*ItemScaleX;
+		regionW = getRegionHeight()/CuocChienSinhTon.PPM*ItemScaleY;
+		
+	}
+
+	@Override
+	public void effect() {
+		isDied = true;
+		screen.getPlayer().shieldBegin = System.currentTimeMillis();
+		
 	}
 }

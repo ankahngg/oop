@@ -100,7 +100,7 @@ public abstract class Hero extends Sprite{
 	protected PlayScreen screen;
 	protected Bullet bullet;
 	private TextureRegion region;
-	private Shield shield;
+	private HeroShield shield;
 	private BulletManage bulletManage;
 	public Hero(World world, PlayScreen screen,float x, float y, int maxHealth) {
 		this.world = world;
@@ -119,7 +119,7 @@ public abstract class Hero extends Sprite{
 		Collision.setCategoryFilter(normalDef, Collision.HERO_BITS,null);
 		normalDef.setUserData(this);
 		
-		shield = new Shield(world, screen);
+		shield = new HeroShield(world, screen);
 		
 	}
 	public void setBullet(World world,PlayScreen screen,float x, float y,int direction) {

@@ -1,11 +1,11 @@
-package com.badlogic.drop.Tools;
+package com.badlogic.drop.Sprites;
 
 import java.util.Set;
 
 import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
-import com.badlogic.drop.Sprites.Collision;
+import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
