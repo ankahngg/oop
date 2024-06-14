@@ -127,10 +127,11 @@ public class FlappyMap extends PlayScreen{
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
+		System.out.print(type);
 
-		if(type==0)
+		if(type==1)
 		player = new AnKhangHero(world,this);
-		else 
+		else if (type==0) 
 			player = new HungKing(world,this);
 		timeBegin = System.currentTimeMillis();
 		
