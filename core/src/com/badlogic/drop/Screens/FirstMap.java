@@ -111,7 +111,7 @@ public class FirstMap extends PlayScreen {
 			else player = new HungKing(world, this);
 
 		}
-		
+		System.out.print(type);
 		player.isHurtWhenCollide = true;
 		
 		//b2dr.setDrawBodies(false);
@@ -207,6 +207,12 @@ public class FirstMap extends PlayScreen {
 			stageCr = 8;
 			stagePass = 7;
 			player.body.setTransform(new Vector2(35*stageCr+2,3) , 0);
+			//player.damage = 10;
+			
+		}
+		if(Gdx.input.isKeyJustPressed(Keys.O) && Gdx.input.isKeyPressed(Keys.ALT_LEFT)) {
+			// +1 vào health
+			game.setScreen(new FlappyMap(game));
 			//player.damage = 10;
 			
 		}
