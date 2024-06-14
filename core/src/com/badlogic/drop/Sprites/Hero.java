@@ -102,6 +102,11 @@ public abstract class Hero extends Sprite{
 	private TextureRegion region;
 	private HeroShield shield;
 	private BulletManage bulletManage;
+	
+	private Sound heroBulletSound;
+	private Sound heroSwordSound;
+	private Sound heroHurtSound;
+	
 	public Hero(World world, PlayScreen screen,float x, float y, int maxHealth) {
 		this.world = world;
 		this.screen = screen;
@@ -120,6 +125,10 @@ public abstract class Hero extends Sprite{
 		normalDef.setUserData(this);
 		
 		shield = new HeroShield(world, screen);
+		
+		heroBulletSound = AudioManagement.manager.get(AudioManagement.heroBulletSound,Sound.class);
+		heroSwordSound = AudioManagement.manager.get(AudioManagement.heroSwordSound,Sound.class);
+		heroHurtSound = AudioManagement.manager.get(AudioManagement.heroHurtSound,Sound.class);
 		
 	}
 	public void setBullet(World world,PlayScreen screen,float x, float y,int direction) {
@@ -279,10 +288,10 @@ public abstract class Hero extends Sprite{
 
 	public void handleHurt(Fixture damageObject) {
 		if(shieldBegin != -1) return;
-		screen.playHeroHurtSound();
 		isHurt = true;
 		isAttacking = false;
 		
+		heroHurtSound.play();
 		
 		Health --;
 		
@@ -358,6 +367,7 @@ public abstract class Hero extends Sprite{
 			
 			if(Gdx.input.isKeyPressed(Keys.J)) {
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
+					heroSwordSound.play();
 					Collision.heroAttack(screen);
 					isAttacking = true;
 					if(currentAttack == 3) currentAttack = 1;
@@ -371,9 +381,13 @@ public abstract class Hero extends Sprite{
 			else FireCoolDown = 1000;
 			if(Gdx.input.isKeyPressed(Keys.K) && ((FirstMap) screen).stagePass >= stageSkill) {
 				if(System.currentTimeMillis() - lastFireTime >= FireCoolDown) {
+					heroBulletSound.play();
 					isFiring = true;
 					if(this.isFlipX()) bulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, -1);
-					else bulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, 1);
+					else {
+						
+						bulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, 1);
+					}
 //					if(this.isFlipX()) BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, -1,-1,45,-1);
 //					else BulletManage.addBullet(bulletType, body.getPosition().x, body.getPosition().y, 1,-1,45,-1);
 					return State.FIRING;
@@ -431,7 +445,7 @@ public abstract class Hero extends Sprite{
 			if(Gdx.input.isKeyPressed(Keys.J)) {
 				if(System.currentTimeMillis() - lastAttackTime >= 50) {
 					Collision.heroAttack(screen);
-					
+					heroBulletSound.play();
 					if(strengthBegin != -1) {
 						bulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,20,0,-1);
 						bulletManage.addBullet(bulletType, this.getX(), this.getY(), 1,20,15,-1);

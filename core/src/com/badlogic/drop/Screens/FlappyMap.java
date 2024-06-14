@@ -21,6 +21,7 @@ import com.badlogic.drop.Sprites.DragonBallMonster1;
 import com.badlogic.drop.Sprites.DragonBallMonster2;
 import com.badlogic.drop.Sprites.EnergyBall;
 import com.badlogic.drop.Sprites.EyeBullet;
+import com.badlogic.drop.Sprites.FireManage;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.Heart;
 import com.badlogic.drop.Sprites.Hero;
@@ -30,12 +31,14 @@ import com.badlogic.drop.Sprites.Monster;
 import com.badlogic.drop.Sprites.Shield;
 import com.badlogic.drop.Sprites.Skeleton;
 import com.badlogic.drop.Sprites.Hero.State;
+import com.badlogic.drop.Tools.AudioManagement;
 import com.badlogic.drop.Tools.B2WorldCreator;
 import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -85,7 +88,7 @@ public class FlappyMap extends PlayScreen{
 	public double lastTimeSpawnItem = 0;
 	public float[] posSpawns = {1,3,5,7,9,11,13,15,17,19};
 	private WinScreen winScreen;
-	
+	public Music map2Music;
 	public FlappyMap (CuocChienSinhTon game) {
 		super(game);
 		//utils
@@ -117,14 +120,18 @@ public class FlappyMap extends PlayScreen{
 		Collision.setup(this);
 		//set up bullet manage		
 		bulletManage = new BulletManage(world, this);
-		
+		fireManage = new FireManage(world, this);
+
 		stageCreator = new StageCreator(world,this);
 		
 		// create hero
 		region = atlas.findRegion("HeroIdle");
 		prepareFlyEngineAnimation();
 
+		if(type==0)
 		player = new AnKhangHero(world,this);
+		else 
+			player = new HungKing(world,this);
 		timeBegin = System.currentTimeMillis();
 		
 		//create heath bar
@@ -139,6 +146,15 @@ public class FlappyMap extends PlayScreen{
 		
 		isBossAppeared=false;
 		b2dr.setDrawBodies(false);
+
+
+		
+		//music
+		map2Music = AudioManagement.manager.get(AudioManagement.map2Music,Music.class);
+		AudioManagement.setLastMusic(map2Music);
+		map2Music.setLooping(true);
+		map2Music.setVolume(0.7f);
+		map2Music.play();
 		
 		
 	}
@@ -147,9 +163,7 @@ public class FlappyMap extends PlayScreen{
 		isPlayerDie = true;
 	}
 
-	private void loadMusic() {
-		
-	}
+	
 	private void spawnItems() {
 		int type = MathUtils.random(2);
 		float posY = MathUtils.random(17)+1;
@@ -270,9 +284,8 @@ public class FlappyMap extends PlayScreen{
 		}
 		
 		spawnItems();
-
 		bulletManage.update(dt);
-		
+		fireManage.update( dt);
 		//update healthbar
 		healthbar.update(dt);
 		
@@ -306,6 +319,7 @@ public class FlappyMap extends PlayScreen{
 	@Override
 	public void render(float delta) {
 		if(pause) {
+			map2Music.pause();
 			Gdx.input.setInputProcessor(pauseStage);
 			pauseStage.draw();
 			 return;
@@ -370,7 +384,6 @@ public class FlappyMap extends PlayScreen{
 
 	public void setWinScreen() {
 		game.setScreen(winScreen);
-		System.out.println("?");
 	}
 	}
 

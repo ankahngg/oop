@@ -96,7 +96,7 @@ public class Menu2 implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	                // Handle button click
-	                System.out.println("Option Button clicked!");
+	                System.out.println("Ban that dep trai!");
 	            }
 	        });
 		 

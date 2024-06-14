@@ -13,7 +13,7 @@ public class HungKing extends Hero{
 	
 	public HungKing(World world, PlayScreen screen) {
 		super(world, screen, 2,2,10);
-		bulletType = "HeroBullet1";
+		bulletType = "Thunder";
 	}
 
 	
@@ -32,11 +32,12 @@ public class HungKing extends Hero{
 		attack3 = new Animation<TextureRegion>(0.08f, atlasAttack3.getRegions());
 		running = new Animation<TextureRegion>(0.1f, atlasRunning.getRegions());
 		jumping = new Animation<TextureRegion>(0.1f, atlasJumping.getRegions());
-		standing = new Animation<TextureRegion>(0.3f, atlasStanding.getRegions());
+		standing = new Animation<TextureRegion>(0.1f, atlasStanding.getRegions());
 		hurt = new Animation<TextureRegion>(0.1f, atlasHurting.getRegions());
 		die = new Animation<TextureRegion>(0.1f, atlasDieing.getRegions());
 		setRegion(atlasStanding.getRegions().get(1));
 		HeroHeight = getRegionHeight();
-		HeroWidth = getRegionHeight();
+		HeroWidth = getRegionWidth();
+
 	}
 }

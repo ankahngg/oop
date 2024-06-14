@@ -65,6 +65,8 @@ public class Collision {
 		if (x.getUserData()==null || y.getUserData() ==null) return;
 		((Monster) y.getUserData()).onHit();
 		((Bullet) x.getUserData()).onHit();
+		Monster monster =(Monster) y.getUserData();
+		screen.fireManage.addFire(monster.getX(),monster.getY());
 	}
 	
 	
@@ -110,7 +112,6 @@ public class Collision {
 		Fixture x = getFix(Collision.HERO_BITS,contact);
 		Fixture y = (contact.getFixtureA() == x ? contact.getFixtureB() : contact.getFixtureA());
 		Hero hero = ((Hero) x.getUserData());
-		System.out.println(hero);
 		hero.handleHurt(y);
 	}
 	

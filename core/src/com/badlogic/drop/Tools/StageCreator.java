@@ -104,7 +104,7 @@ public class StageCreator {
 		}
 		else if(type == "Boss2") {
 			
-			Boss2 xx = new Boss2(world, screen, x,y,maxHealth,isDynamic,isSensor);
+			Boss2 xx = new Boss2(world, screen, x,y,isDynamic,isSensor);
 			monsters.add(xx);
 		}
 	}
@@ -144,7 +144,7 @@ public class StageCreator {
 			monsters.add(xx);
 		}
 		else if(type == "Boss2") {
-			Boss2 xx = new Boss2(world, screen, x,y,maxHealth,isDynamic,isSensor);
+			Boss2 xx = new Boss2(world, screen, x,y,isDynamic,isSensor);
 			xx.setUp(direction, speed, angle, lifeTime);
 			monsters.add(xx);
 		}
@@ -220,7 +220,6 @@ public class StageCreator {
 			addMonster("Boss", posX, posY,50,true,true);
 		}
 		int o = 11;
-		System.out.println(o+y-1);
 		isOnStage = true;
 		if(o+y-1 >= map.getLayers().getCount()) return;
 		MapGroupLayer xx = (MapGroupLayer) map.getLayers().get(o+y-1);

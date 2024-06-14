@@ -2,6 +2,7 @@ package com.badlogic.drop.Tools;
 
 
 
+import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -36,6 +37,7 @@ public class WorldContactListener implements ContactListener {
 	        	Collision.InstructionColi = true;
 	        }
 	        if(isContact(Collision.HEROBULLET_BITS,Collision.MONSTER_BITS,contact)) {
+	        	
 	        	Collision.monsterBulletHurt(contact);
 	        }
 //	        if(isContact(Collision.HERO_BITS,Collision.MONSTER_BITS,contact)) {

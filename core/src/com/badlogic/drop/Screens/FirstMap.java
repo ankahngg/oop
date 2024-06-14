@@ -13,6 +13,7 @@ import com.badlogic.drop.Sprites.Bullet;
 import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
 import com.badlogic.drop.Sprites.EyeBullet;
+import com.badlogic.drop.Sprites.FireManage;
 import com.badlogic.drop.Sprites.FlyingEye;
 import com.badlogic.drop.Sprites.Heart;
 import com.badlogic.drop.Sprites.HellBeast;
@@ -44,7 +45,7 @@ public class FirstMap extends PlayScreen {
 	public int stageLength = 35;
 	public boolean isBossSpawn = true;
 	public final int speed = 10;
-
+	
 	public B2WorldCreator WorldCreator;
 	public double teleCd=1000;
 	public double lastTele=0;
@@ -59,6 +60,8 @@ public class FirstMap extends PlayScreen {
 	public ArrayList<Boolean> stageComplete = new ArrayList<Boolean>();
 	
 	private boolean isOnStage = false;
+	
+	public Music map1Music;
 	
 	public FirstMap(CuocChienSinhTon game) {
 		super(game);
@@ -86,12 +89,29 @@ public class FirstMap extends PlayScreen {
 		Collision.setup(this);
 		//set up bullet manage		
 		bulletManage = new BulletManage(world,this);
-		
+		fireManage = new FireManage(world, this);
+
 		stageCreator = new StageCreator(world,this);
 		//setup die screen
 		dieScreen = new DieScreen(game,this);
 		//create player
-		player = new HungKing(world,this);
+
+
+		if (type==-1) {
+			if ( Math.random()*10>5) {
+					
+					type=0;
+
+		}
+		else {
+			type=1;
+		}
+		}else {
+			if(type==1) player = new AnKhangHero(world,this);
+			else player = new HungKing(world, this);
+
+		}
+		
 		player.isHurtWhenCollide = true;
 		
 		//b2dr.setDrawBodies(false);
@@ -101,10 +121,11 @@ public class FirstMap extends PlayScreen {
 		//
 		for(int i=0;i<=8;i++) firstEntry.add(true);
 		setUpProgress();
-		AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).setLooping(true);
-		AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).setVolume(0.1f);
-		AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).play();
-		
+		map1Music = AudioManagement.manager.get(AudioManagement.map1Music,Music.class);
+		map1Music.setLooping(true);
+		map1Music.setVolume(0.7f);
+		map1Music.play();
+		AudioManagement.setLastMusic(map1Music);
 	}
 	
 	public void setUpProgress() {
@@ -202,15 +223,15 @@ public class FirstMap extends PlayScreen {
 			player.body.setLinearVelocity( new Vector2(speed,vel.y));
 		}
 		
-		if(Gdx.input.isKeyJustPressed(Keys.L) && System.currentTimeMillis()-lastTele > teleCd) {
-			if(!Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.D)) {
-				if(!player.isFlipX()) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
-				else player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
-			}
-			else if(Gdx.input.isKeyPressed(Keys.D)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
-			else if(Gdx.input.isKeyPressed(Keys.A)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
-			lastTele = System.currentTimeMillis();
-		}
+//		if(Gdx.input.isKeyJustPressed(Keys.L) && System.currentTimeMillis()-lastTele > teleCd) {
+//			if(!Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.D)) {
+//				if(!player.isFlipX()) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
+//				else player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
+//			}
+//			else if(Gdx.input.isKeyPressed(Keys.D)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x+5),(int)player.body.getPosition().y), 0);
+//			else if(Gdx.input.isKeyPressed(Keys.A)) player.body.setTransform(new Vector2((int) (player.body.getPosition().x-5),(int)player.body.getPosition().y), 0);
+//			lastTele = System.currentTimeMillis();
+//		}
 		
 		
 		if(Gdx.input.isKeyJustPressed(Keys.W) && canJump && vel.y == 0) {
@@ -228,7 +249,7 @@ public class FirstMap extends PlayScreen {
 		world.step(1/60f, 6, 2);
 		
 		bulletManage.update(dt);
-		
+		fireManage.update(dt);
 		handleInput(dt);
 		player.update(dt);
 		
@@ -257,6 +278,7 @@ public class FirstMap extends PlayScreen {
 	@Override
 	public void render(float delta) {
 		if(pause) {
+			map1Music.pause();
 			pauseStage.draw();
 			Gdx.input.setInputProcessor(pauseStage);
 			 return;
@@ -298,8 +320,7 @@ public class FirstMap extends PlayScreen {
 	}
 	public void dispose() {
 			// TODO Auto-generated method stub
-			
-			AudioManagement.manager.get("Music/Map1Music.mp3",Music.class).dispose();
+			map1Music.dispose();
 		}
 
 	

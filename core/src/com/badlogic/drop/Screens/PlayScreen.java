@@ -6,7 +6,9 @@ import com.badlogic.drop.Sprites.Boss;
 import com.badlogic.drop.Sprites.Boss1;
 import com.badlogic.drop.Sprites.BulletManage;
 import com.badlogic.drop.Sprites.Collision;
+import com.badlogic.drop.Sprites.FireManage;
 import com.badlogic.drop.Sprites.Hero;
+import com.badlogic.drop.Tools.AudioManagement;
 import com.badlogic.drop.Tools.StageCreator;
 import com.badlogic.drop.Tools.WorldContactListener;
 import com.badlogic.gdx.Gdx;
@@ -69,9 +71,10 @@ public abstract class PlayScreen implements Screen {
 	
 	public WorldContactListener worldContactListener;
 
+	// Fire Manage
+	public FireManage fireManage;
 	// music
 	public Music backgroundMusic;
-	public Sound heroHurtSound;
 	public Stage stage;
 	public Texture homeButton;
 	public Texture homeButtonHover;
@@ -93,26 +96,27 @@ public abstract class PlayScreen implements Screen {
 	private ImageButton ResumeButton;
 	public DieScreen dieScreen;
 	public boolean isPlayerDie = false;
-
+	public static int type =0;
+	public Music pauseMusic;
 	public PlayScreen(CuocChienSinhTon game) {
 		this.game = game;
 		camera = new OrthographicCamera();
 		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH, CuocChienSinhTon.V_HEIGHT,camera);
-		
 		setUpPauseButton();
 		setUpPauseStage();
-		
+
 		
 		//Gdx.input.setInputProcessor(stage);
 		
 		 
-		loadSound();
 	}
 	
 
 	public void setUpPauseButton() {
 		stage = new Stage(gamePort);
-		
+		// set up music
+		pauseMusic = AudioManagement.manager.get(AudioManagement.pauseMusic,Music.class);
+//		pauseMusic.setVolume(speed);
 		/// Home button
 		homeButton = new Texture("Menu/Home.png");
 		homeButtonHover = new Texture("Menu/HomeHover.png");
@@ -127,7 +131,7 @@ public abstract class PlayScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	                pause = true;
-	              
+	                pauseMusic.play();
 	            }
 	        });
 		 
@@ -158,7 +162,9 @@ public abstract class PlayScreen implements Screen {
 	            @Override
 	            public void clicked(InputEvent event, float x, float y) {
 	                // Handle button click
+	            	pauseMusic.stop();
 	            	pause = false;
+	            	AudioManagement.lastMusic.play();
 	            	
 	            }
 	        });
@@ -190,6 +196,8 @@ public abstract class PlayScreen implements Screen {
 	            public void clicked(InputEvent event, float x, float y) {
 	                // Handle button click
 	            	dispose();
+	        		pauseMusic.stop();
+
 	                game.setScreen(new Menu2(game));
 	            }
 	        });
@@ -208,9 +216,7 @@ public abstract class PlayScreen implements Screen {
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
-	public void loadSound() {
-		heroHurtSound =  Gdx.audio.newSound(Gdx.files.internal("sound/hero/heroHurt.wav"));
-	}
+	
 	public Viewport getGamePort() {
 		return gamePort;
 	}
@@ -254,16 +260,13 @@ public abstract class PlayScreen implements Screen {
 	}
 	@Override
 	public void dispose() {
-		
 		// TODO Auto-generated method stub
 	
 	}
 	public float getSpeed() {
 		return speed;
 	}
-	public void playHeroHurtSound() {
-		heroHurtSound.play();
-	}
+
 	public abstract void handleDie();
 
 }

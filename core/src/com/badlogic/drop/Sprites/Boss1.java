@@ -1,3 +1,4 @@
+
 package com.badlogic.drop.Sprites;
 
 import com.badlogic.drop.CuocChienSinhTon;
@@ -16,8 +17,6 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Boss1 extends Boss{
 	
 	
-	private Texture BossHealthBar;
-	private Texture BossHealth;
 
 	public void prepareAnimation() {
 		BossHealthBar = new Texture("HealthBar/bg.png");
@@ -96,15 +95,20 @@ public class Boss1 extends Boss{
 	boolean isHurting = false;
 	
 	public State getFrameState(float dt) {
-		
-		
-		System.out.println(isDieing);
+		if(b2body==null) {
+			isDieing = false;
+			stageCreator.removeMonster(this);
+			isDieFinish = true;
+			((FirstMap)screen).map1Music.stop();
+			screen.game.setScreen(new FlappyMap(screen.game));
+		}
 		if(isDieing) {
 			if(!die.isAnimationFinished(stateTime)) return State.DIE;
 			else {
 				isDieing = false;
 				stageCreator.removeMonster(this);
 				isDieFinish = true;
+				((FirstMap)screen).map1Music.stop();
 				screen.game.setScreen(new FlappyMap(screen.game));
 			}
 		}

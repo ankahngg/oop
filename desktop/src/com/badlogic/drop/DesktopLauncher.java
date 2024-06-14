@@ -13,7 +13,7 @@ public class DesktopLauncher {
       config.setTitle("SURVIVAL BATTLE GAME");
       config.setWindowedMode(CuocChienSinhTon.V_WIDTH*2,CuocChienSinhTon.V_HEIGHT*2 );
       config.useVsync(true);
-      config.setForegroundFPS(60);
+      config.setForegroundFPS(120);
       new Lwjgl3Application(new CuocChienSinhTon(), config);
    }
 }

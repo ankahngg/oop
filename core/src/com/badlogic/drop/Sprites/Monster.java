@@ -4,7 +4,9 @@ import com.badlogic.drop.CuocChienSinhTon;
 import com.badlogic.drop.Screens.FirstMap;
 import com.badlogic.drop.Screens.PlayScreen;
 import com.badlogic.drop.Sprites.Monster.State;
+import com.badlogic.drop.Tools.AudioManagement;
 import com.badlogic.drop.Tools.StageCreator;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -272,6 +274,7 @@ abstract public class Monster extends Sprite{
 		
 		void onHit() {
 			if(!isVisible) return;
+			AudioManagement.manager.get(AudioManagement.monsterHurtSound,Sound.class).play();
 			this.Health -= screen.getPlayer().damage;
 			if(this.Health <= 0) {
 //				if(screen instanceof FirstMap) {
