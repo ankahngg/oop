@@ -145,13 +145,13 @@ public class FlappyMap extends PlayScreen{
 		createBounds();
 		
 		isBossAppeared=false;
-		//b2dr.setDrawBodies(false);
+		b2dr.setDrawBodies(false);
 		
 		//music
 		map2Music = AudioManagement.manager.get(AudioManagement.map2Music,Music.class);
 		AudioManagement.setLastMusic(map2Music);
 		map2Music.setLooping(true);
-		map2Music.setVolume(0.1f);
+		map2Music.setVolume(0.7f);
 		map2Music.play();
 		
 		

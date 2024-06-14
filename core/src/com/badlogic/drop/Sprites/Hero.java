@@ -129,6 +129,7 @@ public abstract class Hero extends Sprite{
 		heroBulletSound = AudioManagement.manager.get(AudioManagement.heroBulletSound,Sound.class);
 		heroSwordSound = AudioManagement.manager.get(AudioManagement.heroSwordSound,Sound.class);
 		heroHurtSound = AudioManagement.manager.get(AudioManagement.heroHurtSound,Sound.class);
+		
 	}
 	public void setBullet(World world,PlayScreen screen,float x, float y,int direction) {
 		bulletManage.addBullet("EnergyBall", x, y, direction);

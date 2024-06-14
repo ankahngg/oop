@@ -121,7 +121,7 @@ public class FirstMap extends PlayScreen {
 		setUpProgress();
 		map1Music = AudioManagement.manager.get(AudioManagement.map1Music,Music.class);
 		map1Music.setLooping(true);
-		map1Music.setVolume(0.5f);
+		map1Music.setVolume(0.7f);
 		map1Music.play();
 		AudioManagement.setLastMusic(map1Music);
 	}

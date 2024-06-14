@@ -104,7 +104,7 @@ public abstract class PlayScreen implements Screen {
 		gamePort = new FitViewport(CuocChienSinhTon.V_WIDTH, CuocChienSinhTon.V_HEIGHT,camera);
 		setUpPauseButton();
 		setUpPauseStage();
-		
+
 		
 		//Gdx.input.setInputProcessor(stage);
 		
