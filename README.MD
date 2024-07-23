@@ -1,54 +1,49 @@
-1. D
-1. A
-1. B
-1. B và D
-    - B: Khung tin không được quảng bá ra tất cả các cổng khi địa chỉ MAC máy đích chưa có trong bảng chuyển tiếp, mà nó sẽ được gửi đến chỉ cổng mà đích được liên kết với.
-    - D: Switch không cần cập nhật cổng cho địa chỉ MAC đích khi khung tin đến, mà nó chỉ cần cập nhật cho địa chỉ MAC nguồn.
-1. A và B ?
-1. C
-    - DV: Mạng cỡ nhỏ
-    - LS: Mạng cỡ lớn, truy cập nhanh
-1. C
-    - Mã parity chẵn sẽ thêm 1 bit vào dữ liệu để đảm bảo tổng số bit 1 trong dữ liệu và bit kiểm tra là số chẵn
-1. **Chưa làm**
-1. A
-    - RIP sử dụng DV
-1. D
-1. D
-    - cost = 10^8/bandwith
-1. C
-    - router biên AS có bảng định tuyến nối vùng và liên vùng
-1. D
-1. A
-1. A
-1. B
-1. D
-1. B và C
-    - Các tầng có giao thức riêng
-    - Xuống tầng dưới = thêm header
-1. D?
-1. chưa làm
-1. A D E
-    - Điểm đa điểm ko cần kết nối qua thiết bị cuối khác
-    - Điểm - điểm cần kết nối trung gian
-1. A , B
-1. Chịu
-1. A
-    - Đụng độ trong CSMA do trễ đường truyền
-1. B ?
-1. D
-    - Trong mạng ad-hoc, không cần Access point, có thể kết nối trực tiếp
-1. B
-1. D
-1. D và E ?
-1. D
-1. B
-1. D
-1. A
-1. C
-1. D
-1. B,C,D
-1. B va F?
-1. B
-1. B
-1. A
+# Cuộc Chiến Sinh Tồn
+Cuộc chiến sinh tồn là một game đơn giản được phát triển bằng libGDX, một framework mạnh mẽ để phát triển game trên Java. Game này bao gồm 2 map chính theo cốt truyện nhằm tiêu diệt quái vật và giành chiến thắng.
+## Yêu cầu hệ thống
+
+Để chạy game này, bạn cần cài đặt các phần mềm và công cụ sau:
+
+- **Java Development Kit (JDK) 21 hoặc mới hơn**
+- **Gradle**: Công cụ quản lý dự án và xây dựng, có thể tải từ [đây](https://gradle.org/install/) nếu bạn muốn cài đặt thủ công. Tuy nhiên, dự án này đã đi kèm với Gradle Wrapper, do đó bạn không cần cài đặt riêng.
+
+## Cài đặt
+
+### Clone dự án từ GitHub
+
+Trước tiên, bạn cần clone repository từ GitHub về máy tính của mình:
+
+```bash
+git clone git@github.com:ankahngg/oop.git
+cd oop
+```
+### Sử dụng Gradle để build dự án
+Dự án này đã đi kèm với Gradle Wrapper, bạn có thể sử dụng nó để build dự án mà không cần cài đặt Gradle riêng.
+
+Trên Windows:
+```bash
+gradlew.bat build
+```
+Trên MacOS/Linux:
+```bash
+./gradlew build
+```
+
+### Chạy trên Desktop:
+Trên Windows:
+```bash
+gradlew.bat desktop:run
+```
+Trên MacOS/Linux:
+```bash
+./gradlew desktop:run
+```
+
+## Đóng góp
+Nếu bạn muốn đóng góp cho dự án này, vui lòng fork repository, tạo branch mới, thực hiện các thay đổi và tạo pull request. Chúng tôi hoan nghênh mọi đóng góp!
+
+## Liên hệ
+Nếu bạn có bất kỳ câu hỏi hoặc góp ý nào, vui lòng liên hệ qua email: duchung04st@gmail.com hoặc saidepchieu@gmail.com.
+
+Cảm ơn bạn đã quan tâm đến dự án của chúng tôi!
+
