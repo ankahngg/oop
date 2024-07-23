@@ -34,6 +34,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -98,23 +99,23 @@ public class FirstMap extends PlayScreen {
 
 
 		if (type==-1) {
-			if ( Math.random()*10>5) {
-					
+			//System.out.println(type);
+			if (MathUtils.random(1) == 0 ) {
+				player = new AnKhangHero(world,this);
 					type=0;
 
+			}
+			else {
+				type=1;
+				player = new HungKing(world, this);
+			}
 		}
-		else {
-			type=1;
-		}
-		}else {
-			if(type==1) player = new AnKhangHero(world,this);
-			else player = new HungKing(world, this);
-
-		}
-		System.out.print(type);
+		
+		player = new AnKhangHero(world,this);
+		
 		player.isHurtWhenCollide = true;
 		
-		//b2dr.setDrawBodies(false);
+		b2dr.setDrawBodies(false);
 		
 		//create healthBar
 		healthbar = new HealthBar(this);
